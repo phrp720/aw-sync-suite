@@ -1,4 +1,4 @@
-package activitywatch
+package aw
 
 import "fmt"
 

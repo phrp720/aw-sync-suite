@@ -1,4 +1,4 @@
-package activitywatch
+package aw
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// GetBuckets gets the buckets from the activitywatch database
+// GetBuckets gets the buckets from the aw database
 func GetBuckets() (Watchers, error) {
 	awUrl := os.Getenv("ACTIVITY_WATCH_URL")
 	if awUrl == "" {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"aw-sync-agent/activitywatch"
+	"aw-sync-agent/aw"
 	"encoding/json"
 	"fmt"
 	"github.com/joho/godotenv"
@@ -19,7 +19,7 @@ func main() {
 		fmt.Println("Environment variable PROMETHEUS_WRITE_URL is not set or is empty")
 		os.Exit(1)
 	}
-	buckets, err := activitywatch.GetBuckets()
+	buckets, err := aw.GetBuckets()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,7 +31,7 @@ func main() {
 	//fmt.Println(buckets["aw-watcher-afk_moonlight"])
 
 	//fmt.Println(string(bucketsJSON))
-	events, err := activitywatch.GetEvents("aw-watcher-window_moonlight", nil, nil, nil)
+	events, err := aw.GetEvents("aw-watcher-window_moonlight", nil, nil, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
