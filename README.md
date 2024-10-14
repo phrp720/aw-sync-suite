@@ -10,8 +10,8 @@ curl 'http://localhost:9090/api/v1/query?query=ActivityWatch'
 
 ## TODO
 
-- [ ] Create an activitywatch client to interact with ActivityWatch rest API
-- [ ] Modify the already implemented prometheus client
+- [x] Create an activitywatch client to interact with ActivityWatch rest API
+- [x] Modify the already implemented prometheus client
 - [ ] Create a sync agent to push data from ActivityWatch to Prometheus
 - [ ] Create a Grafana dashboard to visualize the data
 - [ ] Make the agent run as a service for Linux and Windows(maybe and for macOS)
