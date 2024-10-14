@@ -10,7 +10,7 @@ import (
 
 // GetBuckets gets the buckets from the activitywatch database
 func GetBuckets() (Watchers, error) {
-	awUrl := os.Getenv("ACTIVITY_WATCHER_URL")
+	awUrl := os.Getenv("ACTIVITY_WATCH_URL")
 	if awUrl == "" {
 		fmt.Println("Environment variable ACTIVITY_WATCHER_URL is not set or is empty")
 		os.Exit(1)
@@ -31,7 +31,7 @@ func GetBuckets() (Watchers, error) {
 
 // GetEvents gets the events from a specific bucket
 func GetEvents(bucket string, start *time.Time, end *time.Time, limit *int) (Events, error) {
-	awUrl := os.Getenv("ACTIVITY_WATCHER_URL")
+	awUrl := os.Getenv("ACTIVITY_WATCH_URL")
 	if awUrl == "" {
 		fmt.Println("Environment variable ACTIVITY_WATCHER_URL is not set or is empty")
 		os.Exit(1)
