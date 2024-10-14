@@ -12,19 +12,18 @@ import (
 func GetBuckets() (Watchers, error) {
 	awUrl := os.Getenv("ACTIVITY_WATCH_URL")
 	if awUrl == "" {
-		fmt.Println("Environment variable ACTIVITY_WATCHER_URL is not set or is empty")
-		os.Exit(1)
+		return nil, &EnvVarError{VarName: "ACTIVITY_WATCH_URL"}
 	}
 	url := awUrl + "/api/0/buckets"
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get buckets: %w", err)
+		return nil, &HTTPError{URL: url, Err: err}
 	}
 	defer resp.Body.Close()
 
 	var buckets Watchers
 	if err := json.NewDecoder(resp.Body).Decode(&buckets); err != nil {
-		return nil, fmt.Errorf("failed to decode response: %w", err)
+		return nil, &DecodeError{Err: err}
 	}
 	return buckets, nil
 }
@@ -33,21 +32,20 @@ func GetBuckets() (Watchers, error) {
 func GetEvents(bucket string, start *time.Time, end *time.Time, limit *int) (Events, error) {
 	awUrl := os.Getenv("ACTIVITY_WATCH_URL")
 	if awUrl == "" {
-		fmt.Println("Environment variable ACTIVITY_WATCHER_URL is not set or is empty")
-		os.Exit(1)
+		return nil, &EnvVarError{VarName: "ACTIVITY_WATCH_URL"}
 	}
 	url := fmt.Sprintf("%s/api/0/buckets/%s/events", awUrl, bucket)
 	url = addQueryParams(url, start, end, limit)
 
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get events: %w", err)
+		return nil, &HTTPError{URL: url, Err: err}
 	}
 	defer resp.Body.Close()
 
 	var events Events
 	if err := json.NewDecoder(resp.Body).Decode(&events); err != nil {
-		return nil, fmt.Errorf("failed to decode response: %w", err)
+		return nil, &DecodeError{Err: err}
 	}
 	return events, nil
 }
