@@ -37,7 +37,7 @@ func GetEvents(bucket string, start *time.Time, end *time.Time, limit *int) (Eve
 		os.Exit(1)
 	}
 	url := fmt.Sprintf("%s/api/0/buckets/%s/events", awUrl, bucket)
-	url = getEventsURL(url, start, end, limit)
+	url = addQueryParams(url, start, end, limit)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -52,7 +52,8 @@ func GetEvents(bucket string, start *time.Time, end *time.Time, limit *int) (Eve
 	return events, nil
 }
 
-func getEventsURL(url string, start *time.Time, end *time.Time, limit *int) string {
+// addQueryParams adds query parameters to the get Events url
+func addQueryParams(url string, start *time.Time, end *time.Time, limit *int) string {
 	// Add start and end time parameters if they are provided
 	if start != nil && end != nil {
 		url = fmt.Sprintf("%s?start=%s&end=%s", url, start.Format(time.RFC3339), end.Format(time.RFC3339))
@@ -60,7 +61,6 @@ func getEventsURL(url string, start *time.Time, end *time.Time, limit *int) stri
 		url = fmt.Sprintf("%s?start=%s", url, start.Format(time.RFC3339))
 	} else if end != nil {
 		url = fmt.Sprintf("%s?end=%s", url, end.Format(time.RFC3339))
-
 	}
 	if limit != nil {
 		if start != nil || end != nil {
@@ -69,6 +69,5 @@ func getEventsURL(url string, start *time.Time, end *time.Time, limit *int) stri
 			url = fmt.Sprintf("%s?limit=%d", url, *limit)
 		}
 	}
-
 	return url
 }

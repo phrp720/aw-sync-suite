@@ -18,7 +18,7 @@ type Watchers map[string]Watcher
 
 // Event represents an event in the activitywatch database
 type Event struct {
-	ID        string                 `json:"id"`
+	ID        int                    `json:"id"`
 	Timestamp time.Time              `json:"timestamp"`
 	Duration  float64                `json:"duration"`
 	Data      map[string]interface{} `json:"data"`
