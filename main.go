@@ -21,16 +21,26 @@ func main() {
 	}
 	buckets, err := activitywatch.GetBuckets()
 	if err != nil {
-		return
+		log.Fatal(err)
 	}
 	// Pretty-print the buckets
-	bucketsJSON, err := json.MarshalIndent(buckets, "", "  ")
+	_, err = json.MarshalIndent(buckets, "", "  ")
 	if err != nil {
 		log.Fatalf("Error marshalling buckets: %v", err)
 	}
 	//fmt.Println(buckets["aw-watcher-afk_moonlight"])
 
-	fmt.Println(string(bucketsJSON))
+	//fmt.Println(string(bucketsJSON))
+	events, err := activitywatch.GetEvents("aw-watcher-window_moonlight", nil, nil, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Pretty-print the buckets
+	eventsJSON, err := json.MarshalIndent(events, "", "  ")
+	if err != nil {
+		log.Fatalf("Error marshalling buckets: %v", err)
+	}
+	fmt.Println(string(eventsJSON))
 	//client := promwrite.NewClient(prometheusURL)
 	//num := float64(1 + rand.Intn(999-1))
 	//fmt.Print(num)
