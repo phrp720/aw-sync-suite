@@ -19,6 +19,8 @@ func main() {
 
 	data, err := datamanager.ScrapeData(awUrl)
 	print(data)
+	print("\n")
+	util.PromHealthCheck("http://localhost:9090")
 	if err != nil {
 		log.Fatal(err)
 	}
