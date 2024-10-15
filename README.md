@@ -8,6 +8,10 @@ This is an open-source ActivityWatch sync agent. The purpose of this agent is to
 curl 'http://localhost:9090/api/v1/query?query=ActivityWatch'
 ```
 
+### What we expect:
+
+    sudo ./agent -ExcludedWatchers=aw-*t -cron=**** -MinData=454 -asService
+
 ## TODO
 
 - [x] Create an activitywatch client to interact with ActivityWatch rest API

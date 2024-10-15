@@ -1,12 +1,9 @@
 package main
 
 import (
-	"aw-sync-agent/aw"
-	"encoding/json"
-	"fmt"
+	"aw-sync-agent/datamanager"
 	"github.com/joho/godotenv"
 	"log"
-	"os"
 )
 
 func main() {
@@ -14,33 +11,35 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file", err)
 	}
-	prometheusURL := os.Getenv("PROMETHEUS_WRITE_URL")
-	if prometheusURL == "" {
-		fmt.Println("Environment variable PROMETHEUS_WRITE_URL is not set or is empty")
-		os.Exit(1)
-	}
-	buckets, err := aw.GetBuckets()
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Pretty-print the buckets
-	_, err = json.MarshalIndent(buckets, "", "  ")
-	if err != nil {
-		log.Fatalf("Error marshalling buckets: %v", err)
-	}
-	//fmt.Println(buckets["aw-watcher-afk_moonlight"])
+	datamanager.ScrapeData()
 
-	//fmt.Println(string(bucketsJSON))
-	events, err := aw.GetEvents("aw-watcher-window_moonlight", nil, nil, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Pretty-print the buckets
-	eventsJSON, err := json.MarshalIndent(events, "", "  ")
-	if err != nil {
-		log.Fatalf("Error marshalling buckets: %v", err)
-	}
-	fmt.Println(string(eventsJSON))
+	//prometheusURL := os.Getenv("PROMETHEUS_WRITE_URL")
+	//if prometheusURL == "" {
+	//	fmt.Println("Environment variable PROMETHEUS_WRITE_URL is not set or is empty")
+	//	os.Exit(1)
+	//}
+	//buckets, err := aw.GetBuckets()
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//// Pretty-print the buckets
+	//_, err = json.MarshalIndent(buckets, "", "  ")
+	//if err != nil {
+	//	log.Fatalf("Error marshalling buckets: %v", err)
+	//}
+	////fmt.Println(buckets["aw-watcher-afk_moonlight"])
+	//
+	////fmt.Println(string(bucketsJSON))
+	//events, err := aw.GetEvents("aw-watcher-window_moonlight", nil, nil, nil)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//// Pretty-print the buckets
+	//eventsJSON, err := json.MarshalIndent(events, "", "  ")
+	//if err != nil {
+	//	log.Fatalf("Error marshalling buckets: %v", err)
+	//}
+	//fmt.Println(string(eventsJSON))
 	//client := promwrite.NewClient(prometheusURL)
 	//num := float64(1 + rand.Intn(999-1))
 	//fmt.Print(num)
