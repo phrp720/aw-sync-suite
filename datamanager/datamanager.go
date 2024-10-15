@@ -2,34 +2,34 @@ package datamanager
 
 import (
 	"aw-sync-agent/aw"
-	"fmt"
+	"aw-sync-agent/util"
 	"log"
-	"os"
-	"strings"
 )
 
 // ScrapeData scrapes the data from the local ActivityWatch instance via the aw Client
-func ScrapeData() aw.WatcherNameToEventsMap {
-	fmt.Print("Fetching buckets  ...\n")
-	buckets, err := aw.GetBuckets()
+func ScrapeData(awUrl string) (aw.WatcherNameToEventsMap, error) {
+	log.Print("Fetching buckets  ...\n")
+	buckets, err := aw.GetBuckets(awUrl)
 	if err != nil {
-		log.Fatal("Error getting buckets: ", err)
-
+		log.Printf("Error getting buckets: %s", err)
+		return nil, err
 	}
 
-	fmt.Print("Buckets fetched successfully\n", "Total buckets fetched: ", len(buckets), "\n")
-	RemoveExcludedWatchers(buckets)
+	log.Print("Buckets fetched successfully")
+	log.Print("Total buckets fetched: ", len(buckets))
+	util.RemoveExcludedWatchers(buckets)
 	eventsMap := make(aw.WatcherNameToEventsMap)
 	for name, bucket := range buckets {
-		fmt.Print("Getting events for bucket ", bucket.Client, " ...\n")
-		events, err := aw.GetEvents(name, nil, nil, nil)
+		log.Print("Getting events for bucket ", bucket.Client, " ...")
+		events, err := aw.GetEvents(awUrl, name, nil, nil, nil)
 		if err != nil {
-			log.Fatal("Error getting events for bucket ", bucket.Client, " : ", err)
+			log.Printf("Error getting events for bucket %s: %v", bucket.Client, err)
+			return nil, err
 		}
 		eventsMap[bucket.ID] = events
 	}
-	fmt.Print("Events fetched successfully\n")
-	return eventsMap
+	log.Print("Events fetched successfully\n")
+	return eventsMap, nil
 }
 
 // AggregateData aggregates the data
@@ -38,24 +38,6 @@ func AggregateData() {
 }
 
 // PushData pushes the data to the server via the Prometheus Client
-func PushData() {
+func PushData(prometheusUrl string, eventsMap aw.WatcherNameToEventsMap) {
 
-}
-func getExcludedWatchers() []string {
-	return strings.Split(os.Getenv("EXCLUDED_WATCHERS"), ",")
-}
-
-func RemoveExcludedWatchers(buckets aw.Watchers) aw.Watchers {
-	excluded := getExcludedWatchers()
-	if len(excluded) > 0 {
-		for _, excludedWatcher := range excluded {
-			for id, bucket := range buckets {
-				if bucket.Client == excludedWatcher {
-					delete(buckets, id)
-				}
-			}
-		}
-	}
-	fmt.Print("Buckets excluded: ", len(excluded), excluded, "\n")
-	return buckets
 }

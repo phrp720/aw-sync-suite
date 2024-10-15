@@ -5,16 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"time"
 )
 
 // GetBuckets gets the buckets from the aw database
-func GetBuckets() (Watchers, error) {
-	awUrl := os.Getenv("ACTIVITY_WATCH_URL")
-	if awUrl == "" {
-		return nil, &errors.EnvVarError{VarName: "ACTIVITY_WATCH_URL"}
-	}
+func GetBuckets(awUrl string) (Watchers, error) {
+
 	url := awUrl + "/api/0/buckets"
 	resp, err := http.Get(url)
 	if err != nil {
@@ -30,11 +26,8 @@ func GetBuckets() (Watchers, error) {
 }
 
 // GetEvents gets the events from a specific bucket
-func GetEvents(bucket string, start *time.Time, end *time.Time, limit *int) (Events, error) {
-	awUrl := os.Getenv("ACTIVITY_WATCH_URL")
-	if awUrl == "" {
-		return nil, &errors.EnvVarError{VarName: "ACTIVITY_WATCH_URL"}
-	}
+func GetEvents(awUrl string, bucket string, start *time.Time, end *time.Time, limit *int) (Events, error) {
+
 	url := fmt.Sprintf("%s/api/0/buckets/%s/events", awUrl, bucket)
 	url = addQueryParams(url, start, end, limit)
 

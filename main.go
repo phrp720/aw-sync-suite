@@ -2,6 +2,7 @@ package main
 
 import (
 	"aw-sync-agent/datamanager"
+	"aw-sync-agent/util"
 	"github.com/joho/godotenv"
 	"log"
 )
@@ -11,13 +12,16 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file", err)
 	}
-	datamanager.ScrapeData()
+	awUrl, err := util.GetEnvVar("ACTIVITY_WATCH_URL", true)
+	if err != nil {
+		panic(err)
+	}
 
-	//prometheusURL := os.Getenv("PROMETHEUS_WRITE_URL")
-	//if prometheusURL == "" {
-	//	fmt.Println("Environment variable PROMETHEUS_WRITE_URL is not set or is empty")
-	//	os.Exit(1)
-	//}
+	data, err := datamanager.ScrapeData(awUrl)
+	print(data)
+	if err != nil {
+		log.Fatal(err)
+	}
 	//buckets, err := aw.GetBuckets()
 	//if err != nil {
 	//	log.Fatal(err)
