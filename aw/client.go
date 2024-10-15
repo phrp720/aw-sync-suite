@@ -1,6 +1,7 @@
 package aw
 
 import (
+	"aw-sync-agent/errors"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,18 +13,18 @@ import (
 func GetBuckets() (Watchers, error) {
 	awUrl := os.Getenv("ACTIVITY_WATCH_URL")
 	if awUrl == "" {
-		return nil, &EnvVarError{VarName: "ACTIVITY_WATCH_URL"}
+		return nil, &errors.EnvVarError{VarName: "ACTIVITY_WATCH_URL"}
 	}
 	url := awUrl + "/api/0/buckets"
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, &HTTPError{URL: url, Err: err}
+		return nil, &errors.HTTPError{URL: url, Err: err}
 	}
 	defer resp.Body.Close()
 
 	var buckets Watchers
 	if err := json.NewDecoder(resp.Body).Decode(&buckets); err != nil {
-		return nil, &DecodeError{Err: err}
+		return nil, &errors.DecodeError{Err: err}
 	}
 	return buckets, nil
 }
@@ -32,20 +33,20 @@ func GetBuckets() (Watchers, error) {
 func GetEvents(bucket string, start *time.Time, end *time.Time, limit *int) (Events, error) {
 	awUrl := os.Getenv("ACTIVITY_WATCH_URL")
 	if awUrl == "" {
-		return nil, &EnvVarError{VarName: "ACTIVITY_WATCH_URL"}
+		return nil, &errors.EnvVarError{VarName: "ACTIVITY_WATCH_URL"}
 	}
 	url := fmt.Sprintf("%s/api/0/buckets/%s/events", awUrl, bucket)
 	url = addQueryParams(url, start, end, limit)
 
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, &HTTPError{URL: url, Err: err}
+		return nil, &errors.HTTPError{URL: url, Err: err}
 	}
 	defer resp.Body.Close()
 
 	var events Events
 	if err := json.NewDecoder(resp.Body).Decode(&events); err != nil {
-		return nil, &DecodeError{Err: err}
+		return nil, &errors.DecodeError{Err: err}
 	}
 	return events, nil
 }
