@@ -2,12 +2,16 @@ package main
 
 import (
 	"aw-sync-agent/datamanager"
+	"aw-sync-agent/prometheus"
 	"aw-sync-agent/util"
+	"fmt"
 	"github.com/joho/godotenv"
 	"log"
+	"strings"
 )
 
 func main() {
+	//Here we must load the env variables and check the flags
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file", err)
@@ -16,72 +20,20 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	data, err := datamanager.ScrapeData(awUrl)
-	print(data)
-	print("\n")
-	util.PromHealthCheck("http://localhost:9090")
+	prometheusUrl, err := util.GetEnvVar("PROMETHEUS_URL", true)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	//buckets, err := aw.GetBuckets()
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//// Pretty-print the buckets
-	//_, err = json.MarshalIndent(buckets, "", "  ")
-	//if err != nil {
-	//	log.Fatalf("Error marshalling buckets: %v", err)
-	//}
-	////fmt.Println(buckets["aw-watcher-afk_moonlight"])
-	//
-	////fmt.Println(string(bucketsJSON))
-	//events, err := aw.GetEvents("aw-watcher-window_moonlight", nil, nil, nil)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//// Pretty-print the buckets
-	//eventsJSON, err := json.MarshalIndent(events, "", "  ")
-	//if err != nil {
-	//	log.Fatalf("Error marshalling buckets: %v", err)
-	//}
-	//fmt.Println(string(eventsJSON))
-	//client := promwrite.NewClient(prometheusURL)
-	//num := float64(1 + rand.Intn(999-1))
-	//fmt.Print(num)
-	//_, err = client.Write(context.Background(), &promwrite.WriteRequest{
-	//	TimeSeries: []promwrite.TimeSeries{
-	//		// One Record
-	//		{
-	//			Labels: []promwrite.Label{
-	//				{
-	//					Name:  "__name__",
-	//					Value: "ActivityWatch",
-	//				},
-	//			},
-	//			Sample: promwrite.Sample{
-	//				Time:  time.Now(),
-	//				Value: 321,
-	//			},
-	//		},
-	//		// Another Record
-	//		{
-	//			Labels: []promwrite.Label{
-	//				{
-	//					Name:  "__name__",
-	//					Value: "testname",
-	//				},
-	//			},
-	//			Sample: promwrite.Sample{
-	//				Time:  time.Now(),
-	//				Value: num,
-	//			},
-	//		},
-	//	},
-	//})
-	//if err != nil {
-	//	fmt.Printf("Failed to push: %v\n", err)
-	//	return
-	//}
-	//fmt.Print("Push was successful!\n")
+	prometheusClient := prometheus.NewClient(fmt.Sprintf("%s%s", prometheusUrl, "/api/v1/write"))
+	scrapedData, err := datamanager.ScrapeData(awUrl)
+	for watcher, data := range scrapedData {
+		aggregatedData := datamanager.AggregateData(data, strings.ReplaceAll(watcher, "-", "_")) //metric names must not have '-'
+		err = datamanager.PushData(prometheusClient, prometheusUrl, aggregatedData)
+		if err != nil {
+			panic(err)
+		}
+	}
+	if err != nil {
+		panic(err)
+	}
 }
