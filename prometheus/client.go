@@ -84,7 +84,7 @@ func (p *Client) Write(ctx context.Context, req *WriteRequest, options ...WriteO
 	// Send http request.
 	httpResp, err := p.opts.httpClient.Do(httpReq)
 	if err != nil {
-		return nil, fmt.Errorf("promwrite: sending remote write request: %w", err)
+		return nil, fmt.Errorf("prometheus: sending remote write request: %w", err)
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -96,7 +96,7 @@ func (p *Client) Write(ctx context.Context, req *WriteRequest, options ...WriteO
 	if st := httpResp.StatusCode; st/100 != 2 {
 		msg, _ := io.ReadAll(httpResp.Body)
 		return nil, &errors.WriteError{
-			Err:  fmt.Errorf("promwrite: expected status %d, got %d: %s", http.StatusOK, st, string(msg)),
+			Err:  fmt.Errorf("prometheus: expected status %d, got %d: %s", http.StatusOK, st, string(msg)),
 			Code: st,
 		}
 	}

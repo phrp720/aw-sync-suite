@@ -1,13 +1,10 @@
 package main
 
 import (
-	"aw-sync-agent/datamanager"
-	"aw-sync-agent/prometheus"
+	"aw-sync-agent/synchronizer"
 	"aw-sync-agent/util"
-	"fmt"
 	"github.com/joho/godotenv"
 	"log"
-	"strings"
 )
 
 func main() {
@@ -18,22 +15,14 @@ func main() {
 	}
 	awUrl, err := util.GetEnvVar("ACTIVITY_WATCH_URL", true)
 	if err != nil {
-		panic(err)
+		panic(err) // force quit. mandatory url
 	}
 	prometheusUrl, err := util.GetEnvVar("PROMETHEUS_URL", true)
 	if err != nil {
-		panic(err)
+		panic(err) // force quit. mandatory url
 	}
-	prometheusClient := prometheus.NewClient(fmt.Sprintf("%s%s", prometheusUrl, "/api/v1/write"))
-	scrapedData, err := datamanager.ScrapeData(awUrl)
-	for watcher, data := range scrapedData {
-		aggregatedData := datamanager.AggregateData(data, strings.ReplaceAll(watcher, "-", "_")) //metric names must not have '-'
-		err = datamanager.PushData(prometheusClient, prometheusUrl, aggregatedData)
-		if err != nil {
-			panic(err)
-		}
-	}
+	err = synchronizer.Start(awUrl, prometheusUrl)
 	if err != nil {
-		panic(err)
+		panic(err) // handle if something wrong happens
 	}
 }
