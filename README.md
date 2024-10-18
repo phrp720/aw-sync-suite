@@ -5,19 +5,25 @@ This is an open-source ActivityWatch sync agent. The purpose of this agent is to
 ## Test Query
 
 ```bash
-curl 'http://localhost:9090/api/v1/query?query=aw-watcher-window'
+curl 'http://localhost:9090/api/v1/query?query=aw_watcher_window'
 ```
+
+### Settings
+
+| Flag                | Environment Variable | Description                                                                               |
+|---------------------|----------------------|-------------------------------------------------------------------------------------------|
+| `-asService`        | `AS_SERVICE`         | Run the agent as a service.                                                               |
+| `-awUrl`            | `ACTIVITY_WATCH_URL` | The URL of the ActivityWatch server.                                                      |
+| `-cron`             | `CRON`               | A cron expression to run the sync agent.                                                  |
+| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | A comma-separated list of watchers to exclude from the sync agent.                        |
+| `-minData`          | `MIN_DATA`           | The minimum amount of data that a watcher needs to have to be included in the sync agent. |
+| `-prometheusUrl`    | `PROMETHEUS_URL`     | The URL of the Prometheus server.                                                         |
+| `-userID`           | `USER_ID`            | The name of the user that we scrape data                                                  |
+
 
 ### What we expect:
 
-    sudo ./agent -ExcludedWatchers=aw-*t -cron=**** -MinData=454 -asService
-### Useful flags/env arguments
-- `ExcludedWatchers` - A comma-separated list of watchers to exclude from the sync agent.
-- `cron` - A cron expression to run the sync agent.
-- `MinData` - The minimum amount of data that a watcher needs to have to be included in the sync agent.
-- `asService` - Run the agent as a service.
-- `PrometheusURL` - The URL of the Prometheus server.
-- `ActivityWatchURL` - The URL of the ActivityWatch server.
+    sudo ./agent -excludedWatchers=aw-watcher-window -cron=*2*** -minData=9 -asService=true -awUrl=http://localhost:5600 -prometheusUrl=http://localhost:9090 -userID=Phillip
 
 ## TODO
 
