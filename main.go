@@ -3,21 +3,24 @@ package main
 import (
 	"aw-sync-agent/settings"
 	"aw-sync-agent/synchronizer"
+	"log"
 )
 
 func main() {
-	// These are the settings that contains the Env Variables/Flags
-	Settings := map[settings.SettingsKey]string{
-		settings.AWUrl:            settings.GetFlagOrEnvVar("ACTIVITY_WATCH_URL", "awUrl", true),
-		settings.PrometheusUrl:    settings.GetFlagOrEnvVar("PROMETHEUS_URL", "prometheusUrl", true),
-		settings.ExcludedWatchers: settings.GetFlagOrEnvVar("EXCLUDED_WATCHERS", "excludedWatchers", false),
-		settings.UserID:           settings.GetFlagOrEnvVar("USER_ID", "userID", false),
-		settings.Cron:             settings.GetFlagOrEnvVar("CRON", "cron", false),
-	}
 
-	// Pass the map to the synchronizer.Start function
-	err := synchronizer.Start(Settings)
-	if err != nil {
-		panic(err) // handle if something wrong happens
+	// Initialize the settings
+	Settings := settings.InitSettings()
+
+	// Check if the agent should run as a service
+	if *Settings[settings.AsService] == "true" {
+		log.Println("Running as a service")
+		// Add your code to run the agent as a service here
+	} else {
+		log.Println("Running as a regular application")
+		// Pass the map to the synchronizer.Start function
+		err := synchronizer.Start(Settings)
+		if err != nil {
+			panic(err) // handle if something wrong happens
+		}
 	}
 }

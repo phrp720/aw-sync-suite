@@ -14,11 +14,11 @@ curl 'http://localhost:9090/api/v1/query?query=aw-watcher-window'
 ### Useful flags/env arguments
 - `ExcludedWatchers` - A comma-separated list of watchers to exclude from the sync agent.
 - `cron` - A cron expression to run the sync agent.
-- `MinData` - The minimum amount of data to sync for each watcher.
+- `MinData` - The minimum amount of data that a watcher needs to have to be included in the sync agent.
 - `asService` - Run the agent as a service.
 - `PrometheusURL` - The URL of the Prometheus server.
 - `ActivityWatchURL` - The URL of the ActivityWatch server.
-- `BatchSize` - The number of data points to sync at a time.
+
 ## TODO
 
 - [x] Create an activitywatch client to interact with ActivityWatch rest API
