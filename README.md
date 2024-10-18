@@ -10,15 +10,15 @@ curl 'http://localhost:9090/api/v1/query?query=aw_watcher_window'
 
 ### Settings
 
-| Flag                | Environment Variable | Description                                                                               |
-|---------------------|----------------------|-------------------------------------------------------------------------------------------|
-| `-asService`        | `AS_SERVICE`         | Run the agent as a service.                                                               |
-| `-awUrl`            | `ACTIVITY_WATCH_URL` | The URL of the ActivityWatch server.                                                      |
-| `-cron`             | `CRON`               | A cron expression to run the sync agent.                                                  |
-| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | A comma-separated list of watchers to exclude from the sync agent.                        |
-| `-minData`          | `MIN_DATA`           | The minimum amount of data that a watcher needs to have to be included in the sync agent. |
-| `-prometheusUrl`    | `PROMETHEUS_URL`     | The URL of the Prometheus server.                                                         |
-| `-userID`           | `USER_ID`            | The name of the user that we scrape data                                                  |
+| Flag                | Environment Variable | Description                                                                               | Mandatory | Default                                           |
+|---------------------|----------------------|-------------------------------------------------------------------------------------------|-----------|---------------------------------------------------|
+| `-asService`        | `AS_SERVICE`         | Run the agent as a service.                                                               | false     | false                                             |
+| `-awUrl`            | `ACTIVITY_WATCH_URL` | The URL of the ActivityWatch server.                                                      | true      | -                                                 |
+| `-cron`             | `CRON`               | A cron expression to run the sync agent.                                                  | false     | Every 10 minutes                                  |
+| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | A comma-separated list of watchers to exclude from the sync agent.                        | false     | -                                                 |
+| `-minData`          | `MIN_DATA`           | The minimum amount of data that a watcher needs to have to be included in the sync agent. | false     | 5                                                 |
+| `-prometheusUrl`    | `PROMETHEUS_URL`     | The URL of the Prometheus server.                                                         | true      | -                                                 |
+| `-userID`           | `USER_ID`            | The name of the user that we scrape data                                                  | false     | The name of the computer otherwise a generated id |
 
 
 ### What we expect:
