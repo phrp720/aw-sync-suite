@@ -1,27 +1,22 @@
 package main
 
 import (
+	"aw-sync-agent/settings"
 	"aw-sync-agent/synchronizer"
-	"aw-sync-agent/util"
-	"github.com/joho/godotenv"
-	"log"
 )
 
 func main() {
-	//Here we must load the env variables and check the flags
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("Error loading .env file", err)
+	// These are the settings that contains the Env Variables/Flags
+	Settings := map[settings.SettingsKey]string{
+		settings.AWUrl:            settings.GetFlagOrEnvVar("ACTIVITY_WATCH_URL", "awUrl", true),
+		settings.PrometheusUrl:    settings.GetFlagOrEnvVar("PROMETHEUS_URL", "prometheusUrl", true),
+		settings.ExcludedWatchers: settings.GetFlagOrEnvVar("EXCLUDED_WATCHERS", "excludedWatchers", false),
+		settings.UserID:           settings.GetFlagOrEnvVar("USER_ID", "userID", false),
+		settings.Cron:             settings.GetFlagOrEnvVar("CRON", "cron", false),
 	}
-	awUrl, err := util.GetEnvVar("ACTIVITY_WATCH_URL", true)
-	if err != nil {
-		panic(err) // force quit. mandatory url
-	}
-	prometheusUrl, err := util.GetEnvVar("PROMETHEUS_URL", true)
-	if err != nil {
-		panic(err) // force quit. mandatory url
-	}
-	err = synchronizer.Start(awUrl, prometheusUrl)
+
+	// Pass the map to the synchronizer.Start function
+	err := synchronizer.Start(Settings)
 	if err != nil {
 		panic(err) // handle if something wrong happens
 	}

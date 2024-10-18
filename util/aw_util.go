@@ -7,14 +7,13 @@ import (
 )
 
 // getExcludedWatchers gets the excluded watchers from the environment variable
-func getExcludedWatchers() []string {
-	excluded, _ := GetEnvVar("EXCLUDED_WATCHERS", false)
-	return strings.Split(excluded, "|")
+func getExcludedWatchers(excludedWatchers string) []string {
+	return strings.Split(excludedWatchers, "|")
 }
 
 // RemoveExcludedWatchers removes the excluded watchers from the buckets
-func RemoveExcludedWatchers(buckets aw.Watchers) aw.Watchers {
-	excluded := getExcludedWatchers()
+func RemoveExcludedWatchers(buckets aw.Watchers, excludedWatchers string) aw.Watchers {
+	excluded := getExcludedWatchers(excludedWatchers)
 	if len(excluded) > 0 {
 		for _, excludedWatcher := range excluded {
 			for id, bucket := range buckets {
