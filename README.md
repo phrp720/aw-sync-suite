@@ -23,7 +23,11 @@ curl 'http://localhost:9090/api/v1/query?query=aw-watcher-window'
 
 - [x] Create an activitywatch client to interact with ActivityWatch rest API
 - [x] Modify the already implemented prometheus client
-- [ ] Create a sync agent to push data from ActivityWatch to Prometheus
+- [x] Create a sync agent to push data from ActivityWatch to Prometheus
+- [x] Create a command-line interface to run the agent
+- [ ] Create checkpoints with checkpoint.json file
+- [ ] Create internet connection check and retry mechanism
+- [ ] Create better error handler
 - [ ] Create a Grafana dashboard to visualize the data
 - [ ] Make the agent run as a service for Linux and Windows(maybe and for macOS)
 - [ ] Create a docker-compose file to run the whole system.
