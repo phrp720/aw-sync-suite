@@ -25,3 +25,5 @@ type Event struct {
 }
 
 type Events []Event
+
+type WatcherNameToEventsMap map[string]Events

@@ -5,9 +5,20 @@ This is an open-source ActivityWatch sync agent. The purpose of this agent is to
 ## Test Query
 
 ```bash
-curl 'http://localhost:9090/api/v1/query?query=ActivityWatch'
+curl 'http://localhost:9090/api/v1/query?query=aw-watcher-window'
 ```
 
+### What we expect:
+
+    sudo ./agent -ExcludedWatchers=aw-*t -cron=**** -MinData=454 -asService
+### Useful flags/env arguments
+- `ExcludedWatchers` - A comma-separated list of watchers to exclude from the sync agent.
+- `cron` - A cron expression to run the sync agent.
+- `MinData` - The minimum amount of data to sync for each watcher.
+- `asService` - Run the agent as a service.
+- `PrometheusURL` - The URL of the Prometheus server.
+- `ActivityWatchURL` - The URL of the ActivityWatch server.
+- `BatchSize` - The number of data points to sync at a time.
 ## TODO
 
 - [x] Create an activitywatch client to interact with ActivityWatch rest API

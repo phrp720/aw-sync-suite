@@ -1,15 +1,6 @@
-package aw
+package errors
 
 import "fmt"
-
-// Define custom error types
-type EnvVarError struct {
-	VarName string
-}
-
-func (e *EnvVarError) Error() string {
-	return fmt.Sprintf("Environment variable %s is not set or is empty", e.VarName)
-}
 
 type HTTPError struct {
 	URL string
