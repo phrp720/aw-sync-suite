@@ -8,7 +8,11 @@ import (
 
 // getExcludedWatchers gets the excluded watchers from the environment variable
 func getExcludedWatchers(excludedWatchers string) []string {
-	return strings.Split(excludedWatchers, "|")
+	excluded := strings.Split(excludedWatchers, "|")
+	if len(excluded) == 1 && excluded[0] == "" {
+		return []string{}
+	}
+	return excluded
 }
 
 // RemoveExcludedWatchers removes the excluded watchers from the buckets
