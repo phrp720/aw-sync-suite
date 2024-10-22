@@ -6,7 +6,7 @@ Grafana will then be used to visualize the data.
 
 
 
-### This repo contains the following components:
+### This repo contains the following packages:
 
 - `aw`: A client to interact with the ActivityWatch REST API.
 - `prometheus-client`: A client to interact with the Prometheus REST API.
