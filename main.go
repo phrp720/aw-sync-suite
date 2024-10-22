@@ -16,6 +16,7 @@ func main() {
 		log.Println("Running as a service")
 		// Add your code to run the agent as a service here
 	} else {
+
 		log.Println("Running as a regular application")
 		// Pass the map to the synchronizer.Start function
 		if !util.PromHealthCheck(*Settings[settings.PrometheusUrl]) {

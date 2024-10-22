@@ -1,6 +1,22 @@
 # aw-sync-agent
 
-This is an open-source ActivityWatch sync agent. The purpose of this agent is to function as a service, collecting data from ActivityWatch and pushing it to a central monitoring system, Prometheus. Grafana will then be used to visualize the data.
+This is an open-source ActivityWatch sync agent. The purpose of this agent is to function as a service, collecting data from ActivityWatch and pushing it to a central monitoring system, Prometheus. 
+
+Grafana will then be used to visualize the data.
+
+
+
+### This repo contains the following components:
+
+- `aw`: A client to interact with the ActivityWatch REST API.
+- `prometheus-client`: A client to interact with the Prometheus REST API.
+- `synchronizer`: The sync agent that pushes data from ActivityWatch to Prometheus.
+- `checkpoint`: Contains the checkpoint mechanism to keep track of the last data pushed.
+- `errors`: Contains the error handlers to handle errors.
+- `datamanager`: Manages the data processing and pushing to Prometheus.
+- `settings`: Handles the configuration settings for the agent.
+- `util`: Contains utility functions such as health checks.
+
 
 ### Settings
 
@@ -14,6 +30,15 @@ This is an open-source ActivityWatch sync agent. The purpose of this agent is to
 | `-prometheusUrl`    | `PROMETHEUS_URL`     | The URL of the Prometheus server.                                                         | true      | -                                                 |
 | `-userID`           | `USER_ID`            | The name of the user that we scrape data                                                  | false     | The name of the computer otherwise a generated id |
 
+
+### Makefile commands
+
+- `make build`: Builds the agent.
+- `make run`: Runs the agent.
+- `make dev-run`: Runs the agent in dev-mode.
+- `make test`: Runs the tests.
+- `make format`: Formats the code.
+- `make clean`: Cleans the project.
 
 ### What we expect:
 
