@@ -2,6 +2,7 @@ package datamanager
 
 import (
 	"aw-sync-agent/aw"
+	"aw-sync-agent/checkpoint"
 	"aw-sync-agent/prometheus"
 	"aw-sync-agent/util"
 	"context"
@@ -26,7 +27,9 @@ func ScrapeData(awUrl string, excludedWatchers string) (aw.WatcherNameToEventsMa
 	eventsMap := make(aw.WatcherNameToEventsMap)
 	for name, bucket := range buckets {
 		log.Print("Fetching events from ", bucket.Client, " ...")
-		events, err := aw.GetEvents(awUrl, name, nil, nil, nil)
+		startPoint := checkpoint.Read(bucket.Client)
+		//endPoint := time.Now().AddDate(0, 0, -1) // Set end date to one day before the current date
+		events, err := aw.GetEvents(awUrl, name, startPoint, nil, nil)
 		if err != nil {
 			log.Printf("Error fetching events for bucket %s: %v", bucket.Client, err)
 			return nil, err
@@ -78,9 +81,9 @@ func AggregateData(events []aw.Event, watcher string) []prometheus.TimeSeries {
 }
 
 // PushData pushes  data to the server via the Prometheus Client
-func PushData(client *prometheus.Client, prometheusUrl string, timeseries []prometheus.TimeSeries) error {
-	const chunkSize = 10
-	for i := 0; i < len(timeseries); i += chunkSize {
+func PushData(client *prometheus.Client, prometheusUrl string, timeseries []prometheus.TimeSeries, watcher string) error {
+	const chunkSize = 20
+	for i := 1; i < len(timeseries); i += chunkSize {
 		if !util.PromHealthCheck(prometheusUrl) {
 			log.Print("Prometheus is down. Skipping pushing data and stall instead")
 			time.Sleep(3000 * time.Millisecond)
@@ -97,6 +100,7 @@ func PushData(client *prometheus.Client, prometheusUrl string, timeseries []prom
 			log.Printf("Error pushing data: %v", err)
 			return err
 		}
+		checkpoint.Update(watcher, chunk[len(chunk)-1].Sample.Time)
 		log.Printf("Pushed %d time series records", len(chunk))
 	}
 	return nil

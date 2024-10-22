@@ -60,6 +60,5 @@ func addQueryParams(url string, start *time.Time, end *time.Time, limit *int) st
 			url = fmt.Sprintf("%s?limit=%d", url, *limit)
 		}
 	}
-	print(url, "\n")
 	return url
 }
