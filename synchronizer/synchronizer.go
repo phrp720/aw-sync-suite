@@ -20,7 +20,7 @@ func Start(Settings map[settings.SettingsKey]*string) error {
 	for watcher, data := range scrapedData {
 		log.Print("Pushing data for ", watcher, " ...")
 		aggregatedData := datamanager.AggregateData(data, strings.ReplaceAll(watcher, "-", "_")) //metric names must not have '-'
-		err = datamanager.PushData(prometheusClient, *Settings[settings.PrometheusUrl], aggregatedData)
+		err = datamanager.PushData(prometheusClient, *Settings[settings.PrometheusUrl], aggregatedData, watcher)
 		if err != nil {
 			return err
 		}
