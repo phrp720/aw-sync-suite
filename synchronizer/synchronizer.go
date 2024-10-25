@@ -11,21 +11,21 @@ import (
 )
 
 // Start starts the synchronization process of data with prometheus
-func Start(Settings map[settings.SettingsKey]*string) error {
+func Start(Settings settings.Settings) error {
 
 	log.Print("==================================================================")
 	log.Print("Starting synchronization process...\n")
 	log.Print("==================================================================")
 
-	prometheusClient := prometheus.NewClient(fmt.Sprintf("%s%s", *Settings[settings.PrometheusUrl], "/api/v1/write"))
-	scrapedData, err := datamanager.ScrapeData(*Settings[settings.AWUrl], *Settings[settings.ExcludedWatchers])
+	prometheusClient := prometheus.NewClient(fmt.Sprintf("%s%s", Settings.PrometheusUrl, "/api/v1/write"))
+	scrapedData, err := datamanager.ScrapeData(Settings.AWUrl, Settings.ExcludedWatchers)
 	if err != nil {
 		return err
 	}
 	for watcher, data := range scrapedData {
 		log.Print("Pushing data for ", watcher, " ...")
 		aggregatedData := datamanager.AggregateData(data, strings.ReplaceAll(watcher, "-", "_")) //metric names must not have '-'
-		err = datamanager.PushData(prometheusClient, *Settings[settings.PrometheusUrl], aggregatedData, watcher)
+		err = datamanager.PushData(prometheusClient, Settings.PrometheusUrl, aggregatedData, watcher)
 		if err != nil {
 			return err
 		}
@@ -40,9 +40,9 @@ func Start(Settings map[settings.SettingsKey]*string) error {
 }
 
 // SyncRoutine returns a function that init the synchronization and starts the  process
-func SyncRoutine(Settings map[settings.SettingsKey]*string) func() {
+func SyncRoutine(Settings settings.Settings) func() {
 	return func() {
-		if !util.PromHealthCheck(*Settings[settings.PrometheusUrl]) {
+		if !util.PromHealthCheck(Settings.PrometheusUrl) {
 			log.Fatal("Prometheus is not reachable or you don't have internet connection")
 		}
 		err := Start(Settings)
