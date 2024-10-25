@@ -27,19 +27,14 @@ func main() {
 		}
 		os.Exit(0)
 	}
-	if Settings.Standalone {
-		log.Print("Running as a service...")
-		log.Print("Setting up Sync Cronjob...")
-		scheduler := util.ValidateCronExpr(Settings.Cron)
-		c := cron.Init()
-		cron.Add(c, scheduler, synchronizer.SyncRoutine(*Settings))
-		cron.Start(c)
+	log.Print("Setting up Sync Cronjob...")
+	scheduler := util.ValidateCronExpr(Settings.Cron)
+	c := cron.Init()
+	cron.Add(c, scheduler, synchronizer.SyncRoutine(*Settings))
+	cron.Start(c)
 
-		log.Print("Agent Started Successfully")
+	log.Print("Agent Started Successfully")
 
-		// Keep the main program running
-		select {}
-	}
-	log.Print("If you want to run the agent as a service, please run the agent with the -service flag")
-	log.Print("If you want to run the agent as a standalone process, please run the agent with the -standalone flag")
+	// Keep the main program running
+	select {}
 }

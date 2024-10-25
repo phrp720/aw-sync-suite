@@ -2,8 +2,6 @@ aw-url: "http://localhost:5600"
 prometheus-url: "http://localhost:9090"
 min-data: 100
 userId: DemoTester
-cron: "* 1 * * * "
-service: false  # set to true if you want to run it as a service
-standalone: true  # set to true if you want to run it in a standalone mode(docker)
+cron: "* * * * * "
 excluded-watchers:
   - aw-watcher-afk

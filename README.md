@@ -25,14 +25,14 @@ Grafana will then be used to visualize the data.
 - `util`: Contains utility functions such as health checks.
 - `scripts`: Contains the scripts to run the agent as a service.
 - `cron`: Contains the cron manager .
+- `service`: Contains the as A Service manager.
 
 
 ### Settings
 
-| Flag                | Environment Variable | Config Key          | Description                                                                               | Mandatory | Default                                           |
+| Flag                | Environment Variable | Config Key          | Description                                                                               | Mandatory | Default Value                                     |
 |---------------------|----------------------|---------------------|-------------------------------------------------------------------------------------------|-----------|---------------------------------------------------|
-| `-service`          | -                    | `service`           | Run the agent as a service.                                                               | false     | false                                             |
-| `-standalone`       | -                    | `standalone`        | Run the agent as a standalone.                                                            | false     | false                                             |
+| `-service`          | -                    | -                   | Run the agent as a service.                                                               | false     | false                                             |
 | `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | The URL of the ActivityWatch server.                                                      | true      | -                                                 |
 | `-cron`             | `CRON`               | `cron`              | A cron expression to run the sync agent.                                                  | false     | Every 5 minutes                                   |
 | `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | A pipe-separated list of watchers to exclude from the sync agent.                         | false     | -                                                 |

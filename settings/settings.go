@@ -7,7 +7,6 @@ import (
 	"gopkg.in/yaml.v3"
 	"log"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -23,7 +22,6 @@ const (
 	Cron             SettingsKey = "cron"
 	MinData          SettingsKey = "min-data"
 	AsService        SettingsKey = "service"
-	Standalone       SettingsKey = "standalone"
 )
 const configFile = "config.yaml"
 
@@ -34,8 +32,7 @@ type Settings struct {
 	UserID           string   `yaml:"userId"`
 	Cron             string   `yaml:"cron"`
 	MinData          string   `yaml:"min-data"`
-	AsService        bool     `yaml:"service"`
-	Standalone       bool     `yaml:"standalone"`
+	AsService        bool
 }
 
 func InitSettings() *Settings {
@@ -60,6 +57,8 @@ func loadYAMLConfig(filename string) Settings {
 		if err := decoder.Decode(&settings); err != nil {
 			log.Fatalf("Failed to decode settings file: %v", err)
 		}
+		// Remove loading of SERVICE and STANDALONE from YAML config
+		settings.AsService = false
 	}
 
 	return settings
@@ -88,12 +87,7 @@ func loadEnvVariables(settings *Settings) {
 	if value, exists := os.LookupEnv("MIN_DATA"); exists {
 		settings.MinData = value
 	}
-	if value, exists := os.LookupEnv("SERVICE"); exists {
-		settings.AsService, _ = strconv.ParseBool(value)
-	}
-	if value, exists := os.LookupEnv("STANDALONE"); exists {
-		settings.Standalone, _ = strconv.ParseBool(value)
-	}
+
 }
 
 func loadFlags(settings *Settings) {
@@ -103,7 +97,6 @@ func loadFlags(settings *Settings) {
 	flag.StringVar(&settings.Cron, string(Cron), settings.Cron, "Cron expression")
 	flag.StringVar(&settings.MinData, string(MinData), settings.MinData, "Minimum data")
 	flag.BoolVar(&settings.AsService, string(AsService), settings.AsService, "Run as service")
-	flag.BoolVar(&settings.Standalone, string(Standalone), settings.Standalone, "Run in standalone mode")
 	flag.Parse()
 }
 
@@ -132,7 +125,6 @@ func printSettings(settings *Settings) {
 		Cron:             settings.Cron,
 		MinData:          settings.MinData,
 		AsService:        fmt.Sprintf("%t", settings.AsService),
-		Standalone:       fmt.Sprintf("%t", settings.Standalone),
 	}
 
 	maxKeyLength := 0
