@@ -82,7 +82,7 @@ func CheckSettingValue(value string, isMandatory bool) {
 }
 func validateSettings(settings map[SettingsKey]*string) map[SettingsKey]*string {
 	for key, value := range settings {
-		if key == Cron && *value == "" {
+		if key == Cron && *value == "" && isService() {
 			log.Print("Cron expression is empty, setting it to default value: */5 * * * * (every 5 minutes)")
 
 			*value = "@every 5m"

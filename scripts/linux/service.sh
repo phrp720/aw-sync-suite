@@ -29,7 +29,7 @@ Description=ActivityWatch Sync Agent
 After=network.target
 
 [Service]
-ExecStart=$APP_PATH
+ExecStart=$APP_PATH -service
 Restart=always
 User=$(whoami)
 Group=$(whoami)
