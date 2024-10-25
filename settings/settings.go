@@ -3,9 +3,11 @@ package settings
 import (
 	"aw-sync-agent/errors"
 	"flag"
+	"fmt"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"strings"
 )
 
 // SettingsKey is a custom type for settings keys
@@ -34,9 +36,11 @@ func InitSettings() map[SettingsKey]*string {
 		AsService:        InitFlag("AS_SERVICE", "asService", false),
 	}
 	flag.Parse()
+	validateSettings(Settings)
 	for key, value := range Settings {
 		CheckSettingValue(*value, key == AWUrl || key == PrometheusUrl)
 	}
+	PrintSettings(Settings)
 	return Settings
 }
 func GetEnvVar(variable string, mandatory bool) (string, error) {
@@ -65,4 +69,40 @@ func CheckSettingValue(value string, isMandatory bool) {
 	if value == "" && isMandatory {
 		log.Fatalf("The %s is mandatory", value)
 	}
+
+}
+func validateSettings(settings map[SettingsKey]*string) map[SettingsKey]*string {
+	for key, value := range settings {
+		if key == Cron && *value == "" {
+			log.Print("Cron expression is empty, setting it to default value: */5 * * * * (every 5 minutes)")
+
+			*value = "@every 5m"
+		}
+		if key == AsService && *value == "" {
+			*value = "false"
+		}
+	}
+	return settings
+}
+
+// PrintSettings prints the settings in a symmetric box format
+func PrintSettings(settings map[SettingsKey]*string) {
+	log.Print("Current Settings:")
+	maxKeyLength := 0
+	maxValueLength := 0
+	for key, value := range settings {
+		if len(key) > maxKeyLength {
+			maxKeyLength = len(key)
+		}
+		if len(*value) > maxValueLength {
+			maxValueLength = len(*value)
+		}
+	}
+	borderLength := maxKeyLength + maxValueLength + 7
+	border := strings.Repeat("-", borderLength)
+	fmt.Println(border)
+	for key, value := range settings {
+		fmt.Printf("| %-*s | %-*s |\n", maxKeyLength, key, maxValueLength, *value)
+	}
+	fmt.Println(border)
 }

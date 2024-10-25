@@ -11,7 +11,11 @@ import (
 
 // Start starts the synchronization process of data with prometheus
 func Start(Settings map[settings.SettingsKey]*string) error {
+
+	log.Print("==================================================================")
 	log.Print("Starting synchronization process...\n")
+	log.Print("==================================================================")
+
 	prometheusClient := prometheus.NewClient(fmt.Sprintf("%s%s", *Settings[settings.PrometheusUrl], "/api/v1/write"))
 	scrapedData, err := datamanager.ScrapeData(*Settings[settings.AWUrl], *Settings[settings.ExcludedWatchers])
 	if err != nil {
@@ -26,6 +30,10 @@ func Start(Settings map[settings.SettingsKey]*string) error {
 		}
 		log.Print("Data pushed successfully for ", watcher, "\n")
 	}
+
+	log.Print("==================================================================")
 	log.Print("Synchronization process finished successfully\n")
+	log.Print("==================================================================")
+
 	return nil
 }
