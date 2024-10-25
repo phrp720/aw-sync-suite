@@ -14,7 +14,7 @@ import (
 // SettingsKey is a custom type for settings keys
 type SettingsKey string
 
-// Define constants for each setting name
+// Define constants for each setting name(These values are the flags and the environment variables)
 const (
 	AWUrl            SettingsKey = "awUrl"
 	PrometheusUrl    SettingsKey = "prometheusUrl"
@@ -29,14 +29,14 @@ const (
 func InitSettings() map[SettingsKey]*string {
 	// These are the settings that contains the Env Variables/Flags
 	Settings := map[SettingsKey]*string{
-		AWUrl:            InitFlag("ACTIVITY_WATCH_URL", "awUrl", true),
-		PrometheusUrl:    InitFlag("PROMETHEUS_URL", "prometheusUrl", true),
-		ExcludedWatchers: InitFlag("EXCLUDED_WATCHERS", "excludedWatchers", false),
-		UserID:           InitFlag("USER_ID", "userID", false),
-		Cron:             InitFlag("CRON", "cron", false),
-		MinData:          InitFlag("MIN_DATA", "minData", false),
-		AsService:        InitBooleanFlag("service"),
-		Standalone:       InitBooleanFlag("standalone"),
+		AWUrl:            InitFlag("ACTIVITY_WATCH_URL", string(AWUrl), true),
+		PrometheusUrl:    InitFlag("PROMETHEUS_URL", string(PrometheusUrl), true),
+		ExcludedWatchers: InitFlag("EXCLUDED_WATCHERS", string(ExcludedWatchers), false),
+		UserID:           InitFlag("USER_ID", string(UserID), false),
+		Cron:             InitFlag("CRON", string(Cron), false),
+		MinData:          InitFlag("MIN_DATA", string(MinData), false),
+		AsService:        InitBooleanFlag(string(AsService)),
+		Standalone:       InitBooleanFlag(string(Standalone)),
 	}
 	flag.Parse()
 	validateSettings(Settings)
