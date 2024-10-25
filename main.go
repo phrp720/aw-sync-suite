@@ -18,7 +18,7 @@ func main() {
 	log.Print("Setting up Sync Cronjob...")
 	scheduler := util.ValidateCronExpr(*Settings[settings.Cron])
 
-	c := cron.InitCron()
+	c := cron.Init()
 	cron.Add(c, scheduler, synchronizer.SyncRoutine(Settings))
 	cron.Start(c)
 
