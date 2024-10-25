@@ -31,9 +31,8 @@ func main() {
 		log.Print("Running as a service...")
 		log.Print("Setting up Sync Cronjob...")
 		scheduler := util.ValidateCronExpr(Settings.Cron)
-		print(scheduler)
 		c := cron.Init()
-		cron.Add(c, "@every 5s", synchronizer.SyncRoutine(*Settings))
+		cron.Add(c, scheduler, synchronizer.SyncRoutine(*Settings))
 		cron.Start(c)
 
 		log.Print("Agent Started Successfully")
