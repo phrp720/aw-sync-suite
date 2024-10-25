@@ -1,10 +1,10 @@
 package main
 
 import (
+	"aw-sync-agent/cron"
 	"aw-sync-agent/settings"
 	"aw-sync-agent/synchronizer"
 	"aw-sync-agent/util"
-	"github.com/robfig/cron"
 	"log"
 )
 
@@ -17,22 +17,11 @@ func main() {
 
 	log.Print("Setting up Sync Cronjob...")
 	scheduler := util.ValidateCronExpr(*Settings[settings.Cron])
-	sync := func() {
-		if !util.PromHealthCheck(*Settings[settings.PrometheusUrl]) {
-			log.Fatal("Prometheus is not reachable or you don't have internet connection")
-		}
-		err := synchronizer.Start(Settings)
-		if err != nil {
-			panic(err) // handle if something wrong happens
-		}
-	}
-	c := cron.New()
 
-	err := c.AddFunc(scheduler, sync)
-	if err != nil {
-		log.Print(err)
-	}
-	c.Start()
+	c := cron.InitCron()
+	cron.Add(c, scheduler, synchronizer.SyncRoutine(Settings))
+	cron.Start(c)
+
 	log.Print("Agent Started Successfully")
 
 	// Keep the main program running

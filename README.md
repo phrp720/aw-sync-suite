@@ -16,6 +16,7 @@ Grafana will then be used to visualize the data.
 - `datamanager`: Manages the data processing and pushing to Prometheus.
 - `settings`: Handles the configuration settings for the agent.
 - `util`: Contains utility functions such as health checks.
+- `scripts`: Contains the scripts to run the agent as a service.
 
 
 ### Settings
@@ -24,7 +25,7 @@ Grafana will then be used to visualize the data.
 |---------------------|----------------------|-------------------------------------------------------------------------------------------|-----------|---------------------------------------------------|
 | `-asService`        | `AS_SERVICE`         | Run the agent as a service.                                                               | false     | false                                             |
 | `-awUrl`            | `ACTIVITY_WATCH_URL` | The URL of the ActivityWatch server.                                                      | true      | -                                                 |
-| `-cron`             | `CRON`               | A cron expression to run the sync agent.                                                  | false     | Every 10 minutes                                  |
+| `-cron`             | `CRON`               | A cron expression to run the sync agent.                                                  | false     | Every 5 minutes                                   |
 | `-excludedWatchers` | `EXCLUDED_WATCHERS`  | A pipe-separated list of watchers to exclude from the sync agent.                         | false     | -                                                 |
 | `-minData`          | `MIN_DATA`           | The minimum amount of data that a watcher needs to have to be included in the sync agent. | false     | 5                                                 |
 | `-prometheusUrl`    | `PROMETHEUS_URL`     | The URL of the Prometheus server.                                                         | true      | -                                                 |

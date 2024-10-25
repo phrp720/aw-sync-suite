@@ -7,13 +7,13 @@ ifeq ($(OS), windows)
  DEV_BUILD := GOOS=windows go build -o bin/agent.exe main.go
  CLEAN := rm -rf C:/aw-sync-agent
  ##Service commands
- SERVICE := scripts/windows_service/service.bat
+ SERVICE := scripts/windows/service.bat
 else
  BUILD := sudo go build -o /bin/agent main.go && sudo cp -r .env /bin/.env
  DEV_BUILD := go build -o bin/agent main.go
  CLEAN :=  sudo rm -rf /bin/agent && sudo rm -rf /bin/.env
  ##Service commands
- SERVICE := sudo scripts/linux_service/service.sh
+ SERVICE := sudo scripts/linux/service.sh
 endif
 
 ##Development commands

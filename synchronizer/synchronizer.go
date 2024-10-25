@@ -4,6 +4,7 @@ import (
 	"aw-sync-agent/datamanager"
 	"aw-sync-agent/prometheus"
 	"aw-sync-agent/settings"
+	"aw-sync-agent/util"
 	"fmt"
 	"log"
 	"strings"
@@ -36,4 +37,17 @@ func Start(Settings map[settings.SettingsKey]*string) error {
 	log.Print("==================================================================")
 
 	return nil
+}
+
+// SyncRoutine returns a function that init the synchronization and starts the  process
+func SyncRoutine(Settings map[settings.SettingsKey]*string) func() {
+	return func() {
+		if !util.PromHealthCheck(*Settings[settings.PrometheusUrl]) {
+			log.Fatal("Prometheus is not reachable or you don't have internet connection")
+		}
+		err := Start(Settings)
+		if err != nil {
+			panic(err) // handle if something wrong happens
+		}
+	}
 }
