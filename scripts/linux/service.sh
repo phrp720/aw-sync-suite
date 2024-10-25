@@ -1,7 +1,7 @@
 #!/bin/bash
 
 APP_NAME="aw-sync-agent"
-APP_PATH="/bin/agent"
+APP_PATH="/bin/aw/agent"
 SERVICE_FILE="/etc/systemd/system/$APP_NAME.service"
 GO_VERSION="go1.23.2"
 
@@ -19,7 +19,7 @@ GO_VERSION="go1.23.2"
 # Build the Go application
 echo "Building ActivityWatch Sync Agent..."
 go build -o $APP_PATH main.go
-cp -r .env /bin/.env
+cp -r .env /bin/aw/.env
 
 # Create systemd service file
 echo "Creating systemd service file..."

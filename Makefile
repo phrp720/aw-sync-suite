@@ -3,29 +3,16 @@ MAKEFLAGS += --no-print-directory
 ## Determine the OS and set the destination path
 OS := $(shell go run scripts/detect_os.go)
 ifeq ($(OS), windows)
- BUILD := GOOS=windows go build -o C:/aw-sync-agent/agent.exe main.go && cp -r .env C:/aw-sync-agent/.env
- DEV_BUILD := GOOS=windows go build -o bin/agent.exe main.go
+ BUILD := GOOS=windows go build -o bin/agent.exe main.go
  CLEAN := rm -rf C:/aw-sync-agent
  ##Service commands
  SERVICE := scripts/windows/service.bat
 else
- BUILD := sudo go build -o /bin/agent main.go && sudo cp -r .env /bin/.env
- DEV_BUILD := go build -o bin/agent main.go
- CLEAN :=  sudo rm -rf /bin/agent && sudo rm -rf /bin/.env
+ BUILD := go build -o bin/agent main.go
+ CLEAN :=  sudo rm -rf /bin/aw
  ##Service commands
  SERVICE := sudo scripts/linux/service.sh
 endif
-
-##Development commands
-dev-run:
-	@go run main.go -asService=false -awUrl=http://localhost:5600 -prometheusUrl=http://localhost:9090 -userID=DevUser
-
-dev-build:
-	@$(DEV_BUILD)
-	@cp -r .env bin/.env
-
-dev-clean:
-	@rm -rf bin
 
 
 ##General commands
@@ -34,7 +21,7 @@ run:
 
 build:
 	@$(BUILD)
-
+	@cp -r .env bin/.env
 
 check-os:
 	@go run scripts/detect_os.go
@@ -43,7 +30,8 @@ test:
 	@go test -v ./...
 
 clean:
-	@$(CLEAN)
+	@rm -rf bin
+
 
 format:
 	@gofmt -s -w .
@@ -68,6 +56,7 @@ service-remove:
 	@echo "Deleting ActivityWatch Sync Agent service..."
 	@sudo rm /etc/systemd/system/aw-sync-agent.service
 	@sudo systemctl daemon-reload
+	@$(CLEAN)
 
 service-restart:
 	@echo "Restarting ActivityWatch Sync Agent service..."
@@ -75,6 +64,6 @@ service-restart:
 
 service-update:
 	@echo "Re-Building ActivityWatch Sync Agent application..."
-	@go build -o $APP_PATH main.go
-	@sudo cp -r .env /bin/.env
+	@sudo go build -o /bin/aw/agent main.go
+	@sudo cp -r .env /bin/aw/.env
 	@$(MAKE) service-restart

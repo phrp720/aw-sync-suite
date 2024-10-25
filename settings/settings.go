@@ -22,7 +22,8 @@ const (
 	UserID           SettingsKey = "userID"
 	Cron             SettingsKey = "cron"
 	MinData          SettingsKey = "minData"
-	AsService        SettingsKey = "asService"
+	AsService        SettingsKey = "service"
+	Standalone       SettingsKey = "standalone"
 )
 
 func InitSettings() map[SettingsKey]*string {
@@ -34,7 +35,8 @@ func InitSettings() map[SettingsKey]*string {
 		UserID:           InitFlag("USER_ID", "userID", false),
 		Cron:             InitFlag("CRON", "cron", false),
 		MinData:          InitFlag("MIN_DATA", "minData", false),
-		AsService:        InitServiceFlag("service"),
+		AsService:        InitBooleanFlag("service"),
+		Standalone:       InitBooleanFlag("standalone"),
 	}
 	flag.Parse()
 	validateSettings(Settings)
@@ -66,9 +68,9 @@ func InitFlag(envVarName string, flagName string, isMandatory bool) *string {
 	return flagValue
 }
 
-func InitServiceFlag(flagName string) *string {
+func InitBooleanFlag(flagName string) *string {
 	// Define the command-line flag and sets the default value to the environment variable value
-	flagValue := flag.Bool(flagName, false, "Run as a service")
+	flagValue := flag.Bool(flagName, false, "")
 	flagValueStr := strconv.FormatBool(*flagValue)
 
 	return &flagValueStr
@@ -82,21 +84,16 @@ func CheckSettingValue(value string, isMandatory bool) {
 }
 func validateSettings(settings map[SettingsKey]*string) map[SettingsKey]*string {
 	for key, value := range settings {
-		if key == Cron && *value == "" && isService() {
+		if key == Cron && *value == "" {
 			log.Print("Cron expression is empty, setting it to default value: */5 * * * * (every 5 minutes)")
 
 			*value = "@every 5m"
 		}
-		if key == AsService && *value == "" {
-			*value = "false"
-		}
-		// Check if the -service flag was set
-		if isService() {
-			srv := "true"
-			settings[AsService] = &srv
-		}
-		//
+
 	}
+	SetBooleanSetting(settings, AsService)
+	SetBooleanSetting(settings, Standalone)
+
 	return settings
 }
 
@@ -122,13 +119,31 @@ func PrintSettings(settings map[SettingsKey]*string) {
 	fmt.Println(border)
 }
 
-func isService() bool {
+func FlagExists(flg string) bool {
 	// Check if the -service flag was set
-	IsService := false
+	Exists := false
 	flag.Visit(func(f *flag.Flag) {
-		if f.Name == "service" {
-			IsService = true
+		if f.Name == flg {
+			Exists = true
 		}
 	})
-	return IsService
+	return Exists
+}
+
+func SetBooleanSetting(settings map[SettingsKey]*string, key SettingsKey) {
+	if FlagExists(string(key)) {
+		srv := "true"
+		settings[key] = &srv
+	} else {
+		srv := "false"
+		settings[key] = &srv
+	}
+}
+
+func IsStandalone(standalone string) bool {
+	return standalone == "true"
+}
+
+func IsService(service string) bool {
+	return service == "true"
 }
