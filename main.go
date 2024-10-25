@@ -14,12 +14,14 @@ func main() {
 
 	log.Print("Initializing settings...")
 	Settings := settings.InitSettings()
-
+	if *Settings[settings.AsService] == "true" {
+		log.Print("Running as a service...")
+	}
 	log.Print("Setting up Sync Cronjob...")
 	scheduler := util.ValidateCronExpr(*Settings[settings.Cron])
-
+	print(scheduler)
 	c := cron.Init()
-	cron.Add(c, scheduler, synchronizer.SyncRoutine(Settings))
+	cron.Add(c, "@every 5s", synchronizer.SyncRoutine(Settings))
 	cron.Start(c)
 
 	log.Print("Agent Started Successfully")

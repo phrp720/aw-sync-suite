@@ -5,6 +5,13 @@ This is an open-source ActivityWatch sync agent. The purpose of this agent is to
 Grafana will then be used to visualize the data.
 
 
+## Requirements
+
+- To run this agent by yourself, you need the following:
+  - Go  Version >= 1.23
+  - Make
+
+- If you got the executable file ,there are no dependencies or requirements.
 
 ### This repo contains the following packages:
 
@@ -17,13 +24,14 @@ Grafana will then be used to visualize the data.
 - `settings`: Handles the configuration settings for the agent.
 - `util`: Contains utility functions such as health checks.
 - `scripts`: Contains the scripts to run the agent as a service.
+- `cron`: Contains the cron manager .
 
 
 ### Settings
 
 | Flag                | Environment Variable | Description                                                                               | Mandatory | Default                                           |
 |---------------------|----------------------|-------------------------------------------------------------------------------------------|-----------|---------------------------------------------------|
-| `-asService`        | `AS_SERVICE`         | Run the agent as a service.                                                               | false     | false                                             |
+| `-service`          | -                    | Run the agent as a service.                                                               | false     | false                                             |
 | `-awUrl`            | `ACTIVITY_WATCH_URL` | The URL of the ActivityWatch server.                                                      | true      | -                                                 |
 | `-cron`             | `CRON`               | A cron expression to run the sync agent.                                                  | false     | Every 5 minutes                                   |
 | `-excludedWatchers` | `EXCLUDED_WATCHERS`  | A pipe-separated list of watchers to exclude from the sync agent.                         | false     | -                                                 |

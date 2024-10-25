@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -33,7 +34,7 @@ func InitSettings() map[SettingsKey]*string {
 		UserID:           InitFlag("USER_ID", "userID", false),
 		Cron:             InitFlag("CRON", "cron", false),
 		MinData:          InitFlag("MIN_DATA", "minData", false),
-		AsService:        InitFlag("AS_SERVICE", "asService", false),
+		AsService:        InitServiceFlag("service"),
 	}
 	flag.Parse()
 	validateSettings(Settings)
@@ -65,6 +66,14 @@ func InitFlag(envVarName string, flagName string, isMandatory bool) *string {
 	return flagValue
 }
 
+func InitServiceFlag(flagName string) *string {
+	// Define the command-line flag and sets the default value to the environment variable value
+	flagValue := flag.Bool(flagName, false, "Run as a service")
+	flagValueStr := strconv.FormatBool(*flagValue)
+
+	return &flagValueStr
+}
+
 func CheckSettingValue(value string, isMandatory bool) {
 	if value == "" && isMandatory {
 		log.Fatalf("The %s is mandatory", value)
@@ -81,6 +90,12 @@ func validateSettings(settings map[SettingsKey]*string) map[SettingsKey]*string 
 		if key == AsService && *value == "" {
 			*value = "false"
 		}
+		// Check if the -service flag was set
+		if isService() {
+			srv := "true"
+			settings[AsService] = &srv
+		}
+		//
 	}
 	return settings
 }
@@ -105,4 +120,15 @@ func PrintSettings(settings map[SettingsKey]*string) {
 		fmt.Printf("| %-*s | %-*s |\n", maxKeyLength, key, maxValueLength, *value)
 	}
 	fmt.Println(border)
+}
+
+func isService() bool {
+	// Check if the -service flag was set
+	IsService := false
+	flag.Visit(func(f *flag.Flag) {
+		if f.Name == "service" {
+			IsService = true
+		}
+	})
+	return IsService
 }
