@@ -43,11 +43,13 @@ func Start(Settings settings.Settings) error {
 func SyncRoutine(Settings settings.Settings) func() {
 	return func() {
 		if !util.PromHealthCheck(Settings.PrometheusUrl) {
-			log.Fatal("Prometheus is not reachable or you don't have internet connection")
+			log.Print("Prometheus is not reachable or Internet connection is lost. Data will be pushed when health is recovered")
+		} else {
+			err := Start(Settings)
+			if err != nil {
+				log.Print(err) // handle if something wrong happens
+			}
 		}
-		err := Start(Settings)
-		if err != nil {
-			panic(err) // handle if something wrong happens
-		}
+
 	}
 }

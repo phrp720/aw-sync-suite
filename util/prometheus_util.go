@@ -16,7 +16,6 @@ func PromHealthCheck(prometheusUrl string) bool {
 
 	resp, err := client.Get(url)
 	if err != nil {
-		fmt.Printf("Error checking Prometheus' URL: %v\n", err)
 		return false
 	}
 	defer resp.Body.Close()

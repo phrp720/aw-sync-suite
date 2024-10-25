@@ -97,6 +97,7 @@ func loadFlags(settings *Settings) {
 	flag.StringVar(&settings.Cron, string(Cron), settings.Cron, "Cron expression")
 	flag.StringVar(&settings.MinData, string(MinData), settings.MinData, "Minimum data")
 	flag.BoolVar(&settings.AsService, string(AsService), settings.AsService, "Run as service")
+
 	flag.Parse()
 }
 
