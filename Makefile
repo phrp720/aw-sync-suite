@@ -3,12 +3,12 @@ MAKEFLAGS += --no-print-directory
 ## Determine the OS and set the destination path
 OS := $(shell go run scripts/detect_os.go)
 ifeq ($(OS), windows)
- BUILD := GOOS=windows go build -o bin/agent.exe main.go
+ BUILD := GOOS=windows go build -o agent.exe main.go
  CLEAN := rm -rf C:/aw-sync-agent
  ##Service commands
  SERVICE := scripts/windows/service.bat
 else
- BUILD := go build -o bin/agent main.go
+ BUILD := go build -o agent main.go
  CLEAN :=  sudo rm -rf /bin/aw
  ##Service commands
  SERVICE := sudo scripts/linux/service.sh
@@ -21,17 +21,12 @@ run:
 
 build:
 	@$(BUILD)
-	@cp -r .env bin/.env
 
 check-os:
 	@go run scripts/detect_os.go
 
-test:
-	@go test -v ./...
-
 clean:
-	@rm -rf bin
-
+	@rm -rf agent*
 
 format:
 	@gofmt -s -w .
@@ -65,5 +60,4 @@ service-restart:
 service-update:
 	@echo "Re-Building ActivityWatch Sync Agent application..."
 	@sudo go build -o /bin/aw/agent main.go
-	@sudo cp -r .env /bin/aw/.env
 	@$(MAKE) service-restart
