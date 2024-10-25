@@ -50,6 +50,10 @@ func AggregateData(events []aw.Event, watcher string) []prometheus.TimeSeries {
 	sort.Slice(events, func(i, j int) bool {
 		return events[i].Timestamp.Before(events[j].Timestamp)
 	})
+	// Remove the newest event
+	if len(events) > 0 {
+		events = events[:len(events)-1]
+	}
 	var timeSeriesList []prometheus.TimeSeries
 
 	for _, event := range events {
@@ -83,7 +87,7 @@ func AggregateData(events []aw.Event, watcher string) []prometheus.TimeSeries {
 // PushData pushes  data to the server via the Prometheus Client
 func PushData(client *prometheus.Client, prometheusUrl string, timeseries []prometheus.TimeSeries, watcher string) error {
 	const chunkSize = 20
-	for i := 1; i < len(timeseries); i += chunkSize {
+	for i := 0; i < len(timeseries); i += chunkSize {
 		if !util.PromHealthCheck(prometheusUrl) {
 			log.Print("Prometheus is down. Skipping pushing data and stall instead")
 			time.Sleep(3000 * time.Millisecond)
