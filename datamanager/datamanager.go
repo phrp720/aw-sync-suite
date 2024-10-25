@@ -13,7 +13,7 @@ import (
 )
 
 // ScrapeData scrapes the data from the local ActivityWatch instance via the aw Client
-func ScrapeData(awUrl string, excludedWatchers string) (aw.WatcherNameToEventsMap, error) {
+func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEventsMap, error) {
 	log.Print("Fetching buckets  ...\n")
 	buckets, err := aw.GetBuckets(awUrl)
 	if err != nil {

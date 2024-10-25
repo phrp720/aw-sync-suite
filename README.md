@@ -29,16 +29,22 @@ Grafana will then be used to visualize the data.
 
 ### Settings
 
-| Flag                | Environment Variable | Description                                                                               | Mandatory | Default                                           |
-|---------------------|----------------------|-------------------------------------------------------------------------------------------|-----------|---------------------------------------------------|
-| `-service`          | -                    | Run the agent as a service.                                                               | false     | false                                             |
-| `-awUrl`            | `ACTIVITY_WATCH_URL` | The URL of the ActivityWatch server.                                                      | true      | -                                                 |
-| `-cron`             | `CRON`               | A cron expression to run the sync agent.                                                  | false     | Every 5 minutes                                   |
-| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | A pipe-separated list of watchers to exclude from the sync agent.                         | false     | -                                                 |
-| `-minData`          | `MIN_DATA`           | The minimum amount of data that a watcher needs to have to be included in the sync agent. | false     | 5                                                 |
-| `-prometheusUrl`    | `PROMETHEUS_URL`     | The URL of the Prometheus server.                                                         | true      | -                                                 |
-| `-userID`           | `USER_ID`            | The name of the user that we scrape data                                                  | false     | The name of the computer otherwise a generated id |
+| Flag                | Environment Variable | Config Key          | Description                                                                               | Mandatory | Default                                           |
+|---------------------|----------------------|---------------------|-------------------------------------------------------------------------------------------|-----------|---------------------------------------------------|
+| `-service`          | -                    | `service`           | Run the agent as a service.                                                               | false     | false                                             |
+| `-standalone`       | -                    | `standalone`        | Run the agent as a standalone.                                                            | false     | false                                             |
+| `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | The URL of the ActivityWatch server.                                                      | true      | -                                                 |
+| `-cron`             | `CRON`               | `cron`              | A cron expression to run the sync agent.                                                  | false     | Every 5 minutes                                   |
+| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | A pipe-separated list of watchers to exclude from the sync agent.                         | false     | -                                                 |
+| `-minData`          | `MIN_DATA`           | `min-data`          | The minimum amount of data that a watcher needs to have to be included in the sync agent. | false     | 5                                                 |
+| `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | The URL of the Prometheus server.                                                         | true      | -                                                 |
+| `-user`             | `USER`               | `user`              | The name of the user that we scrape data                                                  | false     | The name of the computer otherwise a generated id |
 
+### Configuration Hierarchy:
+
+1. Configuration File(config.yaml): This is the base configuration.
+2. Environment Variables: These override the configuration file settings.
+3. Command-Line Flags: These have the highest priority and override both the configuration file and environment variables.
 
 ### Makefile commands
 

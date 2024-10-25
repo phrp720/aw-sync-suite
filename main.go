@@ -16,7 +16,7 @@ func main() {
 
 	log.Print("Initializing settings...")
 	Settings := settings.InitSettings()
-	if settings.IsService(*Settings[settings.AsService]) {
+	if Settings.AsService {
 		//Here we will handle the windows and linux service creation
 		//We will use the nssm for windows and the systemd for linux
 		//We will create a service that will run the agent as a service and with -service flag we will pass all the data to the excutable
@@ -27,13 +27,13 @@ func main() {
 		}
 		os.Exit(0)
 	}
-	if settings.IsStandalone(*Settings[settings.Standalone]) {
+	if Settings.Standalone {
 		log.Print("Running as a service...")
 		log.Print("Setting up Sync Cronjob...")
-		scheduler := util.ValidateCronExpr(*Settings[settings.Cron])
+		scheduler := util.ValidateCronExpr(Settings.Cron)
 		print(scheduler)
 		c := cron.Init()
-		cron.Add(c, "@every 5s", synchronizer.SyncRoutine(Settings))
+		cron.Add(c, "@every 5s", synchronizer.SyncRoutine(*Settings))
 		cron.Start(c)
 
 		log.Print("Agent Started Successfully")

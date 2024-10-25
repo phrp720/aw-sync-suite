@@ -1,10 +1,10 @@
 package settings
 
 import (
-	"aw-sync-agent/errors"
 	"flag"
 	"fmt"
 	"github.com/joho/godotenv"
+	"gopkg.in/yaml.v3"
 	"log"
 	"os"
 	"strconv"
@@ -14,136 +14,143 @@ import (
 // SettingsKey is a custom type for settings keys
 type SettingsKey string
 
-// Define constants for each setting name(These values are the flags and the environment variables)
+// Define constants for each setting name
 const (
 	AWUrl            SettingsKey = "awUrl"
 	PrometheusUrl    SettingsKey = "prometheusUrl"
 	ExcludedWatchers SettingsKey = "excludedWatchers"
-	UserID           SettingsKey = "userID"
+	UserID           SettingsKey = "userId"
 	Cron             SettingsKey = "cron"
-	MinData          SettingsKey = "minData"
+	MinData          SettingsKey = "min-data"
 	AsService        SettingsKey = "service"
 	Standalone       SettingsKey = "standalone"
 )
+const configFile = "config.yaml"
 
-func InitSettings() map[SettingsKey]*string {
-	// These are the settings that contains the Env Variables/Flags
-	Settings := map[SettingsKey]*string{
-		AWUrl:            InitFlag("ACTIVITY_WATCH_URL", string(AWUrl), true),
-		PrometheusUrl:    InitFlag("PROMETHEUS_URL", string(PrometheusUrl), true),
-		ExcludedWatchers: InitFlag("EXCLUDED_WATCHERS", string(ExcludedWatchers), false),
-		UserID:           InitFlag("USER_ID", string(UserID), false),
-		Cron:             InitFlag("CRON", string(Cron), false),
-		MinData:          InitFlag("MIN_DATA", string(MinData), false),
-		AsService:        InitBooleanFlag(string(AsService)),
-		Standalone:       InitBooleanFlag(string(Standalone)),
-	}
-	flag.Parse()
-	validateSettings(Settings)
-	for key, value := range Settings {
-		CheckSettingValue(*value, key == AWUrl || key == PrometheusUrl)
-	}
-	PrintSettings(Settings)
-	return Settings
+type Settings struct {
+	AWUrl            string   `yaml:"aw-url"`
+	PrometheusUrl    string   `yaml:"prometheus-url"`
+	ExcludedWatchers []string `yaml:"excluded-watchers"`
+	UserID           string   `yaml:"userId"`
+	Cron             string   `yaml:"cron"`
+	MinData          string   `yaml:"min-data"`
+	AsService        bool     `yaml:"service"`
+	Standalone       bool     `yaml:"standalone"`
 }
-func GetEnvVar(variable string, mandatory bool) (string, error) {
-	err := godotenv.Load(".env")
+
+func InitSettings() *Settings {
+	settings := loadYAMLConfig(configFile)
+	loadEnvVariables(&settings)
+	loadFlags(&settings)
+	validateSettings(&settings)
+	printSettings(&settings)
+	return &settings
+}
+
+func loadYAMLConfig(filename string) Settings {
+	file, err := os.Open(filename)
+	var settings Settings
+
 	if err != nil {
-		log.Fatal("Error loading .env file", err)
-	}
-	if os.Getenv(variable) == "" && mandatory {
-		return "", &errors.EnvVarError{VarName: variable}
-	} else if os.Getenv(variable) == "" && !mandatory {
-		return "", nil
-	}
-	return os.Getenv(variable), nil
-}
+		log.Print("No config.yaml file found. Proceeding with environment variables and flags.")
+	} else {
 
-func InitFlag(envVarName string, flagName string, isMandatory bool) *string {
-	// Define the command-line flag
-	envValue, _ := GetEnvVar(envVarName, isMandatory)
-	// Define the command-line flag and sets the default value to the environment variable value
-	flagValue := flag.String(flagName, envValue, envVarName+" (env Variable)")
-
-	return flagValue
-}
-
-func InitBooleanFlag(flagName string) *string {
-	// Define the command-line flag and sets the default value to the environment variable value
-	flagValue := flag.Bool(flagName, false, "")
-	flagValueStr := strconv.FormatBool(*flagValue)
-
-	return &flagValueStr
-}
-
-func CheckSettingValue(value string, isMandatory bool) {
-	if value == "" && isMandatory {
-		log.Fatalf("The %s is mandatory", value)
-	}
-
-}
-func validateSettings(settings map[SettingsKey]*string) map[SettingsKey]*string {
-	for key, value := range settings {
-		if key == Cron && *value == "" {
-			log.Print("Cron expression is empty, setting it to default value: */5 * * * * (every 5 minutes)")
-
-			*value = "@every 5m"
+		defer file.Close()
+		decoder := yaml.NewDecoder(file)
+		if err := decoder.Decode(&settings); err != nil {
+			log.Fatalf("Failed to decode settings file: %v", err)
 		}
-
 	}
-	SetBooleanSetting(settings, AsService)
-	SetBooleanSetting(settings, Standalone)
 
 	return settings
 }
 
-// PrintSettings prints the settings in a symmetric box format
-func PrintSettings(settings map[SettingsKey]*string) {
+func loadEnvVariables(settings *Settings) {
+	if err := godotenv.Load(".env"); err != nil {
+		log.Print("No .env file found. Loading environment variables from the system.")
+	}
+
+	if value, exists := os.LookupEnv("ACTIVITY_WATCH_URL"); exists {
+		settings.AWUrl = value
+	}
+	if value, exists := os.LookupEnv("PROMETHEUS_URL"); exists {
+		settings.PrometheusUrl = value
+	}
+	if value, exists := os.LookupEnv("EXCLUDED_WATCHERS"); exists {
+		settings.ExcludedWatchers = strings.Split(value, ",")
+	}
+	if value, exists := os.LookupEnv("USER_ID"); exists {
+		settings.UserID = value
+	}
+	if value, exists := os.LookupEnv("CRON"); exists {
+		settings.Cron = value
+	}
+	if value, exists := os.LookupEnv("MIN_DATA"); exists {
+		settings.MinData = value
+	}
+	if value, exists := os.LookupEnv("SERVICE"); exists {
+		settings.AsService, _ = strconv.ParseBool(value)
+	}
+	if value, exists := os.LookupEnv("STANDALONE"); exists {
+		settings.Standalone, _ = strconv.ParseBool(value)
+	}
+}
+
+func loadFlags(settings *Settings) {
+	flag.StringVar(&settings.AWUrl, string(AWUrl), settings.AWUrl, "Activity Watch URL")
+	flag.StringVar(&settings.PrometheusUrl, string(PrometheusUrl), settings.PrometheusUrl, "Prometheus URL")
+	flag.StringVar(&settings.UserID, string(UserID), settings.UserID, "User")
+	flag.StringVar(&settings.Cron, string(Cron), settings.Cron, "Cron expression")
+	flag.StringVar(&settings.MinData, string(MinData), settings.MinData, "Minimum data")
+	flag.BoolVar(&settings.AsService, string(AsService), settings.AsService, "Run as service")
+	flag.BoolVar(&settings.Standalone, string(Standalone), settings.Standalone, "Run in standalone mode")
+	flag.Parse()
+}
+
+func validateSettings(settings *Settings) {
+	if settings.AWUrl == "" {
+		log.Fatal("Activity Watch URL is mandatory")
+	}
+	if settings.PrometheusUrl == "" {
+		log.Fatal("Prometheus URL is mandatory")
+	}
+	if settings.Cron == "" {
+		log.Print("Cron expression is empty, setting it to default value: */5 * * * * (every 5 minutes)")
+		settings.Cron = "@every 5m"
+	}
+}
+
+func printSettings(settings *Settings) {
 	log.Print("Current Settings:")
+
+	// Create a map of settings for easier iteration
+	settingsMap := map[SettingsKey]string{
+		AWUrl:            settings.AWUrl,
+		PrometheusUrl:    settings.PrometheusUrl,
+		ExcludedWatchers: strings.Join(settings.ExcludedWatchers, ", "),
+		UserID:           settings.UserID,
+		Cron:             settings.Cron,
+		MinData:          settings.MinData,
+		AsService:        fmt.Sprintf("%t", settings.AsService),
+		Standalone:       fmt.Sprintf("%t", settings.Standalone),
+	}
+
 	maxKeyLength := 0
 	maxValueLength := 0
-	for key, value := range settings {
+	for key, value := range settingsMap {
 		if len(key) > maxKeyLength {
 			maxKeyLength = len(key)
 		}
-		if len(*value) > maxValueLength {
-			maxValueLength = len(*value)
+		if len(value) > maxValueLength {
+			maxValueLength = len(value)
 		}
 	}
+
 	borderLength := maxKeyLength + maxValueLength + 7
 	border := strings.Repeat("-", borderLength)
 	fmt.Println(border)
-	for key, value := range settings {
-		fmt.Printf("| %-*s | %-*s |\n", maxKeyLength, key, maxValueLength, *value)
+	for key, value := range settingsMap {
+		fmt.Printf("| %-*s | %-*s |\n", maxKeyLength, key, maxValueLength, value)
 	}
 	fmt.Println(border)
-}
-
-func FlagExists(flg string) bool {
-	// Check if the -service flag was set
-	Exists := false
-	flag.Visit(func(f *flag.Flag) {
-		if f.Name == flg {
-			Exists = true
-		}
-	})
-	return Exists
-}
-
-func SetBooleanSetting(settings map[SettingsKey]*string, key SettingsKey) {
-	if FlagExists(string(key)) {
-		srv := "true"
-		settings[key] = &srv
-	} else {
-		srv := "false"
-		settings[key] = &srv
-	}
-}
-
-func IsStandalone(standalone string) bool {
-	return standalone == "true"
-}
-
-func IsService(service string) bool {
-	return service == "true"
 }
