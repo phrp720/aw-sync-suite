@@ -11,9 +11,10 @@ import (
 func main() {
 
 	log.Print("Starting ActivityWatch Sync Agent...")
-	// Initialize the settings
+
 	log.Print("Initializing settings...")
 	Settings := settings.InitSettings()
+
 	log.Print("Setting up Sync Cronjob...")
 	scheduler := util.ValidateCronExpr(*Settings[settings.Cron])
 	sync := func() {
