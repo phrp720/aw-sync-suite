@@ -1,10 +1,12 @@
-# aw-sync-agent
+# ActivityWatch Sync Agent | aw-sync-agent
+The ActivityWatch Sync Agent is a free and open-source tool designed to run as a background service. It collects data from the ActivityWatch platform and pushes it to a central monitoring system, Prometheus. This setup allows for the visualization of collected data using Grafana, providing insightful metrics on user activity.
 
-This is an open-source ActivityWatch sync agent. The purpose of this agent is to function as a service, collecting data from ActivityWatch and pushing it to a central monitoring system, Prometheus. 
+### Features
 
-Grafana will then be used to visualize the data.
-
-
+- Data Synchronization: Retrieves and synchronizes user activity data from multiple ActivityWatch instances.
+- Prometheus Integration: Transforms and pushes the data to Prometheus for storage and monitoring.
+- Grafana Visualization: Easily visualize trends and activity metrics in Grafana.
+- Customizable Configuration: Configure which ActivityWatch buckets to include or exclude, and set sync intervals.
 ## Requirements
 
 - To run this agent by yourself, you need the following:
@@ -16,10 +18,10 @@ Grafana will then be used to visualize the data.
 ### This repo contains the following packages:
 
 - `aw`: A client to interact with the ActivityWatch REST API.
-- `prometheus-client`: A client to interact with the Prometheus REST API.
-- `synchronizer`: The sync agent that pushes data from ActivityWatch to Prometheus.
-- `checkpoint`: Contains the checkpoint mechanism to keep track of the last data pushed.
-- `errors`: Contains the error handlers to handle errors.
+- `prometheus`: A client to interact with the Prometheus REST API.
+- `synchronizer`: The synchronizer that pushes data from ActivityWatch to Prometheus.
+- `checkpoint`: Contains the checkpoint mechanism to keep track of the latest data pushed.
+- `errors`: Contains the error handlers.
 - `datamanager`: Manages the data processing and pushing to Prometheus.
 - `settings`: Handles the configuration settings for the agent.
 - `util`: Contains utility functions such as health checks.
@@ -50,14 +52,10 @@ Grafana will then be used to visualize the data.
 
 - `make build`: Builds the agent.
 - `make run`: Runs the agent.
-- `make dev-run`: Runs the agent in dev-mode.
-- `make test`: Runs the tests.
+- `make service`: Runs the agent as a service.
 - `make format`: Formats the code.
 - `make clean`: Cleans the project.
 
-### What we expect:
-
-    sudo ./agent -excludedWatchers=aw-watcher-window -cron=*2*** -minData=9 -asService=true -awUrl=http://localhost:5600 -prometheusUrl=http://localhost:9090 -userID=Phillip
 
 ## TODO
 
