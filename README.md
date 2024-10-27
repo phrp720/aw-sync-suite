@@ -40,7 +40,7 @@ The ActivityWatch Sync Agent is a free and open-source tool designed to run as a
 | `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | A pipe-separated list of watchers to exclude from the sync agent.                         | false     | -                                                 |
 | `-minData`          | `MIN_DATA`           | `min-data`          | The minimum amount of data that a watcher needs to have to be included in the sync agent. | false     | 5                                                 |
 | `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | The URL of the Prometheus server.                                                         | true      | -                                                 |
-| `-user`             | `USER`               | `user`              | The name of the user that we scrape data                                                  | false     | The name of the computer otherwise a generated id |
+| `-userId`           | `USER_ID`            | `userId`            | The name of the user that we scrape data                                                  | false     | The name of the computer otherwise a generated id |
 
 ### Configuration Hierarchy:
 
