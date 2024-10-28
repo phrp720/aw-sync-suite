@@ -9,6 +9,7 @@ import (
 	"runtime"
 )
 
+// ValidateCronExpr validates the cron expression
 func ValidateCronExpr(cronExpr string) string {
 	_, err := cron.ParseStandard(cronExpr)
 	if err != nil {

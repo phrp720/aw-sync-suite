@@ -26,6 +26,7 @@ const (
 )
 const configFile = "config.yaml"
 
+// Settings struct
 type Settings struct {
 	AWUrl            string   `yaml:"aw-url"`
 	PrometheusUrl    string   `yaml:"prometheus-url"`
@@ -36,6 +37,7 @@ type Settings struct {
 	AsService        bool     `yaml:"-"`
 }
 
+// InitSettings initializes the settings
 func InitSettings() *Settings {
 	settings := loadYAMLConfig(configFile)
 	loadEnvVariables(&settings)
@@ -45,6 +47,7 @@ func InitSettings() *Settings {
 	return &settings
 }
 
+// Load the YAML config file
 func loadYAMLConfig(filename string) Settings {
 	file, err := os.Open(filename)
 	var settings Settings
@@ -65,6 +68,7 @@ func loadYAMLConfig(filename string) Settings {
 	return settings
 }
 
+// Load the environment variables
 func loadEnvVariables(settings *Settings) {
 	if err := godotenv.Load(".env"); err != nil {
 		log.Print("No .env file found. Loading environment variables from the system.")
@@ -91,6 +95,7 @@ func loadEnvVariables(settings *Settings) {
 
 }
 
+// Load the flags
 func loadFlags(settings *Settings) {
 	flag.StringVar(&settings.AWUrl, string(AWUrl), settings.AWUrl, "Activity Watch URL")
 	flag.StringVar(&settings.PrometheusUrl, string(PrometheusUrl), settings.PrometheusUrl, "Prometheus URL")
@@ -102,6 +107,7 @@ func loadFlags(settings *Settings) {
 	flag.Parse()
 }
 
+// Validate the settings
 func validateSettings(settings *Settings) {
 	if settings.AWUrl == "" {
 		log.Fatal("Activity Watch URL is mandatory")
@@ -115,6 +121,7 @@ func validateSettings(settings *Settings) {
 	}
 }
 
+// Pretty Print of the settings
 func printSettings(settings *Settings) {
 	log.Print("Current Settings:")
 
@@ -149,6 +156,7 @@ func printSettings(settings *Settings) {
 	fmt.Println(border)
 }
 
+// CreateConfigFile creates a config file to a given path based on the settings
 func CreateConfigFile(settings Settings, path string) error {
 
 	content, err := yaml.Marshal(&settings)

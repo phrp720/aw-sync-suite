@@ -1,7 +1,8 @@
 @echo off
 
 set APP_NAME=aw-sync-agent
-set APP_PATH=C:\aw-sync-agent\agent.exe
+set APP_PATH=C:\AwSyncAgent\aw-sync-agent.exe
+set CONFIG_PATH=C:\AwSyncAgent\config.yaml
 set NSSM_PATH=C:\path\to\nssm.exe
 
 echo Building ActivityWatch Sync Agent...

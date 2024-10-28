@@ -9,9 +9,9 @@ ifeq ($(OS), windows)
  SERVICE := scripts/windows/service.bat
 else
  BUILD := go build -o aw-sync-agent main.go
- CLEAN :=  sudo rm -rf /bin/aw
+ CLEAN :=  sudo rm -rf /opt/aw
  ##Service commands
- SERVICE := sudo scripts/linux/service.sh
+ SERVICE := sudo go run main.go -service
 endif
 
 
@@ -26,7 +26,7 @@ check-os:
 	@go run scripts/detect_os.go
 
 clean:
-	@rm -rf agent*
+	@rm -rf aw-sync-agent
 
 format:
 	@gofmt -s -w .
@@ -60,5 +60,5 @@ service-restart:
 
 service-update:
 	@echo "Re-Building ActivityWatch Sync Agent application..."
-	@sudo go build -o /bin/aw/agent main.go
+	@sudo go build -o /opt/aw/aw-sync-agent main.go
 	@$(MAKE) service-restart
