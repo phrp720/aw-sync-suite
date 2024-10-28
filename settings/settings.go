@@ -7,6 +7,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -32,7 +33,7 @@ type Settings struct {
 	UserID           string   `yaml:"userId"`
 	Cron             string   `yaml:"cron"`
 	MinData          string   `yaml:"min-data"`
-	AsService        bool
+	AsService        bool     `yaml:"-"`
 }
 
 func InitSettings() *Settings {
@@ -146,4 +147,18 @@ func printSettings(settings *Settings) {
 		fmt.Printf("| %-*s | %-*s |\n", maxKeyLength, key, maxValueLength, value)
 	}
 	fmt.Println(border)
+}
+
+func CreateConfigFile(settings Settings, path string) error {
+
+	content, err := yaml.Marshal(&settings)
+	if err != nil {
+		return err
+	}
+	dir := filepath.Dir(path)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+	return os.WriteFile(path, content, 0644)
+
 }

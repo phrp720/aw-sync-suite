@@ -13,9 +13,9 @@ import (
 func main() {
 
 	log.Print("Starting ActivityWatch Sync Agent...")
-
 	log.Print("Initializing settings...")
 	Settings := settings.InitSettings()
+
 	if Settings.AsService {
 		//Here we will handle the windows and linux service creation
 		//We will use the nssm for windows and the systemd for linux
@@ -23,7 +23,7 @@ func main() {
 		if util.IsWindows() {
 			service.CreateWindowsService()
 		} else if util.IsLinux() {
-			service.CreateLinuxService()
+			service.CreateLinuxService(*Settings)
 		}
 		os.Exit(0)
 	}

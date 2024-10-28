@@ -1,7 +1,7 @@
-aw-url: "http://localhost:5600"
-prometheus-url: "http://localhost:9090"
-min-data: 100
-userId: DemoTester
-cron: "* * * * * "
+aw-url: http://localhost:5600
+prometheus-url: http://localhost:9090
 excluded-watchers:
   - aw-watcher-afk
+userId: DemoTester
+cron: '* * * * * '
+min-data: "100"
