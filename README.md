@@ -7,13 +7,22 @@ The ActivityWatch Sync Agent is a free and open-source tool designed to run as a
 - Prometheus Integration: Transforms and pushes the data to Prometheus for storage and monitoring.
 - Grafana Visualization: Easily visualize trends and activity metrics in Grafana.
 - Customizable Configuration: Configure which ActivityWatch buckets to include or exclude, and set sync intervals.
+- Service Mode: Run the agent as a service on Windows and Linux systems with just one command.
+
 ## Requirements
 
-- To run this agent by yourself, you need the following:
-  - Go  Version >= 1.23
-  - Make
+- For Development purposes:  
+  - To modify the agent by yourself, you will need the following:
+    - Go Version >= 1.23.2
+    - Make
 
-- If you got the executable file ,there are no dependencies or requirements.
+- For Running the agent:
+  - To run the agent, you will need the following:
+    - The aw-sync-agent binary
+    - A running instance of ActivityWatch
+    - A running instance of Prometheus
+    - A running instance of Grafana(Optional)
+    - A configuration file(Optional). The agent can run without a configuration file(with the use of flags or env variables), but it is recommended to have one.
 
 ### This repo contains the following packages:
 
@@ -25,7 +34,7 @@ The ActivityWatch Sync Agent is a free and open-source tool designed to run as a
 - `datamanager`: Manages the data processing and pushing to Prometheus.
 - `settings`: Handles the configuration settings for the agent.
 - `util`: Contains utility functions such as health checks.
-- `scripts`: Contains the scripts to run the agent as a service.
+- `scripts`: Contains some useful non-mandatory scripts.
 - `cron`: Contains the cron manager .
 - `service`: Contains the as A Service manager.
 
@@ -59,15 +68,19 @@ The ActivityWatch Sync Agent is a free and open-source tool designed to run as a
 
 ## TODO
 
-- [x] Create an activitywatch client to interact with ActivityWatch rest API
+- [x] Create an ActivityWatch client to interact with ActivityWatch rest API
 - [x] Modify the already implemented prometheus client
 - [x] Create a sync agent to push data from ActivityWatch to Prometheus
-- [x] Create a command-line interface to run the agent
-- [x] Create checkpoints with checkpoint.json file
+- [x] Create a command-line interface to run the agent(Makefile,flags,environment variables)
+- [x] Create a checkpoint mechanism for optimization purposes
 - [x] Create internet connection check and retry mechanism
-- [ ] Research and create an aggregator to aggregate the data
+- [x] Make the agent run as a service for Linux
+- [x] Create a cron manager to run the agent at specific intervals
+- [x] Create a configuration manager to handle the configuration settings(.yaml file + environment variables + flags)
 - [ ] Create better error handler
+- [ ] Make the agent run as a service for Windows(PENDING)
+- [ ] Create an aggregator to aggregate the data
 - [ ] Create a Grafana dashboard to visualize the data
-- [ ] Make the agent run as a service for Linux and Windows(maybe and for macOS)
-- [ ] Create a docker-compose file to run the whole system.
-- [ ] Create a README.md file with instructions on how to run the system
+- [ ] Create a Dockerfile that creates an image of the aw-sync-agent.
+- [ ] Create a Documentation for the aw-sync-agent
+- [ ] Publish the aw-sync-agent version 0.1.0
