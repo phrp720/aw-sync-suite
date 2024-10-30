@@ -3,7 +3,7 @@ MAKEFLAGS += --no-print-directory
 ## Determine the OS and set the destination path
 OS := $(shell go run scripts/detect_os.go)
 ifeq ($(OS), windows)
- BUILD := GOOS=windows go build -o aw-sync-agent.exe main.go
+ BUILD := GOOS=windows GOARCH=amd64 go build -o aw-sync-agent.exe main.go
  CLEAN := rm -rf C:/aw-sync-agent
  ##Service commands
  SERVICE := scripts/windows/service.bat
@@ -11,7 +11,7 @@ else
  BUILD := go build -o aw-sync-agent main.go
  CLEAN :=  sudo rm -rf /opt/aw
  ##Service commands
- SERVICE := sudo go run main.go -service
+ SERVICE :=go run main.go -service
 endif
 
 
@@ -32,7 +32,8 @@ format:
 	@gofmt -s -w .
 
 ##Service commands
-service:
+service-install:
+	@$(MAKE) build
 	@$(SERVICE)
 
 service-start:

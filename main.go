@@ -21,7 +21,7 @@ func main() {
 		//We will use the nssm for windows and the systemd for linux
 		//We will create a service that will run the agent as a service and with -service flag we will pass all the data to the excutable
 		if util.IsWindows() {
-			service.CreateWindowsService()
+			service.CreateWindowsService(*Settings)
 		} else if util.IsLinux() {
 			service.CreateLinuxService(*Settings)
 		}
