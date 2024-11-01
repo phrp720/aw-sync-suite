@@ -16,11 +16,20 @@ func (e *EnvVarError) Error() string {
 
 func HandleNormal(message string, err error) {
 	if err != nil {
-		log.Println(message, err)
+		if message != "" {
+			log.Println(message, err)
+		} else {
+			log.Println(err)
+		}
 	}
+
 }
 func HandleFatal(message string, err error) {
 	if err != nil {
-		log.Fatal(message, err)
+		if message != "" {
+			log.Fatal(message, err)
+		} else {
+			log.Fatal(err)
+		}
 	}
 }

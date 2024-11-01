@@ -55,7 +55,7 @@ func loadYAMLConfig(filename string) Settings {
 	if err != nil {
 		log.Print("No config.yaml file found. Proceeding with environment variables and flags.")
 	} else {
-
+		log.Print("Loading settings from config.yaml file.")
 		defer file.Close()
 		decoder := yaml.NewDecoder(file)
 		if err := decoder.Decode(&settings); err != nil {
@@ -72,6 +72,8 @@ func loadYAMLConfig(filename string) Settings {
 func loadEnvVariables(settings *Settings) {
 	if err := godotenv.Load(".env"); err != nil {
 		log.Print("No .env file found. Loading environment variables from the system.")
+	} else {
+		log.Print("Loading environment variables.")
 	}
 
 	if value, exists := os.LookupEnv("ACTIVITY_WATCH_URL"); exists {
@@ -105,6 +107,7 @@ func loadFlags(settings *Settings) {
 	flag.BoolVar(&settings.AsService, string(AsService), settings.AsService, "Run as service")
 
 	flag.Parse()
+	log.Print("Loading settings from flags.")
 }
 
 // Validate the settings

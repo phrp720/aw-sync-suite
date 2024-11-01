@@ -17,8 +17,7 @@ func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEvents
 	log.Print("Fetching buckets  ...\n")
 	buckets, err := aw.GetBuckets(awUrl)
 	if err != nil {
-		log.Printf("Error getting buckets: %s", err)
-		return nil, err
+		return nil, fmt.Errorf("Error fetching buckets: %v", err)
 	}
 
 	log.Print("Buckets fetched successfully")
@@ -31,8 +30,7 @@ func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEvents
 		//endPoint := time.Now().AddDate(0, 0, -1) // Set end date to one day before the current date
 		events, err := aw.GetEvents(awUrl, name, startPoint, nil, nil)
 		if err != nil {
-			log.Printf("Error fetching events for bucket %s: %v", bucket.Client, err)
-			return nil, err
+			return nil, fmt.Errorf("error fetching events for bucket %s: %v", bucket.Client, err)
 		}
 		eventsMap[bucket.Client] = events
 	}

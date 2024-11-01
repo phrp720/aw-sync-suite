@@ -1,7 +1,6 @@
 package prometheus
 
 import (
-	"aw-sync-agent/system_error"
 	"bytes"
 	"context"
 	"fmt"
@@ -95,10 +94,7 @@ func (p *Client) Write(ctx context.Context, req *WriteRequest, options ...WriteO
 
 	if st := httpResp.StatusCode; st/100 != 2 {
 		msg, _ := io.ReadAll(httpResp.Body)
-		return nil, &system_error.WriteError{
-			Err:  fmt.Errorf("prometheus: expected status %d, got %d: %s", http.StatusOK, st, string(msg)),
-			Code: st,
-		}
+		return nil, fmt.Errorf("prometheus: expected status %d, got %d: %s", http.StatusOK, st, string(msg))
 	}
 	return &WriteResponse{}, nil
 }

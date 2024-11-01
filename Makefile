@@ -32,7 +32,7 @@ format:
 
 ##(from linux only) Build executables for both windows and linux
 build-all:
-	@go build -o aw-sync-agent.exe main.go GOOS=windows GOARCH=amd64
+	@GOOS=windows GOARCH=amd64 go build -o aw-sync-agent.exe main.go
 	@go build -o aw-sync-agent main.go
 clean-all:
 	@rm -rf aw-sync-agent

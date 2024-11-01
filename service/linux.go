@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	linux_configFile  = "config.yaml"
-	linux_binaryName  = "aw-sync-agent"
-	linux_serviceName = "aw-sync-agent.service"
+	LinuxConfig     = "config.yaml"
+	LinuxExecutable = "aw-sync-agent"
+	LinuxService    = "aw-sync-agent.service"
 )
 
 // CreateLinuxService creates a Linux service using the service-builder library github.com/phrp720/service-builder
@@ -24,12 +24,12 @@ func CreateLinuxService(sett settings.Settings) {
 
 	// Define paths dynamically based on the user's home directory
 	homeDir := currentUser.HomeDir
-	configPath := filepath.Join(homeDir, ".config", "aw", linux_configFile)
-	appPath := filepath.Join(homeDir, ".config", "aw", linux_binaryName)
-	serviceFilePath := filepath.Join(homeDir, ".config", "systemd", "user", linux_serviceName)
+	configPath := filepath.Join(homeDir, ".config", "aw", LinuxConfig)
+	appPath := filepath.Join(homeDir, ".config", "aw", LinuxExecutable)
+	serviceFilePath := filepath.Join(homeDir, ".config", "systemd", "user", LinuxService)
 
 	// Copies the aw-sync-agent executable to the user's config path
-	util.CopyBinary(appPath, linux_binaryName)
+	util.CopyBinary(appPath, LinuxExecutable)
 
 	// Create the config file that will be used for the service (Based on the settings) and loads it to the user's config path
 	err = settings.CreateConfigFile(sett, configPath)
@@ -58,7 +58,7 @@ func CreateLinuxService(sett settings.Settings) {
 	err = systemd.CreateService(service, serviceFilePath)
 	system_error.HandleFatal("Failed to create service: ", err)
 
-	err = systemd.StartService(linux_binaryName, false)
+	err = systemd.StartService(LinuxExecutable, false)
 	system_error.HandleFatal("Failed to start service: ", err)
 
 	log.Print("Running as a Linux service...")

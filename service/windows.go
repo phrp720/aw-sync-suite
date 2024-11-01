@@ -6,41 +6,46 @@ import (
 	"aw-sync-agent/util"
 	"github.com/phrp720/service-builder/nssm"
 	"log"
+	"os"
+	"path/filepath"
 )
 
 const (
-	windows_configFile  = "config.yaml"
-	windows_binary      = "aw-sync-agent.exe"
-	windows_serviceName = "aw-sync-agent"
-
-	windows_rooPath    = "C:\\AwSyncAgent\\"
-	windows_configPath = "C:\\AwSyncAgent\\" + windows_configFile
-	windows_appPath    = "C:\\AwSyncAgent\\" + windows_binary
+	WinConfig     = "config.yaml"
+	WinExecutable = "aw-sync-agent.exe"
+	WinFolder     = "AwSyncAgent"
+	WinService    = "aw-sync-agent"
 )
 
 func CreateWindowsService(sett settings.Settings) {
-	//Here we will handle the windows and Windows service creation
-	//We will use the nssm for windows and the systemd for windows
-	//We will create a service that will run the agent as a service and with -service flag we will pass all the data to the excutable
-	//os.Exit(0)
-	// Copies  the aw-sync-agent executable to /opt/aw/ path
-	util.CopyBinary(windows_appPath, windows_binary)
+
+	// Construct paths relative to the user's home directory
+	// Get the user's home directory
+	homeDir, err := os.UserHomeDir()
+	system_error.HandleFatal("Failed to get user home directory: ", err)
+
+	windowsRootPath := filepath.Join(homeDir, WinFolder)
+	windowsAppPath := filepath.Join(windowsRootPath, WinExecutable)
+	windowsConfigPath := filepath.Join(windowsRootPath, WinConfig)
+
+	util.CopyBinary(windowsRootPath, WinExecutable)
 
 	// Create the config file that will be used for the service(Based on the settings) and loads it  to /opt/aw/ path
-	err := settings.CreateConfigFile(sett, windows_configPath)
+	err = settings.CreateConfigFile(sett, windowsConfigPath)
 	system_error.HandleFatal("Failed to create config file: ", err)
 
-	err = nssm.InitNssm(windows_rooPath)
-
+	err = nssm.StartNssm(windowsRootPath)
 	system_error.HandleFatal("", err)
 
 	builder := nssm.NewServiceBuilder()
-	service := builder.ServiceName(windows_serviceName).
-		AppDirectory("C:\\AwSyncAgent\\").
+	service := builder.ServiceName(WinService).
+		AppDirectory(windowsRootPath).
 		DisplayName("ActivityWatch Sync Agent").
-		Application("C:\\AwSyncAgent\\aw-sync-agent.exe").
+		Application(windowsAppPath).
 		Build()
+
 	nssm.RemoveService(service.ServiceName)
+
 	err = nssm.CreateService(service)
 	system_error.HandleFatal("Failed to create service: ", err)
 
