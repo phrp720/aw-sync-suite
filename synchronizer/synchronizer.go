@@ -4,6 +4,7 @@ import (
 	"aw-sync-agent/datamanager"
 	"aw-sync-agent/prometheus"
 	"aw-sync-agent/settings"
+	"aw-sync-agent/system_error"
 	"aw-sync-agent/util"
 	"fmt"
 	"log"
@@ -46,9 +47,7 @@ func SyncRoutine(Settings settings.Settings) func() {
 			log.Print("Prometheus is not reachable or Internet connection is lost. Data will be pushed when health is recovered")
 		} else {
 			err := Start(Settings)
-			if err != nil {
-				log.Print(err) // handle if something wrong happens
-			}
+			system_error.HandleNormal("", err)
 		}
 
 	}

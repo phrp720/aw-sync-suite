@@ -1,7 +1,7 @@
 package aw
 
 import (
-	"aw-sync-agent/errors"
+	"aw-sync-agent/system_error"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,13 +14,13 @@ func GetBuckets(awUrl string) (Watchers, error) {
 	url := awUrl + "/api/0/buckets"
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, &errors.HTTPError{URL: url, Err: err}
+		return nil, &system_error.HTTPError{URL: url, Err: err}
 	}
 	defer resp.Body.Close()
 
 	var buckets Watchers
 	if err := json.NewDecoder(resp.Body).Decode(&buckets); err != nil {
-		return nil, &errors.DecodeError{Err: err}
+		return nil, &system_error.DecodeError{Err: err}
 	}
 	return buckets, nil
 }
@@ -32,13 +32,13 @@ func GetEvents(awUrl string, bucket string, start *time.Time, end *time.Time, li
 
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, &errors.HTTPError{URL: url, Err: err}
+		return nil, &system_error.HTTPError{URL: url, Err: err}
 	}
 	defer resp.Body.Close()
 
 	var events Events
 	if err := json.NewDecoder(resp.Body).Decode(&events); err != nil {
-		return nil, &errors.DecodeError{Err: err}
+		return nil, &system_error.DecodeError{Err: err}
 	}
 	return events, nil
 }

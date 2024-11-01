@@ -1,4 +1,4 @@
-package errors
+package system_error
 
 // WriteError returned if HTTP call is finished with response status code, but it was not successful.
 type WriteError struct {

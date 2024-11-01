@@ -1,6 +1,7 @@
 package util
 
 import (
+	"aw-sync-agent/system_error"
 	"github.com/robfig/cron"
 	"io"
 	"log"
@@ -12,9 +13,7 @@ import (
 // ValidateCronExpr validates the cron expression
 func ValidateCronExpr(cronExpr string) string {
 	_, err := cron.ParseStandard(cronExpr)
-	if err != nil {
-		log.Fatalf("Invalid cron expression: %v", err)
-	}
+	system_error.HandleFatal("Invalid cron expression: ", err)
 	return cronExpr
 }
 
@@ -46,9 +45,7 @@ func CopyBinary(appPath string, binaryName string) {
 	defer src.Close()
 
 	dst, err := os.Create(appPath)
-	if err != nil {
-		log.Fatalf("Failed to create destination binary: %v", err)
-	}
+	system_error.HandleFatal("Failed to create destination binary: ", err)
 	defer dst.Close()
 
 	if _, err := io.Copy(dst, src); err != nil {
