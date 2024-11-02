@@ -17,16 +17,16 @@ func main() {
 	Settings := settings.InitSettings()
 
 	if Settings.AsService {
-		//Here we will handle the windows and linux service creation
-		//We will use the nssm for windows and the systemd for linux
-		//We will create a service that will run the agent as a service and with -service flag we will pass all the data to the excutable
+
 		if util.IsWindows() {
 			service.CreateWindowsService(*Settings)
 		} else if util.IsLinux() {
 			service.CreateLinuxService(*Settings)
 		}
 		os.Exit(0)
+
 	}
+
 	log.Print("Setting up Sync Cronjob...")
 	scheduler := util.ValidateCronExpr(Settings.Cron)
 	c := cron.Init()
