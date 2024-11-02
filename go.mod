@@ -6,7 +6,7 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/snappy v0.0.4
 	github.com/joho/godotenv v1.5.1
-	github.com/phrp720/service-builder v0.2.5
+	github.com/phrp720/service-builder v0.2.6
 	github.com/prometheus/prometheus v0.55.0
 	github.com/robfig/cron v1.2.0
 	gopkg.in/yaml.v3 v3.0.1
