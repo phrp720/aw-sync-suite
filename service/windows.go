@@ -17,7 +17,6 @@ const (
 	WinExecutable = "aw-sync-agent.exe"
 	WinFolder     = "AwSyncAgent"
 	WinService    = "aw-sync-agent"
-	NssmExe       = "nssm.exe"
 )
 
 func CreateWindowsService(sett settings.Settings) {
@@ -49,6 +48,7 @@ func CreateWindowsService(sett settings.Settings) {
 		AppDirectory(windowsRootPath).
 		DisplayName("ActivityWatch Sync Agent").
 		Application(windowsAppPath).
+		Start("SERVICE_AUTO_START").
 		Build()
 
 	err = nssm.CreateService(service)
