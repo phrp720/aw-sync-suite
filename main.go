@@ -1,30 +1,40 @@
 package main
 
 import (
+	"aw-sync-agent/cron"
+	"aw-sync-agent/service"
 	"aw-sync-agent/settings"
 	"aw-sync-agent/synchronizer"
 	"aw-sync-agent/util"
 	"log"
+	"os"
 )
 
 func main() {
 
-	// Initialize the settings
+	log.Print("Starting ActivityWatch Sync Agent...")
+	log.Print("Initializing settings...")
 	Settings := settings.InitSettings()
-	// Check if the agent should run as a service
-	if *Settings[settings.AsService] == "true" {
-		log.Println("Running as a service")
-		// Add your code to run the agent as a service here
-	} else {
 
-		log.Println("Running as a regular application")
-		// Pass the map to the synchronizer.Start function
-		if !util.PromHealthCheck(*Settings[settings.PrometheusUrl]) {
-			log.Fatal("Prometheus is not reachable or you don't have internet connection")
+	if Settings.AsService {
+
+		if util.IsWindows() {
+			service.CreateWindowsService(*Settings)
+		} else if util.IsLinux() {
+			service.CreateLinuxService(*Settings)
 		}
-		err := synchronizer.Start(Settings)
-		if err != nil {
-			panic(err) // handle if something wrong happens
-		}
+		os.Exit(0)
+
 	}
+
+	log.Print("Setting up Sync Cronjob...")
+	scheduler := util.ValidateCronExpr(Settings.Cron)
+	c := cron.Init()
+	cron.Add(c, scheduler, synchronizer.SyncRoutine(*Settings))
+	cron.Start(c)
+
+	log.Print("Agent Started Successfully")
+
+	// Keep the main program running
+	select {}
 }

@@ -6,19 +6,18 @@ import (
 	"aw-sync-agent/prometheus"
 	"aw-sync-agent/util"
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"sort"
-	"time"
 )
 
 // ScrapeData scrapes the data from the local ActivityWatch instance via the aw Client
-func ScrapeData(awUrl string, excludedWatchers string) (aw.WatcherNameToEventsMap, error) {
+func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEventsMap, error) {
 	log.Print("Fetching buckets  ...\n")
 	buckets, err := aw.GetBuckets(awUrl)
 	if err != nil {
-		log.Printf("Error getting buckets: %s", err)
-		return nil, err
+		return nil, fmt.Errorf("Error fetching buckets: %v", err)
 	}
 
 	log.Print("Buckets fetched successfully")
@@ -31,8 +30,7 @@ func ScrapeData(awUrl string, excludedWatchers string) (aw.WatcherNameToEventsMa
 		//endPoint := time.Now().AddDate(0, 0, -1) // Set end date to one day before the current date
 		events, err := aw.GetEvents(awUrl, name, startPoint, nil, nil)
 		if err != nil {
-			log.Printf("Error fetching events for bucket %s: %v", bucket.Client, err)
-			return nil, err
+			return nil, fmt.Errorf("error fetching events for bucket %s: %v", bucket.Client, err)
 		}
 		eventsMap[bucket.Client] = events
 	}
@@ -44,12 +42,16 @@ func ScrapeData(awUrl string, excludedWatchers string) (aw.WatcherNameToEventsMa
 // This is going to be called with events for each watcher separately
 func AggregateData(events []aw.Event, watcher string) []prometheus.TimeSeries {
 	//Here we need to digest and aggregate data.
-	//After that we need to convert them to prometheus.TimeSeries
 
-	// Sort events by timestamp
+	// Sort events by timestamp. Older to newer.
 	sort.Slice(events, func(i, j int) bool {
 		return events[i].Timestamp.Before(events[j].Timestamp)
 	})
+	// Remove the newest event because it might be incomplete.
+	//The latest event is not complete because it is not yet finished.
+	if len(events) > 0 {
+		events = events[:len(events)-1]
+	}
 	var timeSeriesList []prometheus.TimeSeries
 
 	for _, event := range events {
@@ -83,18 +85,15 @@ func AggregateData(events []aw.Event, watcher string) []prometheus.TimeSeries {
 // PushData pushes  data to the server via the Prometheus Client
 func PushData(client *prometheus.Client, prometheusUrl string, timeseries []prometheus.TimeSeries, watcher string) error {
 	const chunkSize = 20
-	for i := 1; i < len(timeseries); i += chunkSize {
+	for i := 0; i < len(timeseries); i += chunkSize {
 		if !util.PromHealthCheck(prometheusUrl) {
-			log.Print("Prometheus is down. Skipping pushing data and stall instead")
-			time.Sleep(3000 * time.Millisecond)
-			// here we need to add the error handling for the case when Prometheus is down or internet connection cant be reached.
+			return errors.New("prometheus is not reachable or Internet connection is lost. Data will be pushed when health is recovered")
 		}
 		end := i + chunkSize
 		if end > len(timeseries) {
 			end = len(timeseries)
 		}
 		chunk := timeseries[i:end]
-		// Assuming client has a method Write to push the data
 		_, err := client.Write(context.Background(), &prometheus.WriteRequest{TimeSeries: chunk})
 		if err != nil {
 			log.Printf("Error pushing data: %v", err)

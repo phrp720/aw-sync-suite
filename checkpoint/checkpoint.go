@@ -9,6 +9,7 @@ import (
 
 const checkpointFile = "checkpoint.json"
 
+// Read reads the checkpoint for the given watcher
 func Read(watcher string) *time.Time {
 
 	// Read the existing data from the file | If the file does not exist, creates it
@@ -34,6 +35,7 @@ func Read(watcher string) *time.Time {
 	return &timestamp
 }
 
+// Update updates the checkpoint for the given watcher
 func Update(watcher string, timestamp time.Time) {
 
 	// Read the existing data from the file | If the file does not exist, creates it
