@@ -35,8 +35,7 @@ func CreateWindowsService(sett settings.Settings) {
 	system_error.HandleFatal("", err)
 
 	// Stop and remove the service if it already exists
-	err = StopAndRemoveService(WinService, windowsRootPath+"/"+NssmExe)
-	system_error.HandleNormal("", err)
+	StopAndRemoveService(WinService, nssm.GetNssmPath())
 
 	util.CopyBinary(windowsAppPath, WinExecutable)
 
