@@ -1,10 +1,14 @@
 # ActivityWatch Sync Agent | aw-sync-agent
 
-The **ActivityWatch Sync Agent** is an open-source background service that collects data from the ActivityWatch platform and synchronizes it to a central Prometheus database. With Grafana integration, it provides real-time visual insights into user activity data, allowing for easy monitoring and analysis.
+The **aw-sync-agent** is an open-source background service that collects data from the ActivityWatch platform and synchronizes it to a central Prometheus database. With Grafana integration, it provides real-time visual insights into user activity data, allowing for easy monitoring and analysis.
 
+With **aw-sync-agent** we can accomplish the synchronization of multiple ActivityWatch instances to a single Prometheus database. This allows for centralized monitoring and analysis of user activity data across multiple systems.
+
+This project is independent of the [ActivityWatch](https://github.com/ActivityWatch/activitywatch) and can work with all the old and new versions of ActivityWatch that supports the REST API feature.
 ## Key Features
 
 - **Data Synchronization**: Fetches user activity data from multiple ActivityWatch instances.
+- **Data Filtering and Aggregation**: Filters and aggregates data based on user-defined criteria.
 - **Prometheus Integration**: Transforms data into a Prometheus-compatible format for centralized monitoring.
 - **Grafana Visualization**: Easily visualize activity metrics and trends through Grafana dashboards.
 - **Flexible Configuration**: Allows selection of ActivityWatch buckets to include/exclude and customizes sync intervals.
@@ -21,9 +25,9 @@ To modify the agent, ensure you have:
 ### For Running the Agent
 To run the agent, you need:
 - **aw-sync-agent** binary
+- aw-sync-agent's **configuration file** (optional but recommended; you can also use flags or environment variables)
 - Running instances of **ActivityWatch** and **Prometheus**
 - **Grafana** (optional, for visualization)
-- **Configuration file** (optional but recommended; you can also use flags or environment variables)
 
 ## Package Overview
 
@@ -31,8 +35,8 @@ To run the agent, you need:
 - **prometheus**: Client for Prometheus REST API interactions.
 - **synchronizer**: Manages data synchronization from ActivityWatch to Prometheus.
 - **checkpoint**: Tracks the latest data synced for efficient operation.
-- **errors**: Error handling utilities.
-- **datamanager**: Handles data processing and transmission to Prometheus.
+- **system_error**: Error handling utilities.
+- **datamanager**: Handles data processing and transmission to Prometheus(**Scrape**,**Aggregate** and **Push** data).
 - **settings**: Manages agent configuration settings.
 - **util**: Utility functions, including health checks.
 - **scripts**: Additional, optional scripts.
@@ -43,15 +47,15 @@ To run the agent, you need:
 
 The following table provides details on configurable settings:
 
-| Flag                | Environment Variable | Config Key          | Description                                                                               | Required | Default                                       |
-|---------------------|----------------------|---------------------|-------------------------------------------------------------------------------------------|----------|-----------------------------------------------|
-| `-service`          | -                    | -                   | Run the agent as a service.                                                               | No       | `false`                                       |
-| `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                                          | Yes      | -                                             |
-| `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                                        | No       | Every 5 minutes                               |
-| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | Pipe-separated list of watchers to exclude.                                               | No       | -                                             |
-| `-minData`          | `MIN_DATA`           | `min-data`          | Minimum data threshold for watchers to be included.                                       | No       | 5                                             |
-| `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                                             | Yes      | -                                             |
-| `-userId`           | `USER_ID`            | `userId`            | Identifier for user data; defaults to computer name if not specified.                     | No       | Generated ID or computer name                 |
+| Flag                | Environment Variable | Config Key          | Description                                                             | Required | Default                         |
+|---------------------|----------------------|---------------------|-------------------------------------------------------------------------|----------|---------------------------------|
+| `-service`          | -                    | -                   | Run the agent as a service.                                             | ❌        | -                               |
+| `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                        | ✅        | -                               |
+| `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                           | ✅        | -                               |
+| `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Basic Auth for prometheus(if prom is protected)                         | ❌        | -                               |
+| `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                      | ❌        | Every 5 minutes                 |
+| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | Pipe-separated list of watchers to exclude.                             | ❌        | -                               |
+| `-userId`           | `USER_ID`            | `userId`            | Identifier for user data; defaults to computer's name if not specified. | ❌        | Generated ID or computer's name |
 
 ### Configuration Hierarchy
 
@@ -64,9 +68,9 @@ Settings are prioritized in the following order:
 
 - `make build`: Builds the agent.
 - `make run`: Runs the agent.
-- `make service`: Starts the agent as a service.
+- `make service-install`: Install and Starts the agent as a service.
 - `make format`: Formats the codebase.
-- `make clean`: Cleans up build artifacts.
+- `make clean`: Cleans up the service's files and folders.
 
 ## Roadmap
 

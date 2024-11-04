@@ -4,4 +4,3 @@ excluded-watchers:
   - aw-watcher-afk
 userId: DemoTester
 cron: '* * * * * '
-min-data: "100"
