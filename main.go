@@ -15,6 +15,7 @@ func main() {
 	log.Print("Starting ActivityWatch Sync Agent...")
 	log.Print("Initializing settings...")
 	Settings := settings.InitSettings()
+	scheduler := util.ValidateCronExpr(Settings.Cron)
 
 	if Settings.AsService {
 
@@ -28,7 +29,6 @@ func main() {
 	}
 
 	log.Print("Setting up Sync Cronjob...")
-	scheduler := util.ValidateCronExpr(Settings.Cron)
 	c := cron.Init()
 	cron.Add(c, scheduler, synchronizer.SyncRoutine(*Settings))
 	cron.Start(c)
