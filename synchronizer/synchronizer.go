@@ -20,13 +20,14 @@ func Start(Settings settings.Settings) error {
 
 	prometheusClient := prometheus.NewClient(fmt.Sprintf("%s%s", Settings.PrometheusUrl, "/api/v1/write"))
 	scrapedData, err := datamanager.ScrapeData(Settings.AWUrl, Settings.ExcludedWatchers)
+	userID := util.GetUserID(Settings.UserID)
 	if err != nil {
 		return err
 	}
 	for watcher, data := range scrapedData {
 		log.Print("Pushing data for ", watcher, " ...")
-		aggregatedData := datamanager.AggregateData(data, strings.ReplaceAll(watcher, "-", "_")) //metric names must not have '-'
-		err = datamanager.PushData(prometheusClient, Settings.PrometheusUrl, aggregatedData, watcher)
+		aggregatedData := datamanager.AggregateData(data, strings.ReplaceAll(watcher, "-", "_"), userID) //metric names must not have '-'
+		err = datamanager.PushData(prometheusClient, Settings.PrometheusUrl, Settings.PrometheusSecretKey, aggregatedData, watcher)
 		if err != nil {
 			return err
 		}
@@ -43,8 +44,8 @@ func Start(Settings settings.Settings) error {
 // SyncRoutine returns a function that init the synchronization and starts the  process
 func SyncRoutine(Settings settings.Settings) func() {
 	return func() {
-		if !util.PromHealthCheck(Settings.PrometheusUrl) {
-			log.Print("Prometheus is not reachable or Internet connection is lost. Data will be pushed when health is recovered")
+		if !util.PromHealthCheck(Settings.PrometheusUrl, Settings.PrometheusSecretKey) {
+			log.Print("Something went wrong with Prometheus or Internet connection is lost. Data will be pushed when health is recovered!")
 		} else {
 			err := Start(Settings)
 			system_error.HandleNormal("", err)

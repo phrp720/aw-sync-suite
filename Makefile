@@ -32,6 +32,7 @@ format:
 build-all:
 	@GOOS=windows GOARCH=amd64 go build -o aw-sync-agent.exe main.go
 	@go build -o aw-sync-agent main.go
+
 clean-all:
 	@rm -rf aw-sync-agent
 	@rm -rf aw-sync-agent.exe

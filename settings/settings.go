@@ -16,25 +16,25 @@ type SettingsKey string
 
 // Define constants for each setting name
 const (
-	AWUrl            SettingsKey = "awUrl"
-	PrometheusUrl    SettingsKey = "prometheusUrl"
-	ExcludedWatchers SettingsKey = "excludedWatchers"
-	UserID           SettingsKey = "userId"
-	Cron             SettingsKey = "cron"
-	MinData          SettingsKey = "min-data"
-	AsService        SettingsKey = "service"
+	AWUrl               SettingsKey = "awUrl"
+	PrometheusUrl       SettingsKey = "prometheusUrl"
+	ExcludedWatchers    SettingsKey = "excludedWatchers"
+	UserID              SettingsKey = "userId"
+	Cron                SettingsKey = "cron"
+	PrometheusSecretKey SettingsKey = "prometheus-secret-key"
+	AsService           SettingsKey = "service"
 )
 const configFile = "config.yaml"
 
 // Settings struct
 type Settings struct {
-	AWUrl            string   `yaml:"aw-url"`
-	PrometheusUrl    string   `yaml:"prometheus-url"`
-	ExcludedWatchers []string `yaml:"excluded-watchers"`
-	UserID           string   `yaml:"userId"`
-	Cron             string   `yaml:"cron"`
-	MinData          string   `yaml:"min-data"`
-	AsService        bool     `yaml:"-"`
+	AWUrl               string   `yaml:"aw-url"`
+	PrometheusUrl       string   `yaml:"prometheus-url"`
+	PrometheusSecretKey string   `yaml:"prometheus-secret-key"`
+	ExcludedWatchers    []string `yaml:"excluded-watchers"`
+	UserID              string   `yaml:"userId"`
+	Cron                string   `yaml:"cron"`
+	AsService           bool     `yaml:"-"`
 }
 
 // InitSettings initializes the settings
@@ -91,8 +91,8 @@ func loadEnvVariables(settings *Settings) {
 	if value, exists := os.LookupEnv("CRON"); exists {
 		settings.Cron = value
 	}
-	if value, exists := os.LookupEnv("MIN_DATA"); exists {
-		settings.MinData = value
+	if value, exists := os.LookupEnv("PROMETHEUS_SECRET_KEY"); exists {
+		settings.PrometheusSecretKey = value
 	}
 
 }
@@ -103,7 +103,7 @@ func loadFlags(settings *Settings) {
 	flag.StringVar(&settings.PrometheusUrl, string(PrometheusUrl), settings.PrometheusUrl, "Prometheus URL")
 	flag.StringVar(&settings.UserID, string(UserID), settings.UserID, "User")
 	flag.StringVar(&settings.Cron, string(Cron), settings.Cron, "Cron expression")
-	flag.StringVar(&settings.MinData, string(MinData), settings.MinData, "Minimum data")
+	flag.StringVar(&settings.PrometheusSecretKey, string(PrometheusSecretKey), settings.PrometheusSecretKey, "Prometheus Secret Key")
 	flag.BoolVar(&settings.AsService, string(AsService), settings.AsService, "Run as service")
 
 	flag.Parse()
@@ -130,18 +130,30 @@ func printSettings(settings *Settings) {
 
 	// Create a map of settings for easier iteration
 	settingsMap := map[SettingsKey]string{
-		AWUrl:            settings.AWUrl,
-		PrometheusUrl:    settings.PrometheusUrl,
-		ExcludedWatchers: strings.Join(settings.ExcludedWatchers, ", "),
-		UserID:           settings.UserID,
-		Cron:             settings.Cron,
-		MinData:          settings.MinData,
-		AsService:        fmt.Sprintf("%t", settings.AsService),
+		AWUrl:               settings.AWUrl,
+		PrometheusUrl:       settings.PrometheusUrl,
+		PrometheusSecretKey: settings.PrometheusSecretKey,
+		ExcludedWatchers:    strings.Join(settings.ExcludedWatchers, ", "),
+		UserID:              settings.UserID,
+		Cron:                settings.Cron,
+		AsService:           fmt.Sprintf("%t", settings.AsService),
+	}
+
+	// Define the order of the settings
+	order := []SettingsKey{
+		AWUrl,
+		PrometheusUrl,
+		PrometheusSecretKey,
+		ExcludedWatchers,
+		UserID,
+		Cron,
+		AsService,
 	}
 
 	maxKeyLength := 0
 	maxValueLength := 0
-	for key, value := range settingsMap {
+	for _, key := range order {
+		value := settingsMap[key]
 		if len(key) > maxKeyLength {
 			maxKeyLength = len(key)
 		}
@@ -153,7 +165,8 @@ func printSettings(settings *Settings) {
 	borderLength := maxKeyLength + maxValueLength + 7
 	border := strings.Repeat("-", borderLength)
 	fmt.Println(border)
-	for key, value := range settingsMap {
+	for _, key := range order {
+		value := settingsMap[key]
 		fmt.Printf("| %-*s | %-*s |\n", maxKeyLength, key, maxValueLength, value)
 	}
 	fmt.Println(border)

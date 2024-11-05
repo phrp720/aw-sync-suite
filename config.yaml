@@ -1,7 +1,7 @@
 aw-url: http://localhost:5600
-prometheus-url: http://localhost:9090
+prometheus-url: http://localhost:80
 excluded-watchers:
   - aw-watcher-afk
 userId: DemoTester
 cron: '* * * * * '
-min-data: "100"
+prometheus-secret-key:

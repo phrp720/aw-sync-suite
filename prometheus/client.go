@@ -53,7 +53,7 @@ type WriteResponse struct {
 }
 
 // Write sends HTTP requests to Prometheus Remote Write.
-func (p *Client) Write(ctx context.Context, req *WriteRequest, options ...WriteOption) (*WriteResponse, error) {
+func (p *Client) Write(ctx context.Context, secretKey string, req *WriteRequest, options ...WriteOption) (*WriteResponse, error) {
 	opts := writeOptions{}
 	for _, opt := range options {
 		opt(&opts)
@@ -76,6 +76,9 @@ func (p *Client) Write(ctx context.Context, req *WriteRequest, options ...WriteO
 	httpReq.Header.Add("X-Prometheus-Remote-Write-Version", "0.1.0")
 	httpReq.Header.Add("Content-Encoding", "snappy")
 	httpReq.Header.Set("Content-Type", "application/x-protobuf")
+	if secretKey != "" {
+		httpReq.Header.Add("Authorization", "Bearer "+secretKey)
+	}
 	for k, v := range opts.headers {
 		httpReq.Header.Add(k, v)
 	}
