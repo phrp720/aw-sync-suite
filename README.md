@@ -2,6 +2,7 @@
 
 The **aw-sync-agent** is an open-source background service that collects data from the ActivityWatch platform and synchronizes it to a central Prometheus database. With Grafana integration, it provides real-time visual insights into user activity data, allowing for easy monitoring and analysis.
 
+The repository for **aw-sync-center** which contains the Prometheus and Grafana setup and configurations  can be found [here](https://github.com/phrp720/aw-sync-center).
 With **aw-sync-agent** we can accomplish the synchronization of multiple ActivityWatch instances to a single Prometheus database. This allows for centralized monitoring and analysis of user activity data across multiple systems.
 
 This project is independent of the [ActivityWatch](https://github.com/ActivityWatch/activitywatch) and can work with all the old and new versions of ActivityWatch that supports the REST API feature.
@@ -52,7 +53,7 @@ The following table provides details on configurable settings:
 | `-service`          | -                    | -                   | Run the agent as a service.                                             | ❌        | -                               |
 | `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                        | ✅        | -                               |
 | `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                           | ✅        | -                               |
-| `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Basic Auth for prometheus(if prom is protected)                         | ❌        | -                               |
+| `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Bearer Auth for prometheus(if prom is protected)                        | ❌        | -                               |
 | `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                      | ❌        | Every 5 minutes                 |
 | `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | Pipe-separated list of watchers to exclude.                             | ❌        | -                               |
 | `-userId`           | `USER_ID`            | `userId`            | Identifier for user data; defaults to computer's name if not specified. | ❌        | Generated ID or computer's name |
