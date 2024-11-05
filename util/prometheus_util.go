@@ -20,6 +20,8 @@ func PromHealthCheck(prometheusUrl string, secretKey string) bool {
 
 	if resp.StatusCode == http.StatusOK {
 		return true
+	} else if resp.StatusCode == http.StatusUnauthorized {
+		log.Printf("Unauthorized access to Prometheus. Status Code: %d\n", resp.StatusCode)
 	} else {
 		log.Printf("Prometheus returned status code: %d\n", resp.StatusCode)
 	}
