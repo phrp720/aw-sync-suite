@@ -40,7 +40,7 @@ func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEvents
 
 // AggregateData aggregates the data
 // This is going to be called with events for each watcher separately
-func AggregateData(events []aw.Event, watcher string) []prometheus.TimeSeries {
+func AggregateData(events []aw.Event, watcher string, userID string) []prometheus.TimeSeries {
 	//Here we need to digest and aggregate data.
 
 	// Sort events by timestamp. Older to newer.
@@ -59,6 +59,10 @@ func AggregateData(events []aw.Event, watcher string) []prometheus.TimeSeries {
 		labels = append(labels, prometheus.Label{
 			Name:  "__name__",
 			Value: watcher,
+		})
+		labels = append(labels, prometheus.Label{
+			Name:  "user",
+			Value: userID,
 		})
 		for key, value := range event.Data {
 			labels = append(labels, prometheus.Label{
@@ -83,10 +87,10 @@ func AggregateData(events []aw.Event, watcher string) []prometheus.TimeSeries {
 }
 
 // PushData pushes  data to the server via the Prometheus Client
-func PushData(client *prometheus.Client, prometheusUrl string, timeseries []prometheus.TimeSeries, watcher string) error {
+func PushData(client *prometheus.Client, prometheusUrl string, prometheusSecretKey string, timeseries []prometheus.TimeSeries, watcher string) error {
 	const chunkSize = 20
 	for i := 0; i < len(timeseries); i += chunkSize {
-		if !util.PromHealthCheck(prometheusUrl) {
+		if !util.PromHealthCheck(prometheusUrl, prometheusSecretKey) {
 			return errors.New("prometheus is not reachable or Internet connection is lost. Data will be pushed when health is recovered")
 		}
 		end := i + chunkSize
@@ -94,7 +98,7 @@ func PushData(client *prometheus.Client, prometheusUrl string, timeseries []prom
 			end = len(timeseries)
 		}
 		chunk := timeseries[i:end]
-		_, err := client.Write(context.Background(), &prometheus.WriteRequest{TimeSeries: chunk})
+		_, err := client.Write(context.Background(), prometheusSecretKey, &prometheus.WriteRequest{TimeSeries: chunk})
 		if err != nil {
 			log.Printf("Error pushing data: %v", err)
 			return err

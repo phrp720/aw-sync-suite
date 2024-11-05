@@ -2,11 +2,14 @@ package util
 
 import (
 	"aw-sync-agent/system_error"
+	"github.com/google/uuid"
+
 	"github.com/robfig/cron"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
+
 	"runtime"
 )
 
@@ -56,4 +59,23 @@ func CopyBinary(appPath string, binaryName string) {
 	if err := os.Chmod(appPath, 0755); err != nil {
 		log.Fatalf("Failed to set executable permissions: %v", err)
 	}
+}
+
+// GetUserID fetches or generates the user ID
+func GetUserID(userID string) string {
+	if userID != "" {
+		return userID
+	}
+
+	hostname, err := os.Hostname()
+	if err == nil {
+		return hostname
+	}
+
+	id, err := uuid.NewUUID()
+	if err != nil {
+		return "unknown"
+	}
+
+	return id.String()
 }

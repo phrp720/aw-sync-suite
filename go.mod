@@ -5,6 +5,7 @@ go 1.23.2
 require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/snappy v0.0.4
+	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/phrp720/service-builder v0.2.7
 	github.com/prometheus/prometheus v0.55.0
