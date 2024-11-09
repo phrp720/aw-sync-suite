@@ -67,7 +67,7 @@ func Update(watcher string, timestamp time.Time) {
 	if err != nil {
 		log.Fatalf("Failed to get the current size of the checkpoint file: %v", err)
 	}
-	if err := file.Truncate(tmpFile); err != nil {
+	if err = file.Truncate(tmpFile); err != nil {
 		log.Fatalf("Failed to truncate checkpoint file: %v", err)
 	}
 }

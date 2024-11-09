@@ -15,8 +15,16 @@ func main() {
 	log.Print("Starting ActivityWatch Sync Agent...")
 	log.Print("Initializing settings...")
 	Settings := settings.InitSettings()
+
+	// If immediate flag is set, run the sync routine and exit
+	if Settings.Immediate {
+		synchronizer.SyncRoutine(*Settings)()
+		os.Exit(0)
+	}
+
 	scheduler := util.ValidateCronExpr(Settings.Cron)
 
+	// If the service flag is set, create and Start the service and exit
 	if Settings.AsService {
 
 		if util.IsWindows() {

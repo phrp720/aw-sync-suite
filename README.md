@@ -51,7 +51,8 @@ The following table provides details on configurable settings:
 
 | Flag                | Environment Variable | Config Key          | Description                                                             | Required | Default                         |
 |---------------------|----------------------|---------------------|-------------------------------------------------------------------------|----------|---------------------------------|
-| `-service`          | -                    | -                   | Run the agent as a service.                                             | ❌        | -                               |
+| `-service`          | -                    | -                   | Runs the agent as a service.                                            | ❌        | -                               |
+| `-immediate`        | -                    | -                   | Runs the synchronizer immediately.                                      | ❌        | -                               |
 | `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                        | ✅        | -                               |
 | `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                           | ✅        | -                               |
 | `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Bearer Auth for prometheus(if prom is protected)                        | ❌        | -                               |

@@ -23,6 +23,7 @@ const (
 	Cron                SettingsKey = "cron"
 	PrometheusSecretKey SettingsKey = "prometheus-secret-key"
 	AsService           SettingsKey = "service"
+	Immediate           SettingsKey = "immediate"
 )
 const configFile = "config.yaml"
 
@@ -35,6 +36,7 @@ type Settings struct {
 	UserID              string   `yaml:"userId"`
 	Cron                string   `yaml:"cron"`
 	AsService           bool     `yaml:"-"`
+	Immediate           bool     `yaml:"-"`
 }
 
 // InitSettings initializes the settings
@@ -105,6 +107,7 @@ func loadFlags(settings *Settings) {
 	flag.StringVar(&settings.Cron, string(Cron), settings.Cron, "Cron expression")
 	flag.StringVar(&settings.PrometheusSecretKey, string(PrometheusSecretKey), settings.PrometheusSecretKey, "Prometheus Secret Key")
 	flag.BoolVar(&settings.AsService, string(AsService), settings.AsService, "Run as service")
+	flag.BoolVar(&settings.Immediate, string(Immediate), settings.Immediate, "Run a sync immediately")
 
 	flag.Parse()
 	log.Print("Loading settings from flags.")
