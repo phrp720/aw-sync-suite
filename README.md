@@ -63,7 +63,7 @@ The following table provides details on configurable settings:
 ### Configuration Hierarchy
 
 Settings are prioritized in the following order:
-1. **Configuration File** (`config.yaml`): Base configuration settings.
+1. **Configuration File** (`aw-sync-agent.yaml`): Base configuration settings.
 2. **Environment Variables**: Override settings from the configuration file.
 3. **Command-Line Flags**: Highest priority, override both file and environment settings.
 

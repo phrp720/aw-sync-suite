@@ -13,13 +13,13 @@ import (
 )
 
 const (
-	WinConfig     = "config.yaml"
+	WinConfig     = "aw-sync-agent.yaml"
 	WinExecutable = "aw-sync-agent.exe"
 	WinFolder     = "AwSyncAgent"
 	WinService    = "aw-sync-agent"
 )
 
-func CreateWindowsService(sett settings.Settings) {
+func CreateWindowsService(config settings.Configuration) {
 
 	// Construct paths relative to the user's home directory
 	// Get the user's home directory
@@ -39,7 +39,7 @@ func CreateWindowsService(sett settings.Settings) {
 	util.CopyBinary(windowsAppPath, WinExecutable)
 
 	// Create the config file that will be used for the service(Based on the settings) and loads it  to /opt/aw/ path
-	err = settings.CreateConfigFile(sett, windowsConfigPath)
+	err = settings.CreateConfigFile(config, windowsConfigPath)
 	system_error.HandleFatal("Failed to create config file: ", err)
 
 	builder := nssm.NewServiceBuilder()

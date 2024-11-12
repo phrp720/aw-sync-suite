@@ -1,13 +1,8 @@
 package filter
 
 import (
-	"aw-sync-agent/system_error"
-	"bufio"
 	"fmt"
-	"log"
-	"os"
 	"regexp"
-	"strings"
 )
 
 const (
@@ -30,71 +25,17 @@ type List struct {
 	Filters []Filter
 }
 
-// LoadFilters loads filters from the specified file and returns a List
-func LoadFilters(filename string) *List {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal("Failed to open filters file: %v", err)
-	}
-	defer file.Close()
-
-	var filters []Filter
-	scanner := bufio.NewScanner(file)
-	var currentFilter Filter
-
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-
-		if line == "[Filter]" {
-			// Add the previous filter if it has a valid match field
-			if currentFilter.Match_app_id != nil || currentFilter.Match_app_name != nil {
-				filters = append(filters, currentFilter)
-			}
-			currentFilter = Filter{}
+func ValidateFilters(filters []Filter) []Filter {
+	validFilters := []Filter{}
+	for _, filter := range filters {
+		if (filter.Replace_app_id != "" || filter.Replace_app_name != "") &&
+			(filter.Match_app_id == nil && filter.Match_app_name == nil) {
+			// Ignore this filter as it does not meet the condition
 			continue
 		}
-
-		// Split key-value pairs by "="
-		parts := strings.SplitN(line, "=", 2)
-		if len(parts) != 2 {
-			continue
-		}
-		key, value := strings.TrimSpace(parts[0]), strings.TrimSpace(parts[1])
-
-		// Parse values based on the key
-		switch key {
-		case match_app_id:
-			re, err := regexp.Compile(value)
-			system_error.HandleFatal("invalid regex for match_app_id: ", err)
-			currentFilter.Match_app_id = re
-
-		case match_app_name:
-			re, err := regexp.Compile(value)
-			system_error.HandleFatal("invalid regex for match_app_name: ", err)
-			currentFilter.Match_app_name = re
-
-		case replace_app_id:
-			if currentFilter.Match_app_id != nil || currentFilter.Match_app_name != nil {
-				currentFilter.Replace_app_id = value
-			}
-
-		case replace_app_name:
-			if currentFilter.Match_app_id != nil || currentFilter.Match_app_name != nil {
-				currentFilter.Replace_app_name = value
-			}
-		}
+		validFilters = append(validFilters, filter)
 	}
-
-	// Add the last filter if it has a valid match field
-	if currentFilter.Match_app_id != nil || currentFilter.Match_app_name != nil {
-		filters = append(filters, currentFilter)
-	}
-
-	if err := scanner.Err(); err != nil {
-		system_error.HandleFatal("Failed to read filters file: ", err)
-	}
-
-	return &List{Filters: filters}
+	return validFilters
 }
 
 // Apply applies the filters in the  to the app_id and app_name
@@ -117,8 +58,8 @@ func (l *List) Apply(app_id string, app_name string) (string, string) {
 }
 
 // PrintFilters prints the filters in the List
-func PrintFilters(list List) {
-	for i, filter := range list.Filters {
+func PrintFilters(filters []Filter) {
+	for i, filter := range filters {
 		fmt.Printf("Filter %d:\n", i+1)
 		fmt.Printf("  Match_app_id: %s\n", filter.Match_app_id.String())
 		fmt.Printf("  Match_app_name: %s\n", filter.Match_app_name.String())

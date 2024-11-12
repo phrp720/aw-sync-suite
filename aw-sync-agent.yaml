@@ -1,0 +1,18 @@
+Settings:
+  aw-url: http://localhost:5600
+  prometheus-url: http://localhost:80
+  excluded-watchers:
+    - aw-watcher-afk
+  userId: DemoTester
+  prometheus-secret-key: 7b8c43219399db04ad62642eb6c3e47f09af3b44a0d4b74f45ad9baf09b1ac62
+
+Filters:
+
+  - match_app_id: appid_2
+    match_app_name: testName2
+    replace_app_id: rplc_id_2
+    replace_app_name: rplc_name_2
+
+  - match_app_id:
+    match_app_name:
+    replace_app_id: rplc_id_3

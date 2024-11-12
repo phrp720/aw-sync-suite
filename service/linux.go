@@ -11,13 +11,13 @@ import (
 )
 
 const (
-	LinuxConfig     = "config.yaml"
+	LinuxConfig     = "aw-sync-agent.yaml"
 	LinuxExecutable = "aw-sync-agent"
 	LinuxService    = "aw-sync-agent.service"
 )
 
 // CreateLinuxService creates a Linux service using the service-builder library github.com/phrp720/service-builder
-func CreateLinuxService(sett settings.Settings) {
+func CreateLinuxService(config settings.Configuration) {
 	// Get the current user
 	currentUser, err := user.Current()
 	system_error.HandleFatal("Failed to get current user: ", err)
@@ -32,7 +32,7 @@ func CreateLinuxService(sett settings.Settings) {
 	util.CopyBinary(appPath, LinuxExecutable)
 
 	// Create the config file that will be used for the service (Based on the settings) and loads it to the user's config path
-	err = settings.CreateConfigFile(sett, configPath)
+	err = settings.CreateConfigFile(config, configPath)
 	system_error.HandleFatal("Failed to create config file: ", err)
 
 	// Get the working directory

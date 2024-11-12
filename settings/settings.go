@@ -26,23 +26,27 @@ const (
 	AsService           SettingsKey = "service"
 	Immediate           SettingsKey = "immediate"
 )
-const configFile = "config.yaml"
+const configFile = "aw-sync-agent.yaml"
 
-// Settings struct
-type Settings struct {
-	AWUrl               string       `yaml:"aw-url"`
-	PrometheusUrl       string       `yaml:"prometheus-url"`
-	PrometheusSecretKey string       `yaml:"prometheus-secret-key"`
-	ExcludedWatchers    []string     `yaml:"excluded-watchers"`
-	UserID              string       `yaml:"userId"`
-	Cron                string       `yaml:"cron"`
-	AsService           bool         `yaml:"-"`
-	Immediate           bool         `yaml:"-"`
-	Filters             *filter.List `yaml:"-"`
+type sett struct {
+	AWUrl               string   `yaml:"aw-url"`
+	PrometheusUrl       string   `yaml:"prometheus-url"`
+	PrometheusSecretKey string   `yaml:"prometheus-secret-key"`
+	ExcludedWatchers    []string `yaml:"excluded-watchers"`
+	UserID              string   `yaml:"userId"`
+	Cron                string   `yaml:"cron"`
+	AsService           bool     `yaml:"-"`
+	Immediate           bool     `yaml:"-"`
 }
 
-// InitSettings initializes the settings
-func InitSettings() *Settings {
+// Configuration struct
+type Configuration struct {
+	Settings sett            `yaml:"Settings"`
+	Filters  []filter.Filter `yaml:"Filters"`
+}
+
+// InitConfigurations initializes the settings
+func InitConfigurations() *Configuration {
 	settings := loadYAMLConfig(configFile)
 	loadEnvVariables(&settings)
 	loadFlags(&settings)
@@ -52,28 +56,28 @@ func InitSettings() *Settings {
 }
 
 // Load the YAML config file
-func loadYAMLConfig(filename string) Settings {
+func loadYAMLConfig(filename string) Configuration {
 	file, err := os.Open(filename)
-	var settings Settings
+	var config Configuration
 
 	if err != nil {
-		log.Print("No config.yaml file found. Proceeding with environment variables and flags.")
+		log.Print("No aw-sync-agent.yaml file found. Proceeding with environment variables and flags.")
 	} else {
-		log.Print("Loading settings from config.yaml file.")
+		log.Print("Loading settings from aw-sync-agent.yaml file.")
 		defer file.Close()
 		decoder := yaml.NewDecoder(file)
-		if err := decoder.Decode(&settings); err != nil {
+		if err := decoder.Decode(&config); err != nil {
 			log.Fatalf("Failed to decode settings file: %v", err)
 		}
 		// Remove loading of SERVICE and STANDALONE from YAML config
-		settings.AsService = false
+		config.Settings.AsService = false
 	}
 
-	return settings
+	return config
 }
 
 // Load the environment variables
-func loadEnvVariables(settings *Settings) {
+func loadEnvVariables(config *Configuration) {
 	if err := godotenv.Load(".env"); err != nil {
 		log.Print("No .env file found. Loading environment variables from the system.")
 	} else {
@@ -81,67 +85,67 @@ func loadEnvVariables(settings *Settings) {
 	}
 
 	if value, exists := os.LookupEnv("ACTIVITY_WATCH_URL"); exists {
-		settings.AWUrl = value
+		config.Settings.AWUrl = value
 	}
 	if value, exists := os.LookupEnv("PROMETHEUS_URL"); exists {
-		settings.PrometheusUrl = value
+		config.Settings.PrometheusUrl = value
 	}
 	if value, exists := os.LookupEnv("EXCLUDED_WATCHERS"); exists {
-		settings.ExcludedWatchers = strings.Split(value, ",")
+		config.Settings.ExcludedWatchers = strings.Split(value, ",")
 	}
 	if value, exists := os.LookupEnv("USER_ID"); exists {
-		settings.UserID = value
+		config.Settings.UserID = value
 	}
 	if value, exists := os.LookupEnv("CRON"); exists {
-		settings.Cron = value
+		config.Settings.Cron = value
 	}
 	if value, exists := os.LookupEnv("PROMETHEUS_SECRET_KEY"); exists {
-		settings.PrometheusSecretKey = value
+		config.Settings.PrometheusSecretKey = value
 	}
 
 }
 
 // Load the flags
-func loadFlags(settings *Settings) {
-	flag.StringVar(&settings.AWUrl, string(AWUrl), settings.AWUrl, "Activity Watch URL")
-	flag.StringVar(&settings.PrometheusUrl, string(PrometheusUrl), settings.PrometheusUrl, "Prometheus URL")
-	flag.StringVar(&settings.UserID, string(UserID), settings.UserID, "User")
-	flag.StringVar(&settings.Cron, string(Cron), settings.Cron, "Cron expression")
-	flag.StringVar(&settings.PrometheusSecretKey, string(PrometheusSecretKey), settings.PrometheusSecretKey, "Prometheus Secret Key")
-	flag.BoolVar(&settings.AsService, string(AsService), settings.AsService, "Run as service")
-	flag.BoolVar(&settings.Immediate, string(Immediate), settings.Immediate, "Run a sync immediately")
+func loadFlags(config *Configuration) {
+	flag.StringVar(&config.Settings.AWUrl, string(AWUrl), config.Settings.AWUrl, "Activity Watch URL")
+	flag.StringVar(&config.Settings.PrometheusUrl, string(PrometheusUrl), config.Settings.PrometheusUrl, "Prometheus URL")
+	flag.StringVar(&config.Settings.UserID, string(UserID), config.Settings.UserID, "User")
+	flag.StringVar(&config.Settings.Cron, string(Cron), config.Settings.Cron, "Cron expression")
+	flag.StringVar(&config.Settings.PrometheusSecretKey, string(PrometheusSecretKey), config.Settings.PrometheusSecretKey, "Prometheus Secret Key")
+	flag.BoolVar(&config.Settings.AsService, string(AsService), config.Settings.AsService, "Run as service")
+	flag.BoolVar(&config.Settings.Immediate, string(Immediate), config.Settings.Immediate, "Run a sync immediately")
 
 	flag.Parse()
 	log.Print("Loading settings from flags.")
 }
 
 // Validate the settings
-func validateSettings(settings *Settings) {
-	if settings.AWUrl == "" {
+func validateSettings(config *Configuration) {
+	if config.Settings.AWUrl == "" {
 		log.Fatal("Activity Watch URL is mandatory")
 	}
-	if settings.PrometheusUrl == "" {
+	if config.Settings.PrometheusUrl == "" {
 		log.Fatal("Prometheus URL is mandatory")
 	}
-	if settings.Cron == "" {
+	if config.Settings.Cron == "" {
 		log.Print("Cron expression is empty, setting it to default value: */5 * * * * (every 5 minutes)")
-		settings.Cron = "@every 5m"
+		config.Settings.Cron = "@every 5m"
 	}
 }
 
 // Pretty Print of the settings
-func printSettings(settings *Settings) {
+func printSettings(config *Configuration) {
 	log.Print("Current Settings:")
 
 	// Create a map of settings for easier iteration
 	settingsMap := map[SettingsKey]string{
-		AWUrl:               settings.AWUrl,
-		PrometheusUrl:       settings.PrometheusUrl,
-		PrometheusSecretKey: settings.PrometheusSecretKey,
-		ExcludedWatchers:    strings.Join(settings.ExcludedWatchers, ", "),
-		UserID:              settings.UserID,
-		Cron:                settings.Cron,
-		AsService:           fmt.Sprintf("%t", settings.AsService),
+		AWUrl:               config.Settings.AWUrl,
+		PrometheusUrl:       config.Settings.PrometheusUrl,
+		PrometheusSecretKey: config.Settings.PrometheusSecretKey,
+		ExcludedWatchers:    strings.Join(config.Settings.ExcludedWatchers, ", "),
+		UserID:              config.Settings.UserID,
+		Cron:                config.Settings.Cron,
+		AsService:           fmt.Sprintf("%t", config.Settings.AsService),
 	}
 
 	// Define the order of the settings
@@ -178,9 +182,9 @@ func printSettings(settings *Settings) {
 }
 
 // CreateConfigFile creates a config file to a given path based on the settings
-func CreateConfigFile(settings Settings, path string) error {
+func CreateConfigFile(config Configuration, path string) error {
 
-	content, err := yaml.Marshal(&settings)
+	content, err := yaml.Marshal(&config)
 	if err != nil {
 		return err
 	}
@@ -189,5 +193,4 @@ func CreateConfigFile(settings Settings, path string) error {
 		return err
 	}
 	return os.WriteFile(path, content, 0644)
-
 }
