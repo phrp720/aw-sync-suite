@@ -2,6 +2,7 @@ package main
 
 import (
 	"aw-sync-agent/cron"
+	"aw-sync-agent/filter"
 	"aw-sync-agent/service"
 	"aw-sync-agent/settings"
 	"aw-sync-agent/synchronizer"
@@ -13,18 +14,23 @@ import (
 func main() {
 
 	log.Print("Starting ActivityWatch Sync Agent...")
+
 	log.Print("Initializing settings...")
 	Settings := settings.InitSettings()
 
+	log.Print("Initializing filters...")
+	Settings.Filters = filter.LoadFilters("aw-sync-agent.filters")
+	//filter.PrintFilters(*Settings.Filters)
 	// If immediate flag is set, run the sync routine and exit
 	if Settings.Immediate {
 		synchronizer.SyncRoutine(*Settings)()
 		os.Exit(0)
 	}
 
+	// Validate the cron expression and create a scheduler
 	scheduler := util.ValidateCronExpr(Settings.Cron)
 
-	// If the service flag is set, create and Start the service and exit
+	// If the -service flag is set, creates and starts the service and exit
 	if Settings.AsService {
 
 		if util.IsWindows() {

@@ -1,6 +1,7 @@
 package settings
 
 import (
+	"aw-sync-agent/filter"
 	"flag"
 	"fmt"
 	"github.com/joho/godotenv"
@@ -29,14 +30,15 @@ const configFile = "config.yaml"
 
 // Settings struct
 type Settings struct {
-	AWUrl               string   `yaml:"aw-url"`
-	PrometheusUrl       string   `yaml:"prometheus-url"`
-	PrometheusSecretKey string   `yaml:"prometheus-secret-key"`
-	ExcludedWatchers    []string `yaml:"excluded-watchers"`
-	UserID              string   `yaml:"userId"`
-	Cron                string   `yaml:"cron"`
-	AsService           bool     `yaml:"-"`
-	Immediate           bool     `yaml:"-"`
+	AWUrl               string       `yaml:"aw-url"`
+	PrometheusUrl       string       `yaml:"prometheus-url"`
+	PrometheusSecretKey string       `yaml:"prometheus-secret-key"`
+	ExcludedWatchers    []string     `yaml:"excluded-watchers"`
+	UserID              string       `yaml:"userId"`
+	Cron                string       `yaml:"cron"`
+	AsService           bool         `yaml:"-"`
+	Immediate           bool         `yaml:"-"`
+	Filters             *filter.List `yaml:"-"`
 }
 
 // InitSettings initializes the settings
