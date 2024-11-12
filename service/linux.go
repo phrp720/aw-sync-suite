@@ -4,7 +4,7 @@ import (
 	"aw-sync-agent/settings"
 	"aw-sync-agent/system_error"
 	"aw-sync-agent/util"
-	"github.com/phrp720/service-builder/systemd"
+	"github.com/phrp720/go-service-builder/systemd"
 	"log"
 	"os/user"
 	"path/filepath"

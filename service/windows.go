@@ -5,7 +5,7 @@ import (
 	"aw-sync-agent/system_error"
 	"aw-sync-agent/util"
 	"fmt"
-	"github.com/phrp720/service-builder/nssm"
+	"github.com/phrp720/go-service-builder/nssm"
 	"log"
 	"os"
 	"os/exec"
