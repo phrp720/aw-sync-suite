@@ -20,7 +20,8 @@ func main() {
 
 	log.Print("Validating filters...")
 	Configs.Filters = filter.ValidateFilters(Configs.Filters)
-	filter.PrintFilters(Configs.Filters)
+
+	//filter.PrintFilters(Configs.Filters)
 	// If immediate flag is set, run the sync routine and exit
 	if Configs.Settings.Immediate {
 		synchronizer.SyncRoutine(*Configs)()
