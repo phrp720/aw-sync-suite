@@ -8,7 +8,6 @@ import (
 	"aw-sync-agent/util"
 	"fmt"
 	"log"
-	"strings"
 )
 
 // Start starts the synchronization process of data with prometheus
@@ -26,7 +25,7 @@ func Start(Config settings.Configuration) error {
 	}
 	for watcher, data := range scrapedData {
 		log.Print("Pushing data for ", watcher, " ...")
-		aggregatedData := datamanager.AggregateData(data, strings.ReplaceAll(watcher, "-", "_"), userID) //metric names must not have '-'
+		aggregatedData := datamanager.AggregateData(data, watcher, userID, Config.Filters) //metric names must not have '-'
 		err = datamanager.PushData(prometheusClient, Config.Settings.PrometheusUrl, Config.Settings.PrometheusSecretKey, aggregatedData, watcher)
 		if err != nil {
 			return err

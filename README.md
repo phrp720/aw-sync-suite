@@ -40,6 +40,7 @@ To run the agent, you need:
 - **system_error**: Error handling utilities.
 - **datamanager**: Handles data processing and transmission to Prometheus(**Scrape**,**Aggregate** and **Push** data).
 - **settings**: Manages agent configuration settings.
+- **filter**: Filters data based on user-defined criteria.
 - **util**: Utility functions, including health checks.
 - **scripts**: Additional, optional scripts.
 - **cron**: Manages scheduled sync intervals.

@@ -3,6 +3,7 @@ package datamanager
 import (
 	"aw-sync-agent/aw"
 	"aw-sync-agent/checkpoint"
+	"aw-sync-agent/filter"
 	"aw-sync-agent/prometheus"
 	"aw-sync-agent/util"
 	"context"
@@ -10,6 +11,7 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"strings"
 )
 
 // ScrapeData scrapes the data from the local ActivityWatch instance via the aw Client
@@ -40,27 +42,30 @@ func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEvents
 
 // AggregateData aggregates the data
 // This is going to be called with events for each watcher separately
-func AggregateData(events []aw.Event, watcher string, userID string) []prometheus.TimeSeries {
-	//Here we will add the filtering
-
-	//TODO: Add filtering here
+func AggregateData(events []aw.Event, watcher string, userID string, filters []filter.Filter) []prometheus.TimeSeries {
 
 	// Sort events by timestamp. Older to newer.
 	sort.Slice(events, func(i, j int) bool {
 		return events[i].Timestamp.Before(events[j].Timestamp)
 	})
+
 	// Remove the newest event because it might be incomplete.
-	//The latest event is not complete because it is not yet finished.
 	if len(events) > 0 {
 		events = events[:len(events)-1]
 	}
+
 	var timeSeriesList []prometheus.TimeSeries
 
+	watcherFilters := filter.GetMatchingFilters(filters, watcher)
 	for _, event := range events {
+
+		//Apply the filters
+		event.Data = filter.Apply(event.Data, watcherFilters)
+
 		var labels []prometheus.Label
 		labels = append(labels, prometheus.Label{
 			Name:  "__name__",
-			Value: watcher,
+			Value: strings.ReplaceAll(watcher, "-", "_"),
 		})
 		labels = append(labels, prometheus.Label{
 			Name:  "user",
