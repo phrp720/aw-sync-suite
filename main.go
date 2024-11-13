@@ -2,6 +2,7 @@ package main
 
 import (
 	"aw-sync-agent/cron"
+	"aw-sync-agent/filter"
 	"aw-sync-agent/service"
 	"aw-sync-agent/settings"
 	"aw-sync-agent/synchronizer"
@@ -13,16 +14,32 @@ import (
 func main() {
 
 	log.Print("Starting ActivityWatch Sync Agent...")
-	log.Print("Initializing settings...")
-	Settings := settings.InitSettings()
-	scheduler := util.ValidateCronExpr(Settings.Cron)
 
-	if Settings.AsService {
+	log.Print("Initializing configurations...")
+	Configs := settings.InitConfigurations()
+
+	log.Print("Validating filters...")
+	var totalFilters, invalidFilters int
+	Configs.Filters, totalFilters, invalidFilters = filter.ValidateFilters(Configs.Filters)
+	log.Print("| Total filters: ", totalFilters, " | Valid filters: ", totalFilters-invalidFilters, " | Invalid filters: ", invalidFilters, " |")
+
+	//	filter.PrintFilters(Configs.Filters)
+	// If immediate flag is set, run the sync routine and exit
+	if Configs.Settings.Immediate {
+		synchronizer.SyncRoutine(*Configs)()
+		os.Exit(0)
+	}
+
+	// Validate the cron expression and create a scheduler
+	scheduler := util.ValidateCronExpr(Configs.Settings.Cron)
+
+	// If the -service flag is set, creates and starts the service and exit
+	if Configs.Settings.AsService {
 
 		if util.IsWindows() {
-			service.CreateWindowsService(*Settings)
+			service.CreateWindowsService(*Configs)
 		} else if util.IsLinux() {
-			service.CreateLinuxService(*Settings)
+			service.CreateLinuxService(*Configs)
 		}
 		os.Exit(0)
 
@@ -30,7 +47,7 @@ func main() {
 
 	log.Print("Setting up Sync Cronjob...")
 	c := cron.Init()
-	cron.Add(c, scheduler, synchronizer.SyncRoutine(*Settings))
+	cron.Add(c, scheduler, synchronizer.SyncRoutine(*Configs))
 	cron.Start(c)
 
 	log.Print("Agent Started Successfully")
