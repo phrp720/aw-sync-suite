@@ -1,4 +1,4 @@
-# ActivityWatch Sync Agent | aw-sync-agent
+# aw-sync-agent
 
 
 
@@ -26,15 +26,14 @@
 </details>
 
 ## About
-The **aw-sync-agent** is an open-source background service that collects data from the ActivityWatch platform and synchronizes it to a central Prometheus database. With Grafana integration, it provides real-time visual insights into user activity data, allowing for easy monitoring and analysis.
 
-With **aw-sync-agent** you can accomplish the synchronization of multiple ActivityWatch instances to a single Prometheus database. This allows for centralized monitoring and analysis of user activity data across multiple systems.
+The **aw-sync-agent** is an open-source background service written in Go that collects data from [ActivityWatch](https://github.com/ActivityWatch/activitywatch) and synchronizes it to a central Prometheus database. With Grafana integration, it provides real-time visual insights into user activity data, enabling easy monitoring and analysis.
 
-The repository for **aw-sync-center** which contains the Prometheus and Grafana setup and configurations  can be found [here](https://github.com/phrp720/aw-sync-center).
+The **aw-sync-agent** facilitates the synchronization of multiple ActivityWatch instances to a single Prometheus database, allowing for centralized monitoring and analysis of user activity data across various systems.
 
+The repository for **aw-sync-center**, which contains the Prometheus and Grafana setup and configurations, can be found [here](https://github.com/phrp720/aw-sync-center).
 
-This project is independent of the [ActivityWatch](https://github.com/ActivityWatch/activitywatch) and can work with all the old and new versions of ActivityWatch that supports the REST API feature.
-
+This project operates independently of [ActivityWatch](https://github.com/ActivityWatch/activitywatch) and is compatible with all versions of ActivityWatch that support the REST API feature.
 
 ## Key Features
 
@@ -82,7 +81,7 @@ The following table provides details on configurable settings:
 | Flag                | Environment Variable | Config Key          | Description                                                          | Required | Default                  |
 |---------------------|----------------------|---------------------|----------------------------------------------------------------------|----------|--------------------------|
 | `-service`          | -                    | -                   | Runs the agent as a service.                                         | ❌        | -                        |
-| `-immediate`        | -                    | -                   | Runs the synchronizer immediately.                                   | ❌        | -                        |
+| `-immediate`        | -                    | -                   | Runs the synchronizer once immediately.                              | ❌        | -                        |
 | `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                     | ✅        | -                        |
 | `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                        | ✅        | -                        |
 | `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Bearer Auth for prometheus(if prom is protected)                     | ❌        | -                        |
@@ -190,7 +189,6 @@ Both conditions must match for the filter to apply.
 - `make run`: Runs the agent.
 - `make service-install`: Install and Starts the agent as a service.
 - `make format`: Formats the codebase.
-- `make clean`: Cleans up the service's files and folders.
 
 ## Roadmap
 
