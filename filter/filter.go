@@ -9,10 +9,14 @@ import (
 
 // Filter struct
 type Filter struct {
-	Watchers []string       `yaml:"watchers"`
-	Key      string         `yaml:"key"`
-	Value    *regexp.Regexp `yaml:"value"`
-	Replace  []Replace      `yaml:"replace"`
+	Watchers []string  `yaml:"watchers"` // Watchers is the list of watchers to be filtered
+	Target   []Target  `yaml:"target"`   // Target is the key-value pair to be matched
+	Replace  []Replace `yaml:"replace"`  // Replace is the key-value pair to be replaced
+}
+
+type Target struct {
+	Key   string         `yaml:"key"`
+	Value *regexp.Regexp `yaml:"value"`
 }
 
 type Replace struct {
@@ -23,30 +27,46 @@ type Replace struct {
 // ValidateFilters validates the filters in the List
 func ValidateFilters(filters []Filter) ([]Filter, int, int) {
 	validFilters := []Filter{}
+	var targetList []Target
 	invalid := 0
 	total := len(filters)
 	for _, filter := range filters {
-		if filter.Key == "" || filter.Value == nil {
-			invalid++
-			continue
+		for _, target := range filter.Target {
+			if target.Key != "" && target.Value != nil {
+				targetList = append(targetList, target)
+			}
 		}
-		validFilters = append(validFilters, filter)
+		if len(targetList) != 0 { // Check if the filter has at least one valid target
+			validFilters = append(validFilters, filter)
+		} else {
+			invalid++
+		}
 	}
 	return validFilters, total, invalid
 }
 
 func Apply(data map[string]interface{}, filters []Filter) map[string]interface{} {
-
 	for _, filter := range filters {
-		// Check if the data contains the key to be filtered
-		if value, ok := data[filter.Key]; ok {
-			// Check if the value matches the filter's regex
-			if filter.Value.MatchString(fmt.Sprintf("%v", value)) {
-				// Apply replacements
-				for _, replace := range filter.Replace {
-					if _, exists := data[replace.Key]; exists {
-						data[replace.Key] = replace.Value
-					}
+		allMatch := true
+		for _, target := range filter.Target {
+			// Check if the data contains the key to be filtered
+			if value, ok := data[target.Key]; ok {
+				// Check if the value matches the target's regex
+				if !target.Value.MatchString(fmt.Sprintf("%v", value)) {
+					allMatch = false
+					break
+				}
+			} else {
+				allMatch = false
+				break
+			}
+		}
+
+		if allMatch {
+			// Apply replacements
+			for _, replace := range filter.Replace {
+				if _, exists := data[replace.Key]; exists {
+					data[replace.Key] = replace.Value
 				}
 			}
 		}
@@ -62,7 +82,10 @@ func GetMatchingFilters(filters []Filter, watcher string) []Filter {
 			matchingFilters = append(matchingFilters, filter)
 		}
 	}
-	log.Print(watcher, " filters applied : ", len(matchingFilters))
+	if len(matchingFilters) > 0 {
+		log.Print(watcher, " filters applied : ", len(matchingFilters))
+	}
+
 	return matchingFilters
 }
 
@@ -71,8 +94,11 @@ func PrintFilters(filters []Filter) {
 	for i, filter := range filters {
 		fmt.Printf("Filter %d:\n", i+1)
 		fmt.Printf("  Watchers: %v\n", filter.Watchers)
-		fmt.Printf("  Key: %s\n", filter.Key)
-		fmt.Printf("  Value: %s\n", filter.Value)
+		for k, target := range filter.Target {
+			fmt.Printf("  Target %d:\n", k+1)
+			fmt.Printf("    Key: %s\n", target.Key)
+			fmt.Printf("    Value: %s\n", target.Value)
+		}
 		for j, replace := range filter.Replace {
 			fmt.Printf("  Replace %d:\n", j+1)
 			fmt.Printf("    Key: %s\n", replace.Key)
