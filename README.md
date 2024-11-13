@@ -1,5 +1,31 @@
 # ActivityWatch Sync Agent | aw-sync-agent
 
+
+
+
+<details>
+
+<summary>Table of Contents</summary>
+
+1. [About](#about)
+2. [Key Features](#key-features)
+3. [Requirements](#requirements)
+    - [For Development](#for-development)
+    - [For Running the Agent](#for-running-the-agent)
+4. [Package Overview](#package-overview)
+5. [Configuration Options](#configuration-options)
+    - [Configuration Hierarchy](#configuration-hierarchy)
+6. [Filters](#filters)
+    - [Filter Format](#filter-format)
+    - [Filter Field Descriptions](#filter-field-descriptions)
+    - [Filter Example Scenario](#filter-example-scenario)
+7. [Makefile Commands](#makefile-commands)
+8. [Roadmap](#roadmap)
+    - [Completed Tasks](#completed-tasks)
+    - [Upcoming Features](#upcoming-features)
+</details>
+
+## About
 The **aw-sync-agent** is an open-source background service that collects data from the ActivityWatch platform and synchronizes it to a central Prometheus database. With Grafana integration, it provides real-time visual insights into user activity data, allowing for easy monitoring and analysis.
 
 With **aw-sync-agent** you can accomplish the synchronization of multiple ActivityWatch instances to a single Prometheus database. This allows for centralized monitoring and analysis of user activity data across multiple systems.
@@ -9,25 +35,7 @@ The repository for **aw-sync-center** which contains the Prometheus and Grafana 
 
 This project is independent of the [ActivityWatch](https://github.com/ActivityWatch/activitywatch) and can work with all the old and new versions of ActivityWatch that supports the REST API feature.
 
-## Table of Contents
 
-1. [Key Features](#key-features)
-2. [Requirements](#requirements)
-    - [For Development](#for-development)
-    - [For Running the Agent](#for-running-the-agent)
-3. [Package Overview](#package-overview)
-4. [Configuration Options](#configuration-options)
-    - [Configuration Hierarchy](#configuration-hierarchy)
-5. [Filters](#filters)
-    - [Filter Format](#filter-format)
-    - [Filter Field Descriptions](#filter-field-descriptions)
-    - [Filter Example Scenario](#filter-example-scenario)
-6. [Makefile Commands](#makefile-commands)
-7. [Roadmap](#roadmap)
-    - [Completed Tasks](#completed-tasks)
-    - [Upcoming Features](#upcoming-features)
-
-  
 ## Key Features
 
 - **Data Synchronization**: Fetches user activity data from multiple ActivityWatch instances.
