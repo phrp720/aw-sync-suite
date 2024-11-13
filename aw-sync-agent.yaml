@@ -1,5 +1,4 @@
 Settings:
-
   aw-url: <activitywatch_url>
   prometheus-url: <prometheus_url>
   excluded-watchers:
@@ -12,12 +11,16 @@ Filters:
   - Filter:
     watchers: ## watchers where the filter will be applied
       - <watcher_name>
-    key: "<key_name>" ## key to filter on e.g. `app`
-    value: "<value>" ## REGEX value to filter on
-    replace: ## key value pairs to replace e.g. on the key `name` replace its value with `Chromium` and on the key `Label` replace its value with `Test`
 
-      - key: "name" ## key to replace
-        value: "Chromium" ## value to replace
+    target: ## Data Records that if match , do the filtering
 
-      - key: "Label" ## key to replace
-        value: "Test" ## value to replace
+      - key: "app" ## key to filter on
+        value: "Google.*" ## value to filter on REGEX
+
+      - key: "title" ## key to filter on
+        value: "mail.*" ## value to filter on REGEX
+
+    replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
+
+      - key: "title" ## key to replace
+        value: "Email" ## value to replace
