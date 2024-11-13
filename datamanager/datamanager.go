@@ -41,7 +41,9 @@ func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEvents
 // AggregateData aggregates the data
 // This is going to be called with events for each watcher separately
 func AggregateData(events []aw.Event, watcher string, userID string) []prometheus.TimeSeries {
-	//Here we need to digest and aggregate data.
+	//Here we will add the filtering
+
+	//TODO: Add filtering here
 
 	// Sort events by timestamp. Older to newer.
 	sort.Slice(events, func(i, j int) bool {

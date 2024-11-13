@@ -129,7 +129,7 @@ func validateSettings(config *Configuration) {
 	}
 	if config.Settings.Cron == "" {
 		log.Print("Cron expression is empty, setting it to default value: */5 * * * * (every 5 minutes)")
-		config.Settings.Cron = "@every 5m"
+		config.Settings.Cron = "*/5 * * * *"
 	}
 }
 
@@ -145,7 +145,6 @@ func printSettings(config *Configuration) {
 		ExcludedWatchers:    strings.Join(config.Settings.ExcludedWatchers, ", "),
 		UserID:              config.Settings.UserID,
 		Cron:                config.Settings.Cron,
-		AsService:           fmt.Sprintf("%t", config.Settings.AsService),
 	}
 
 	// Define the order of the settings
@@ -156,7 +155,6 @@ func printSettings(config *Configuration) {
 		ExcludedWatchers,
 		UserID,
 		Cron,
-		AsService,
 	}
 
 	maxKeyLength := 0
