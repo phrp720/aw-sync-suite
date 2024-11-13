@@ -1,14 +1,23 @@
 Settings:
 
-  aw-url: http://localhost:5600
-  prometheus-url: http://localhost:80
+  aw-url: <activitywatch_url>
+  prometheus-url: <prometheus_url>
   excluded-watchers:
-    - aw-watcher-afk
-  userId: DemoTester
+    - <watcher_name>
+  userId: <nickname>
+  prometheus-secret-key: <secret_key>
 
 Filters:
 
-  - match_app_id: appid_2
-    match_app_name: testName2
-    replace_app_id: rplc_id_2
-    replace_app_name: rplc_name_2
+  - Filter:
+    watchers: ## watchers where the filter will be applied
+      - <watcher_name>
+    key: "<key_name>" ## key to filter on e.g. `app`
+    value: "<value>" ## REGEX value to filter on
+    replace: ## key value pairs to replace e.g. on the key `name` replace its value with `Chromium` and on the key `Label` replace its value with `Test`
+
+      - key: "name" ## key to replace
+        value: "Chromium" ## value to replace
+
+      - key: "Label" ## key to replace
+        value: "Test" ## value to replace
