@@ -1,33 +1,33 @@
 # ActivityWatch Sync Agent | aw-sync-agent
 
-## Table of Contents
-
-1. [Introduction](#introduction)
-2. [Key Features](#key-features)
-3. [Requirements](#requirements)
-    - [For Development](#for-development)
-    - [For Running the Agent](#for-running-the-agent)
-4. [Package Overview](#package-overview)
-5. [Configuration Options](#configuration-options)
-    - [Configuration Hierarchy](#configuration-hierarchy)
-6. [Filters](#filters)
-    - [Filter Format](#filter-format)
-    - [Field Descriptions](#field-descriptions)
-    - [Example Scenario](#example-scenario)
-7. [Makefile Commands](#makefile-commands)
-8. [Roadmap](#roadmap)
-    - [Completed Tasks](#completed-tasks)
-    - [Upcoming Features](#upcoming-features)
-
-
-## Introduction
 The **aw-sync-agent** is an open-source background service that collects data from the ActivityWatch platform and synchronizes it to a central Prometheus database. With Grafana integration, it provides real-time visual insights into user activity data, allowing for easy monitoring and analysis.
+
+With **aw-sync-agent** you can accomplish the synchronization of multiple ActivityWatch instances to a single Prometheus database. This allows for centralized monitoring and analysis of user activity data across multiple systems.
 
 The repository for **aw-sync-center** which contains the Prometheus and Grafana setup and configurations  can be found [here](https://github.com/phrp720/aw-sync-center).
 
-With **aw-sync-agent** we can accomplish the synchronization of multiple ActivityWatch instances to a single Prometheus database. This allows for centralized monitoring and analysis of user activity data across multiple systems.
 
 This project is independent of the [ActivityWatch](https://github.com/ActivityWatch/activitywatch) and can work with all the old and new versions of ActivityWatch that supports the REST API feature.
+
+## Table of Contents
+
+1. [Key Features](#key-features)
+2. [Requirements](#requirements)
+    - [For Development](#for-development)
+    - [For Running the Agent](#for-running-the-agent)
+3. [Package Overview](#package-overview)
+4. [Configuration Options](#configuration-options)
+    - [Configuration Hierarchy](#configuration-hierarchy)
+5. [Filters](#filters)
+    - [Filter Format](#filter-format)
+    - [Filter Field Descriptions](#filter-field-descriptions)
+    - [Filter Example Scenario](#filter-example-scenario)
+6. [Makefile Commands](#makefile-commands)
+7. [Roadmap](#roadmap)
+    - [Completed Tasks](#completed-tasks)
+    - [Upcoming Features](#upcoming-features)
+
+  
 ## Key Features
 
 - **Data Synchronization**: Fetches user activity data from multiple ActivityWatch instances.
@@ -71,16 +71,16 @@ To run the agent, you need:
 
 The following table provides details on configurable settings:
 
-| Flag                | Environment Variable | Config Key          | Description                                                             | Required | Default                         |
-|---------------------|----------------------|---------------------|-------------------------------------------------------------------------|----------|---------------------------------|
-| `-service`          | -                    | -                   | Runs the agent as a service.                                            | ❌        | -                               |
-| `-immediate`        | -                    | -                   | Runs the synchronizer immediately.                                      | ❌        | -                               |
-| `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                        | ✅        | -                               |
-| `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                           | ✅        | -                               |
-| `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Bearer Auth for prometheus(if prom is protected)                        | ❌        | -                               |
-| `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                      | ❌        | Every 5 minutes                 |
-| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | Pipe-separated list of watchers to exclude.                             | ❌        | -                               |
-| `-userId`           | `USER_ID`            | `userId`            | Identifier for user data; defaults to computer's name if not specified. | ❌        | Generated ID or computer's name |
+| Flag                | Environment Variable | Config Key          | Description                                                          | Required | Default                  |
+|---------------------|----------------------|---------------------|----------------------------------------------------------------------|----------|--------------------------|
+| `-service`          | -                    | -                   | Runs the agent as a service.                                         | ❌        | -                        |
+| `-immediate`        | -                    | -                   | Runs the synchronizer immediately.                                   | ❌        | -                        |
+| `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                     | ✅        | -                        |
+| `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                        | ✅        | -                        |
+| `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Bearer Auth for prometheus(if prom is protected)                     | ❌        | -                        |
+| `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                   | ❌        | Every 5 minutes          |
+| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | List of watchers to exclude(Pipe-separated for env or flag).         | ❌        | -                        |
+| `-userId`           | `USER_ID`            | `userId`            | Identifier for user nickname; defaults to hostname if not specified. | ❌        | hostname or Generated ID |
 
 ### Configuration Hierarchy
 
@@ -100,19 +100,19 @@ This guide explains the rules for configuring filters in the `aw-sync-agent.yaml
 Filters:
 
   - Filter:
-    watchers: 
+    watchers: ##(Optional) watchers where the filter will be applied. If empty, the filter will apply to all watchers
       - <watcher_name>
 
-    target: 
+    target:  ## Conditions that if match , it will apply the filtering for the specific record
       - key: <key_name>
-        value: <value_to_match>
+        value: <value_to_match> 
         .
         .
         .
       - key: <key_name>
         value: <value_to_match>
 
-    replace: 
+    replace:  ## Mapping for Values to be replaced
       - key: <key_name>
         value: <new_value>
         .
@@ -124,7 +124,7 @@ Filters:
 
 ```
 
-### Field Descriptions
+### Filter Field Descriptions
 
 - **watchers**(Optional): Specifies the watchers to apply the filter to, like `aw-watcher-window`. If this field is omitted or empty, the filter will apply to all watchers.
 
@@ -136,7 +136,7 @@ Filters:
   - **key**: The field name to replace.
   - **value**: The new value for the specified key.
 
-### Example Scenario
+### Filter Example Scenario
 
 ```yaml
 Filters:
@@ -147,10 +147,10 @@ Filters:
 
     target: ## Data Records that if match , do the filtering for the specific record
       - key: "app" ## key to filter on
-        value: "Google.*" ## value to filter on REGEX
+        value: "Google.*" ## value to filter on RegEX
       
       - key: "title" ## key to filter on     
-        value: "mail.*"  ## value to filter on REGEX
+        value: "mail.*"  ## value to filter on RegEX
 
     replace:  ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
       - key: "title"  ## key of record
@@ -198,10 +198,10 @@ Both conditions must match for the filter to apply.
 - [x] Configuration management (YAML, environment variables, flags)
 - [x] Windows service mode support
 - [x] Data aggregation and filtering for enhanced insights
+- [x] Improved error handling
 
 
 ### Upcoming Features
-- [ ] Improved error handling
 - [ ] Grafana dashboard template for data visualization
 - [ ] Dockerfile for containerized deployment
 - [ ] Complete project documentation
