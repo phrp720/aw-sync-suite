@@ -18,7 +18,7 @@
 6. [Filters](#filters)
     - [Filter Format](#filter-format)
     - [Filter Field Descriptions](#filter-field-descriptions)
-    - [Filter Example Scenario](#filter-example-scenario)
+    - [Filter Example Scenario](#filter-example)
 7. [Makefile Commands](#makefile-commands)
 8. [Roadmap](#roadmap)
     - [Completed Tasks](#completed-tasks)
@@ -143,7 +143,7 @@ Filters:
   - **key**: The field name to replace.
   - **value**: The new value for the specified key.
 
-### Filter Example Scenario
+### Filter Example
 
 ```yaml
 Filters:
