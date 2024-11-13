@@ -1,4 +1,5 @@
-# aw-sync-agent
+# ActivityWatch Sync Agent | aw-sync-agent
+
 
 
 
