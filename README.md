@@ -83,7 +83,7 @@ The following table provides details on configurable settings:
 |---------------------|----------------------|---------------------|----------------------------------------------------------------------|----------|--------------------------|
 | `-service`          | -                    | -                   | Runs the agent as a service.                                         | ❌        | -                        |
 | `-immediate`        | -                    | -                   | Runs the synchronizer once immediately.                              | ❌        | -                        |
-| `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                     | ✅        | -                        |
+| `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                     | ✅        | http://localhost:5600    |
 | `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                        | ✅        | -                        |
 | `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Bearer Auth for prometheus(if prom is protected)                     | ❌        | -                        |
 | `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                   | ❌        | Every 5 minutes          |

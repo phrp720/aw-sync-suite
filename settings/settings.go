@@ -122,7 +122,8 @@ func loadFlags(config *Configuration) {
 // Validate the settings
 func validateSettings(config *Configuration) {
 	if config.Settings.AWUrl == "" {
-		log.Fatal("Activity Watch URL is mandatory")
+		log.Print("Activity Watch URL is mandatory but it isn't defined! Setting it to default value: http://localhost:5600")
+		config.Settings.AWUrl = "http://localhost:5600"
 	}
 	if config.Settings.PrometheusUrl == "" {
 		log.Fatal("Prometheus URL is mandatory")
