@@ -82,9 +82,17 @@ On each computer you want to track ActivityWatch data from, go to the `aw-sync-a
 Once configured, you can run the **aw-sync-agent** in one of two ways:
 
 - As an executable: Run the executable directly.
-- As a service: Run the executable as a service on Windows or Linux with a single command:
-  - Windows: `.\aw-sync-agent.exe -service`
-  - Linux: `./aw-sync-agent -service`
+  - As a service: Run the executable as a service on Windows or Linux with a single command:
+    - Windows: 
+
+    ```cmd
+    .\aw-sync-agent.exe -service
+     ```
+    - Linux: 
+    
+    ```bash
+    ./aw-sync-agent -service`
+    ````
 - As a Docker container: Use the Docker image to run the agent in a container. Here’s an example:
 ```bash
 docker run -v /path/to/aw-sync-agent.yaml:/opt/aw-sync-agent/aw-sync-agent.yaml phrp720/aw-sync-agent:latest
