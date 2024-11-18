@@ -1,0 +1,25 @@
+Settings:
+  aw-url: http://localhost:5600
+  prometheus-url: http://localhost:9090
+  excluded-watchers:
+    - aw-watcher-window
+  userId: DemoUser
+
+Filters:
+
+  - Filter:
+    watchers: ## watchers where the filter will be applied
+      - "aw-watcher-window"
+
+    target: ## Data Records that if match , do the filtering
+
+      - key: "app" ## key to filter on
+        value: "Google.*" ## value to filter on REGEX
+
+      - key: "title" ## key to filter on
+        value: "mail.*" ## value to filter on REGEX
+
+    replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
+
+      - key: "title" ## key of record
+        value: "Email" ## value to replace
