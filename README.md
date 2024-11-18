@@ -106,10 +106,9 @@ docker run -v /path/to/aw-sync-agent.yaml:/opt/aw-sync-agent/aw-sync-agent.yaml 
 ## Contributing
 Contributions are welcomed! If you have ideas, improvements, or bug fixes, feel free to open an issue or submit a pull request.
 
-
 ## Roadmap
 
-## In Progress
+### In Progress
 - [ ] Workflows for `aw-sync-suite` releases
 
 ### Upcoming Features
