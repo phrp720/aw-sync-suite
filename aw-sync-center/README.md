@@ -17,7 +17,7 @@
 
 ## About
 
-The **aw-sync-center** is a **centralized monitoring and reporting solution** using **Grafana and Prometheus**, designed to collect and visualize user activity data collected from ActivityWatch Sync Agents ([aw-sync-agents](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent)).
+The **aw-sync-center** is a **centralized monitoring and reporting solution** using **Grafana and Prometheus**, designed to collect and visualize user activity data collected from ActivityWatch Sync Agents ([aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent)).
 
 
 ## Getting Started
