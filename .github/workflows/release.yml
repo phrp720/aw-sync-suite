@@ -1,4 +1,4 @@
-name: Build and Package
+name: Build and Package Release
 
 on:
   push:
@@ -24,17 +24,19 @@ jobs:
 
       # Build aw-sync-agent for Linux
       - name: Build aw-sync-agent for Linux
+        working-directory: aw-sync-agent
         run: |
-          mkdir -p release/linux
-          GOOS=linux GOARCH=amd64 go build -o release/linux/aw-sync-agent ./aw-sync-agent
-          cp ./aw-sync-agent.yaml release/linux/
+          mkdir -p ../release/linux
+          GOOS=linux GOARCH=amd64 go build -o ../release/linux/aw-sync-agent
+          cp aw-sync-agent.yaml ../release/linux/
 
       # Build aw-sync-agent for Windows
       - name: Build aw-sync-agent for Windows
+        working-directory: aw-sync-agent
         run: |
-          mkdir -p release/windows
-          GOOS=windows GOARCH=amd64 go build -o release/windows/aw-sync-agent.exe ./aw-sync-agent
-          cp ./aw-sync-agent.yaml release/windows/
+          mkdir -p ../release/windows
+          GOOS=windows GOARCH=amd64 go build -o ../release/windows/aw-sync-agent.exe
+          cp aw-sync-agent.yaml ../release/windows/
 
       # Package aw-sync-center
       - name: Package aw-sync-center
