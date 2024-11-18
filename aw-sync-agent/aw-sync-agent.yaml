@@ -4,13 +4,13 @@ Settings:
   excluded-watchers:
     - <watcher_name>
   userId: <nickname>
-  prometheus-secret-key: <secret_key>
+  prometheus-secret-key:
 
 Filters:
 
   - Filter:
     watchers: ## watchers where the filter will be applied
-      - <watcher_name>
+      - "aw-watcher-window"
 
     target: ## Data Records that if match , do the filtering
 
@@ -22,5 +22,5 @@ Filters:
 
     replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
 
-      - key: "title" ## key to replace
+      - key: "title" ## key of record
         value: "Email" ## value to replace

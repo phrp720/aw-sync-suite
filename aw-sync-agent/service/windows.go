@@ -1,9 +1,9 @@
 package service
 
 import (
-	"aw-sync-agent/settings"
-	"aw-sync-agent/system_error"
-	"aw-sync-agent/util"
+	"aw-sync-agent/aw-sync-agent/settings"
+	"aw-sync-agent/aw-sync-agent/system_error"
+	"aw-sync-agent/aw-sync-agent/util"
 	"fmt"
 	"github.com/phrp720/go-service-builder/nssm"
 	"log"

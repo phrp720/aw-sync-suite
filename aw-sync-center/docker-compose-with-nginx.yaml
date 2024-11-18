@@ -1,0 +1,43 @@
+networks:
+  monitoring:
+    driver: bridge
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    networks:
+      - monitoring
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-remote-write-receiver'
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prom_data:/prometheus
+  nginx:
+    image: nginx
+    container_name: nginx
+    volumes:
+      - ./nginx:/etc/nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - monitoring
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - ./grafana:/etc/grafana/provisioning/datasources
+
+volumes:
+  prom_data:

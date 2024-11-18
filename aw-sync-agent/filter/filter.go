@@ -1,7 +1,7 @@
 package filter
 
 import (
-	"aw-sync-agent/util"
+	"aw-sync-agent/aw-sync-agent/util"
 	"fmt"
 	"log"
 	"regexp"

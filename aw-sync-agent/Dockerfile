@@ -3,7 +3,7 @@ FROM golang:1.23.2-alpine
 WORKDIR /opt
 
 # Copy the source code
-COPY . .
+COPY .. .
 
 # Download and install the dependencies
 RUN go get -d -v ./...

@@ -1,11 +1,10 @@
 package settings
 
 import (
-	"aw-sync-agent/filter"
+	"aw-sync-agent/aw-sync-agent/filter"
 	"flag"
 	"fmt"
 	"github.com/joho/godotenv"
-	"gopkg.in/yaml.v3"
 	"log"
 	"os"
 	"path/filepath"
