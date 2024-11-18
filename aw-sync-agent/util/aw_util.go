@@ -1,7 +1,7 @@
 package util
 
 import (
-	"aw-sync-agent/aw-sync-agent/aw"
+	"aw-sync-agent/aw"
 	"log"
 )
 

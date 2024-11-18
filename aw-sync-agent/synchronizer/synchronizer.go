@@ -1,11 +1,11 @@
 package synchronizer
 
 import (
-	"aw-sync-agent/aw-sync-agent/datamanager"
-	"aw-sync-agent/aw-sync-agent/prometheus"
-	"aw-sync-agent/aw-sync-agent/settings"
-	"aw-sync-agent/aw-sync-agent/system_error"
-	util2 "aw-sync-agent/aw-sync-agent/util"
+	"aw-sync-agent/datamanager"
+	"aw-sync-agent/prometheus"
+	"aw-sync-agent/settings"
+	"aw-sync-agent/system_error"
+	util2 "aw-sync-agent/util"
 	"fmt"
 	"log"
 )

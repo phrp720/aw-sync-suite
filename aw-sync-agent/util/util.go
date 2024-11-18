@@ -1,7 +1,7 @@
 package util
 
 import (
-	"aw-sync-agent/aw-sync-agent/system_error"
+	"aw-sync-agent/system_error"
 	"github.com/google/uuid"
 
 	"github.com/robfig/cron"
