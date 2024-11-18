@@ -1,10 +1,8 @@
 name: Build and Package Release
 
 on:
-  push:
-    tags:
-      - 'v*' # Trigger workflow for version tags
-  workflow_dispatch: # Manual trigger
+  release:
+    types: [created]
 
 jobs:
   build-and-package:
@@ -72,7 +70,7 @@ jobs:
           cp -r aw-sync-center aw-sync-suite/
           zip -r aw-sync-suite.zip aw-sync-suite
 
-      # Upload assets to GitHub release
+      # Upload release assets
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
         with:
@@ -81,7 +79,7 @@ jobs:
           asset_name: aw-sync-agent-linux.zip
           asset_content_type: application/zip
 
-      - name: Upload Release Assets
+      - name: Upload aw-sync-agent-windows.zip
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
@@ -89,7 +87,7 @@ jobs:
           asset_name: aw-sync-agent-windows.zip
           asset_content_type: application/zip
 
-      - name: Upload Release Assets
+      - name: Upload aw-sync-center.zip
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
@@ -97,7 +95,7 @@ jobs:
           asset_name: aw-sync-center.zip
           asset_content_type: application/zip
 
-      - name: Upload Release Assets
+      - name: Upload aw-sync-suite.zip
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
