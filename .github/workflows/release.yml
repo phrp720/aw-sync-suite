@@ -55,19 +55,19 @@ jobs:
       - name: Create ZIP files
         run: |
           cd release
-          zip -r aw-sync-agent-linux.zip linux
-          zip -r aw-sync-agent-windows.zip windows
-          zip -r aw-sync-center.zip aw-sync-center
-          mkdir aw-sync-suite
-          mkdir aw-sync-suite/aw-sync-agent
-          cp -r linux aw-sync-suite/aw-sync-agent/
-          cp -r windows aw-sync-suite/aw-sync-agent/
-          cp -r aw-sync-center aw-sync-suite/
-          zip -r aw-sync-suite.zip aw-sync-suite
+          zip -r aw-sync-agent-${{github.event.release.tag_name}}-linux.zip linux
+          zip -r aw-sync-agent-${{github.event.release.tag_name}}-windows.zip windows
+          zip -r aw-sync-center-${{github.event.release.tag_name}}.zip aw-sync-center
+          mkdir aw-sync-suite-${{github.event.release.tag_name}}
+          mkdir aw-sync-suite-${{github.event.release.tag_name}}/aw-sync-agent
+          cp -r linux aw-sync-suite-${{github.event.release.tag_name}}/aw-sync-agent/
+          cp -r windows aw-sync-suite-${{github.event.release.tag_name}}/aw-sync-agent/
+          cp -r aw-sync-center aw-sync-suite-${{github.event.release.tag_name}}/
+          zip -r aw-sync-suite-${{github.event.release.tag_name}}.zip aw-sync-suite-${{github.event.release.tag_name}}
 
       - name: Upload artifacts
         run: |
-          gh release upload ${{github.event.release.tag_name}} release/aw-sync-suite.zip release/aw-sync-agent-linux.zip release/aw-sync-agent-windows.zip release/aw-sync-center.zip
+          gh release upload ${{github.event.release.tag_name}} release/aw-sync-suite.zip release/aw-sync-agent-${{github.event.release.tag_name}}-linux.zip release/aw-sync-agent-${{github.event.release.tag_name}}-windows.zip release/aw-sync-center-${{github.event.release.tag_name}}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         shell: bash
