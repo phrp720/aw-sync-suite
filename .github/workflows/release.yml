@@ -22,6 +22,15 @@ jobs:
         with:
           go-version: '1.23.2' # Use your Go version
 
+      # Cache Go modules
+      - name: Cache Go Modules
+        uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
       # Build aw-sync-agent for Linux
       - name: Build aw-sync-agent for Linux
         working-directory: aw-sync-agent
@@ -57,14 +66,41 @@ jobs:
         run: |
           cd release
           mkdir aw-sync-suite
-          cp -r linux aw-sync-suite/
-          cp -r windows aw-sync-suite/
+          mkdir aw-sync-suite/aw-sync-agent
+          cp -r linux aw-sync-suite/aw-sync-agent/
+          cp -r windows aw-sync-suite/aw-sync-agent/
           cp -r aw-sync-center aw-sync-suite/
           zip -r aw-sync-suite.zip aw-sync-suite
 
-      # Upload artifacts
-      - name: Upload Release Artifacts
-        uses: actions/upload-artifact@v3
+      # Upload assets to GitHub release
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
         with:
-          name: Release-Artifacts
-          path: release/*.zip
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: release/aw-sync-agent-linux.zip
+          asset_name: aw-sync-agent-linux.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: release/aw-sync-agent-windows.zip
+          asset_name: aw-sync-agent-windows.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: release/aw-sync-center.zip
+          asset_name: aw-sync-center.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: release/aw-sync-suite.zip
+          asset_name: aw-sync-suite.zip
+          asset_content_type: application/zip
