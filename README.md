@@ -51,8 +51,9 @@ Inside the extracted folder, navigate to the `aw-sync-center` directory and run 
     cd aw-sync-center
     docker-compose -f docker-compose-default.yaml up
 
-This will start the necessary services to collect and visualize the data. If you want to protect the Prometheus endpoints with Bearer token authentication read more [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center#prometheus-with-nginx-secure-setup).
-
+This will start the necessary services to collect and visualize the data.
+> [!IMPORTANT]
+> If you want to protect the exposed Prometheus endpoints with Bearer token authentication read more [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center#prometheus-with-nginx-secure-setup).
 ### 3. Configure and Run aw-sync-agent (On Each Computer)
 
 On each computer you want to track ActivityWatch data from, go to the `aw-sync-agent` folder and configure the `aw-sync-agent.yaml` file to specify the Prometheus endpoint and any other settings.
@@ -64,7 +65,8 @@ Once configured, you can run the **aw-sync-agent** in one of two ways:
 ```bash
 docker run -v /path/to/aw-sync-agent.yaml:/opt/aw-sync-agent/aw-sync-agent.yaml phrp720/aw-sync-agent:latest
 ```
-Make sure to replace `/path/to/aw-sync-agent.yaml` with the path to your configuration file.
+> [!CAUTION]
+> Make sure to replace `/path/to/aw-sync-agent.yaml` with the path to your configuration file.
 > [!Tip]
 > - You can find the images of the latest release [here](https://hub.docker.com/r/phrp5/aw-sync-agent/tags).
 > - Docker-compose Examples can be found [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent/docker-examples).
@@ -97,11 +99,12 @@ Make sure to replace `/path/to/aw-sync-agent.yaml` with the path to your configu
 Contributions are welcomed! If you have ideas, improvements, or bug fixes, feel free to open an issue or submit a pull request.
 
 
-
 ## Roadmap
+
+## In Progress
+- [ ] Workflows for `aw-sync-suite` releases
 
 ### Upcoming Features
 - [ ] Grafana dashboard template for data visualization
-- [ ] Workflows for `aw-sync-suite` releases
 - [ ] Complete project documentation
 - [ ] Publish version 0.1.0 of aw-sync-suite

@@ -41,7 +41,7 @@ This repository offers two Docker Compose configurations:
    
 ## Prometheus with NGINX (Secure Setup)
 
-The **docker-compose-with-nginx** configuration uses an **NGINX reverse proxy** to protect Prometheus endpoints (`/api/v1/write` and `/-/healthy`) with Bearer token authentication.
+The **docker-compose-with-nginx.yml** configuration uses an **NGINX reverse proxy** to protect Prometheus endpoints (`/api/v1/write` and `/-/healthy`) with Bearer token authentication.
 
 #### Generating Bearer Tokens
 
