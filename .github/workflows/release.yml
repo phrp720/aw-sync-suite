@@ -74,5 +74,5 @@ jobs:
         run: |
           gh release upload ${{github.event.release.tag_name}} release/aw-sync-suite.zip
         env:
-          GITHUB_TOKEN: ${{ github.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         shell: bash
