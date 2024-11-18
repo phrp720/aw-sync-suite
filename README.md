@@ -1,6 +1,6 @@
 <h1 align="center">Aw-Sync-Suite</h1>
 <p align="center">
-Open-Source Solution for Syncing and Visualizing Multiple ActivityWatch Instances with Safety.  <br>
+Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch Instances.  <br>
 </p>
 
 <p align="center">
