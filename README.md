@@ -20,9 +20,9 @@
 </details>
 
 ## About
-Aw-Sync-Suite provides an easy-to-deploy solution for syncing data from multiple **ActivityWatch** instances to **Prometheus** and visualizing the data with **Grafana**. 
+**Aw-Sync-Suite** provides an easy-to-deploy solution for syncing data from multiple [ActivityWatch](https://github.com/ActivityWatch/activitywatch) instances to [Prometheus](https://prometheus.io/) and visualizing the data with [Grafana](https://grafana.com/). 
 
-This project operates independently of [ActivityWatch](https://github.com/ActivityWatch/activitywatch) and is compatible with all versions of ActivityWatch that support the REST API feature.
+This project operates independently of **ActivityWatch** and is compatible with all versions of ActivityWatch that support the REST API feature.
 
 ### This suite consists of two main components:
 - **[aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent):**  A lightweight agent that runs on each computer you want to sync data from. It connects to ActivityWatch, retrieves the data,filter them, and pushes it to Prometheus.
@@ -39,10 +39,10 @@ This repository simplifies the deployment and integration process, making it eas
 ## Flow Diagrams
 
 
-### 1. **ActivityWatch Sync Suite Flow Diagram** without Bearer Token Authentication
+### 1. ActivityWatch Sync Suite Flow Diagram without Bearer Token Authentication
 ![aw-sync-diagram.png](aw-sync-diagram.png)
 
-### 2. **ActivityWatch Sync Suite Flow Diagram** with Bearer Token Authentication
+### 2. ActivityWatch Sync Suite Flow Diagram with Bearer Token Authentication
 ![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png)
 
 ## Quick Start
