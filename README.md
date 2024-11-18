@@ -123,9 +123,8 @@ Contributions are welcomed! If you have ideas, improvements, or bug fixes, feel 
 ## Roadmap
 
 ### In Progress
-- [ ] Workflows for `aw-sync-suite` releases
+- [ ] Grafana dashboard template for data visualization
 
 ### Upcoming Features
-- [ ] Grafana dashboard template for data visualization
 - [ ] Complete project documentation
 - [ ] Publish version 0.1.0 of aw-sync-suite
