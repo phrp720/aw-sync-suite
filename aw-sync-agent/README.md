@@ -21,19 +21,12 @@
     - [Filter Field Descriptions](#filter-field-descriptions)
     - [Filter Example Scenario](#filter-example)
 7. [Makefile Commands](#makefile-commands)
-8. [Roadmap](#roadmap)
-    - [Completed Tasks](#completed-tasks)
-    - [Upcoming Features](#upcoming-features)
+
 </details>
 
 ## About
 
-The **aw-sync-agent** is an open-source background service written in Go that collects data from [ActivityWatch](https://github.com/ActivityWatch/activitywatch) and synchronizes it to a central Prometheus database. With Grafana integration, it provides real-time visual insights into user activity data, enabling easy monitoring and analysis.
-
-The **aw-sync-agent** facilitates the synchronization of multiple ActivityWatch instances to a single Prometheus database, allowing for centralized monitoring and analysis of user activity data across various systems.
-
-
-This project operates independently of [ActivityWatch](https://github.com/ActivityWatch/activitywatch) and is compatible with all versions of ActivityWatch that support the REST API feature.
+The **aw-sync-agent** is an open-source background service written in Go that  facilitates the synchronization of multiple ActivityWatch instances to a single Prometheus database, allowing for centralized monitoring and analysis of user activity data across various systems.
 
 ## Key Features
 

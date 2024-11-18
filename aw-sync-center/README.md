@@ -14,8 +14,8 @@ This component provides a **Docker Compose setup** to deploy Grafana and Prometh
 ### Setup Options
 
 This repository offers two Docker Compose configurations:
-- **docker-compose-with-nginx**: Includes NGINX with Bearer token authentication for added security.
-- **docker-compose-default**: A simpler setup without authentication.
+- **docker-compose-with-nginx.yml**: Includes NGINX with Bearer token authentication for added security.
+- **docker-compose-default.yml**: A simpler setup without authentication.
 
 ### Installation and Running
 
