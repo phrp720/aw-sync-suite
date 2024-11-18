@@ -50,24 +50,26 @@ jobs:
         run: |
           mkdir -p release/aw-sync-center
           cp -r aw-sync-center/* release/aw-sync-center/
+      - name: Set version variable
+        run: echo "version=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
 
       # Create separate ZIP files
       - name: Create ZIP files
         run: |
           cd release
-          zip -r aw-sync-agent-${{github.event.release.tag_name}}-linux.zip linux
-          zip -r aw-sync-agent-${{github.event.release.tag_name}}-windows.zip windows
-          zip -r aw-sync-center-${{github.event.release.tag_name}}.zip aw-sync-center
-          mkdir aw-sync-suite-${{github.event.release.tag_name}}
-          mkdir aw-sync-suite-${{github.event.release.tag_name}}/aw-sync-agent
-          cp -r linux aw-sync-suite-${{github.event.release.tag_name}}/aw-sync-agent/
-          cp -r windows aw-sync-suite-${{github.event.release.tag_name}}/aw-sync-agent/
-          cp -r aw-sync-center aw-sync-suite-${{github.event.release.tag_name}}/
-          zip -r aw-sync-suite-${{github.event.release.tag_name}}.zip aw-sync-suite-${{github.event.release.tag_name}}
+          zip -r aw-sync-agent-${version}-linux.zip linux
+          zip -r aw-sync-agent-${version}-windows.zip windows
+          zip -r aw-sync-center-${version}.zip aw-sync-center
+          mkdir aw-sync-suite-${version}
+          mkdir aw-sync-suite-${version}/aw-sync-agent
+          cp -r linux aw-sync-suite-${version}/aw-sync-agent/
+          cp -r windows aw-sync-suite-${version}/aw-sync-agent/
+          cp -r aw-sync-center aw-sync-suite-${version}/
+          zip -r aw-sync-suite-${version}.zip aw-sync-suite-${version}
 
       - name: Upload artifacts
         run: |
-          gh release upload ${{github.event.release.tag_name}} release/aw-sync-suite-${{github.event.release.tag_name}}.zip release/aw-sync-agent-${{github.event.release.tag_name}}-linux.zip release/aw-sync-agent-${{github.event.release.tag_name}}-windows.zip release/aw-sync-center-${{github.event.release.tag_name}}.zip
+          gh release upload ${version} release/aw-sync-suite-${version}.zip release/aw-sync-agent-${version}-linux.zip release/aw-sync-agent-${version}-windows.zip release/aw-sync-center-${version}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         shell: bash
