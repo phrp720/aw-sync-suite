@@ -4,7 +4,7 @@ The **aw-sync-center** is a **centralized monitoring and reporting solution** us
 
 ## Overview
 
-This repository provides a **Docker Compose setup** to deploy Grafana and Prometheus as a centralized hub, collecting data from ActivityWatch Sync Agents ([aw-sync-agent](https://github.com/phrp720/aw-sync-agent)) monitoring user activity on various systems.
+This component provides a **Docker Compose setup** to deploy Grafana and Prometheus as a centralized hub, collecting data from ActivityWatch Sync Agents ([aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent)) monitoring user activity on various systems.
 
 ## Getting Started
 
@@ -21,8 +21,8 @@ This repository offers two Docker Compose configurations:
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/aw-sync-center.git
-   cd aw-sync-center
+   git clone https://github.com/phrp720/aw-sync-suite.git
+   cd aw-sync-suite/aw-sync-center
 
 2. **Choose a Docker Compose Configuration**:
 
@@ -38,6 +38,7 @@ This repository offers two Docker Compose configurations:
 
    - Open a browser and go to http://localhost:3000 to access Grafana.
      - Default login credentials are admin:admin .
+   
 ## Prometheus with NGINX (Secure Setup)
 
 The **docker-compose-with-nginx** configuration uses an **NGINX reverse proxy** to protect Prometheus endpoints (`/api/v1/write` and `/-/healthy`) with Bearer token authentication.
@@ -55,13 +56,3 @@ python3 createBearerToken.py
    - Requests sent to Prometheus endpoints through NGINX must include a valid token.
    - Each token will be checked against `tokens.conf` for authentication.
 
-
-### Project Status
-
-#### In Progress
-- Docker Compose setup for Grafana and Prometheus
-- Prometheus authentication configuration
-
-#### Upcoming Features
-- Grafana dashboards for data visualization
-- Expanded documentation for setting up the Sync Center
