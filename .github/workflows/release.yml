@@ -67,7 +67,7 @@ jobs:
 
       - name: Upload artifacts
         run: |
-          gh release upload ${{github.event.release.tag_name}} release/aw-sync-suite.zip release/aw-sync-agent-${{github.event.release.tag_name}}-linux.zip release/aw-sync-agent-${{github.event.release.tag_name}}-windows.zip release/aw-sync-center-${{github.event.release.tag_name}}.zip
+          gh release upload ${{github.event.release.tag_name}} release/aw-sync-suite-${{github.event.release.tag_name}}.zip release/aw-sync-agent-${{github.event.release.tag_name}}-linux.zip release/aw-sync-agent-${{github.event.release.tag_name}}-windows.zip release/aw-sync-center-${{github.event.release.tag_name}}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         shell: bash
