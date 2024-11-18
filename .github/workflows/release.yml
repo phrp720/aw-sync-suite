@@ -73,6 +73,8 @@ jobs:
       # Upload release assets
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: release/aw-sync-agent-linux.zip
@@ -81,6 +83,8 @@ jobs:
 
       - name: Upload aw-sync-agent-windows.zip
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: release/aw-sync-agent-windows.zip
@@ -89,6 +93,8 @@ jobs:
 
       - name: Upload aw-sync-center.zip
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: release/aw-sync-center.zip
@@ -97,6 +103,8 @@ jobs:
 
       - name: Upload aw-sync-suite.zip
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: release/aw-sync-suite.zip
