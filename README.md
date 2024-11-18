@@ -34,9 +34,14 @@ This repository simplifies the deployment and integration process, making it eas
 - Simple deployment using Docker Compose for the **aw-sync-center**.
 - Modular design: Run the **aw-sync-agent** on each computer where ActivityWatch data is being collected.
 
-## Flow Diagram
+## Flow Diagrams
 
+
+1. **ActivityWatch Sync Suite Flow Diagram** without Bearer Token Authentication
 ![aw-sync-diagram.png](aw-sync-diagram.png)
+
+2. **ActivityWatch Sync Suite Flow Diagram** with Bearer Token Authentication
+![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png)
 
 ## Quick Start
 
