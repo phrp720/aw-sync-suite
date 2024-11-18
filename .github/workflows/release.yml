@@ -1,0 +1,68 @@
+name: Build and Package
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger workflow for version tags
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  build-and-package:
+    name: Build and Package Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Go environment
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.23.2' # Use your Go version
+
+      # Build aw-sync-agent for Linux
+      - name: Build aw-sync-agent for Linux
+        run: |
+          mkdir -p release/linux
+          GOOS=linux GOARCH=amd64 go build -o release/linux/aw-sync-agent ./aw-sync-agent
+          cp ./aw-sync-agent.yaml release/linux/
+
+      # Build aw-sync-agent for Windows
+      - name: Build aw-sync-agent for Windows
+        run: |
+          mkdir -p release/windows
+          GOOS=windows GOARCH=amd64 go build -o release/windows/aw-sync-agent.exe ./aw-sync-agent
+          cp ./aw-sync-agent.yaml release/windows/
+
+      # Package aw-sync-center
+      - name: Package aw-sync-center
+        run: |
+          mkdir -p release/aw-sync-center
+          cp -r aw-sync-center/* release/aw-sync-center/
+
+      # Create separate ZIP files
+      - name: Create ZIP files
+        run: |
+          cd release
+          zip -r aw-sync-agent-linux.zip linux
+          zip -r aw-sync-agent-windows.zip windows
+          zip -r aw-sync-center.zip aw-sync-center
+
+      # Combine files into aw-sync-suite.zip
+      - name: Create aw-sync-suite.zip
+        run: |
+          cd release
+          mkdir aw-sync-suite
+          cp -r linux aw-sync-suite/
+          cp -r windows aw-sync-suite/
+          cp -r aw-sync-center aw-sync-suite/
+          zip -r aw-sync-suite.zip aw-sync-suite
+
+      # Upload artifacts
+      - name: Upload Release Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Release-Artifacts
+          path: release/*.zip
