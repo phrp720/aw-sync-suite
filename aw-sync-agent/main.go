@@ -1,12 +1,12 @@
 package main
 
 import (
-	"aw-sync-agent/cron"
-	"aw-sync-agent/filter"
-	"aw-sync-agent/service"
-	"aw-sync-agent/settings"
-	"aw-sync-agent/synchronizer"
-	"aw-sync-agent/util"
+	"aw-sync-agent/aw-sync-agent/cron"
+	"aw-sync-agent/aw-sync-agent/filter"
+	service2 "aw-sync-agent/aw-sync-agent/service"
+	"aw-sync-agent/aw-sync-agent/settings"
+	"aw-sync-agent/aw-sync-agent/synchronizer"
+	"aw-sync-agent/aw-sync-agent/util"
 	"log"
 	"os"
 )
@@ -37,9 +37,9 @@ func main() {
 	if Configs.Settings.AsService {
 
 		if util.IsWindows() {
-			service.CreateWindowsService(*Configs)
+			service2.CreateWindowsService(*Configs)
 		} else if util.IsLinux() {
-			service.CreateLinuxService(*Configs)
+			service2.CreateLinuxService(*Configs)
 		}
 		os.Exit(0)
 

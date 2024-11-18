@@ -1,11 +1,11 @@
 package synchronizer
 
 import (
-	"aw-sync-agent/datamanager"
-	"aw-sync-agent/prometheus"
-	"aw-sync-agent/settings"
-	"aw-sync-agent/system_error"
-	"aw-sync-agent/util"
+	"aw-sync-agent/aw-sync-agent/datamanager"
+	"aw-sync-agent/aw-sync-agent/prometheus"
+	"aw-sync-agent/aw-sync-agent/settings"
+	"aw-sync-agent/aw-sync-agent/system_error"
+	util2 "aw-sync-agent/aw-sync-agent/util"
 	"fmt"
 	"log"
 )
@@ -19,7 +19,7 @@ func Start(Config settings.Configuration) error {
 
 	prometheusClient := prometheus.NewClient(fmt.Sprintf("%s%s", Config.Settings.PrometheusUrl, "/api/v1/write"))
 	scrapedData, err := datamanager.ScrapeData(Config.Settings.AWUrl, Config.Settings.ExcludedWatchers)
-	userID := util.GetUserID(Config.Settings.UserID)
+	userID := util2.GetUserID(Config.Settings.UserID)
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func Start(Config settings.Configuration) error {
 // SyncRoutine returns a function that init the synchronization and starts the  process
 func SyncRoutine(Config settings.Configuration) func() {
 	return func() {
-		if !util.PromHealthCheck(Config.Settings.PrometheusUrl, Config.Settings.PrometheusSecretKey) {
+		if !util2.PromHealthCheck(Config.Settings.PrometheusUrl, Config.Settings.PrometheusSecretKey) {
 			log.Print("Something went wrong with Prometheus or Internet connection is lost!")
 		} else {
 			err := Start(Config)

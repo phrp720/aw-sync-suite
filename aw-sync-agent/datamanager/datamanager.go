@@ -1,11 +1,11 @@
 package datamanager
 
 import (
-	"aw-sync-agent/aw"
-	"aw-sync-agent/checkpoint"
-	"aw-sync-agent/filter"
-	"aw-sync-agent/prometheus"
-	"aw-sync-agent/util"
+	aw2 "aw-sync-agent/aw-sync-agent/aw"
+	"aw-sync-agent/aw-sync-agent/checkpoint"
+	"aw-sync-agent/aw-sync-agent/filter"
+	prometheus2 "aw-sync-agent/aw-sync-agent/prometheus"
+	util2 "aw-sync-agent/aw-sync-agent/util"
 	"context"
 	"errors"
 	"fmt"
@@ -15,22 +15,22 @@ import (
 )
 
 // ScrapeData scrapes the data from the local ActivityWatch instance via the aw Client
-func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEventsMap, error) {
+func ScrapeData(awUrl string, excludedWatchers []string) (aw2.WatcherNameToEventsMap, error) {
 	log.Print("Fetching buckets  ...\n")
-	buckets, err := aw.GetBuckets(awUrl)
+	buckets, err := aw2.GetBuckets(awUrl)
 	if err != nil {
 		return nil, fmt.Errorf("Error fetching buckets: %v", err)
 	}
 
 	log.Print("Buckets fetched successfully")
 	log.Print("Total buckets fetched: ", len(buckets))
-	util.RemoveExcludedWatchers(buckets, excludedWatchers)
-	eventsMap := make(aw.WatcherNameToEventsMap)
+	util2.RemoveExcludedWatchers(buckets, excludedWatchers)
+	eventsMap := make(aw2.WatcherNameToEventsMap)
 	for name, bucket := range buckets {
 		log.Print("Fetching events from ", bucket.Client, " ...")
 		startPoint := checkpoint.Read(bucket.Client)
 		//endPoint := time.Now().AddDate(0, 0, -1) // Set end date to one day before the current date
-		events, err := aw.GetEvents(awUrl, name, startPoint, nil, nil)
+		events, err := aw2.GetEvents(awUrl, name, startPoint, nil, nil)
 		if err != nil {
 			return nil, fmt.Errorf("error fetching events for bucket %s: %v", bucket.Client, err)
 		}
@@ -42,7 +42,7 @@ func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEvents
 
 // AggregateData aggregates the data
 // This is going to be called with events for each watcher separately
-func AggregateData(events []aw.Event, watcher string, userID string, filters []filter.Filter) []prometheus.TimeSeries {
+func AggregateData(events []aw2.Event, watcher string, userID string, filters []filter.Filter) []prometheus2.TimeSeries {
 
 	// Sort events by timestamp. Older to newer.
 	sort.Slice(events, func(i, j int) bool {
@@ -54,7 +54,7 @@ func AggregateData(events []aw.Event, watcher string, userID string, filters []f
 		events = events[:len(events)-1]
 	}
 
-	var timeSeriesList []prometheus.TimeSeries
+	var timeSeriesList []prometheus2.TimeSeries
 
 	watcherFilters := filter.GetMatchingFilters(filters, watcher)
 	for _, event := range events {
@@ -62,27 +62,27 @@ func AggregateData(events []aw.Event, watcher string, userID string, filters []f
 		//Apply the filters
 		event.Data = filter.Apply(event.Data, watcherFilters)
 
-		var labels []prometheus.Label
-		labels = append(labels, prometheus.Label{
+		var labels []prometheus2.Label
+		labels = append(labels, prometheus2.Label{
 			Name:  "__name__",
 			Value: strings.ReplaceAll(watcher, "-", "_"),
 		})
-		labels = append(labels, prometheus.Label{
+		labels = append(labels, prometheus2.Label{
 			Name:  "user",
 			Value: userID,
 		})
 		for key, value := range event.Data {
-			labels = append(labels, prometheus.Label{
+			labels = append(labels, prometheus2.Label{
 				Name:  key,
 				Value: fmt.Sprintf("%v", value),
 			})
 		}
-		sample := prometheus.Sample{
+		sample := prometheus2.Sample{
 			Value: event.Duration,
 			Time:  event.Timestamp,
 		}
 
-		timeSeries := prometheus.TimeSeries{
+		timeSeries := prometheus2.TimeSeries{
 			Labels: labels, // Add more labels as needed
 			Sample: sample,
 		}
@@ -94,10 +94,10 @@ func AggregateData(events []aw.Event, watcher string, userID string, filters []f
 }
 
 // PushData pushes  data to the server via the Prometheus Client
-func PushData(client *prometheus.Client, prometheusUrl string, prometheusSecretKey string, timeseries []prometheus.TimeSeries, watcher string) error {
+func PushData(client *prometheus2.Client, prometheusUrl string, prometheusSecretKey string, timeseries []prometheus2.TimeSeries, watcher string) error {
 	const chunkSize = 20
 	for i := 0; i < len(timeseries); i += chunkSize {
-		if !util.PromHealthCheck(prometheusUrl, prometheusSecretKey) {
+		if !util2.PromHealthCheck(prometheusUrl, prometheusSecretKey) {
 			return errors.New("prometheus is not reachable or Internet connection is lost. Data will be pushed when health is recovered")
 		}
 		end := i + chunkSize
@@ -105,7 +105,7 @@ func PushData(client *prometheus.Client, prometheusUrl string, prometheusSecretK
 			end = len(timeseries)
 		}
 		chunk := timeseries[i:end]
-		_, err := client.Write(context.Background(), prometheusSecretKey, &prometheus.WriteRequest{TimeSeries: chunk})
+		_, err := client.Write(context.Background(), prometheusSecretKey, &prometheus2.WriteRequest{TimeSeries: chunk})
 		if err != nil {
 			log.Printf("Error pushing data: %v", err)
 			return err
