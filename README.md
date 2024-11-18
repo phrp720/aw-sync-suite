@@ -6,14 +6,15 @@
 
 1. [About](#about)
 2. [Features](#features)
-3. [Quick Start](#quick-start)
+3. [Flow Diagram](#flow-diagram)
+4. [Quick Start](#quick-start)
     - [Download the Latest Release](#1-download-the-latest-release)
     - [Deploy aw-sync-center (Cloud Setup)](#2-deploy-aw-sync-center-cloud-setup)
     - [Configure and Run aw-sync-agent (On Each Computer)](#3-configure-and-run-aw-sync-agent-on-each-computer)
     - [Visualize in Grafana](#4-visualize-in-grafana)
-4. [Components](#components)
-5. [Requirements](#requirements)
-6. [Contributing](#contributing)
+5. [Components](#components)
+6. [Requirements](#requirements)
+7. [Contributing](#contributing)
 </details>
 
 ## About
@@ -32,6 +33,10 @@ This repository simplifies the deployment and integration process, making it eas
 - Visualize the synced data through pre-built Grafana dashboards.
 - Simple deployment using Docker Compose for the **aw-sync-center**.
 - Modular design: Run the **aw-sync-agent** on each computer where ActivityWatch data is being collected.
+
+## Flow Diagram
+
+![aw-sync-diagram.png](aw-sync-diagram.png)
 
 ## Quick Start
 
