@@ -6,7 +6,9 @@
 
 1. [About](#about)
 2. [Features](#features)
-3. [Flow Diagram](#flow-diagram)
+3. [Flow Diagrams](#flow-diagrams)
+    - [Without Bearer Token Authentication](#1-activitywatch-sync-suite-flow-diagram-without-bearer-token-authentication)
+    - [With Bearer Token Authentication](#2-activitywatch-sync-suite-flow-diagram-with-bearer-token-authentication)
 4. [Quick Start](#quick-start)
     - [Download the Latest Release](#1-download-the-latest-release)
     - [Deploy aw-sync-center (Cloud Setup)](#2-deploy-aw-sync-center-cloud-setup)
@@ -37,10 +39,10 @@ This repository simplifies the deployment and integration process, making it eas
 ## Flow Diagrams
 
 
-1. **ActivityWatch Sync Suite Flow Diagram** without Bearer Token Authentication
+### 1. **ActivityWatch Sync Suite Flow Diagram** without Bearer Token Authentication
 ![aw-sync-diagram.png](aw-sync-diagram.png)
 
-2. **ActivityWatch Sync Suite Flow Diagram** with Bearer Token Authentication
+### 2. **ActivityWatch Sync Suite Flow Diagram** with Bearer Token Authentication
 ![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png)
 
 ## Quick Start
