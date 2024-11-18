@@ -61,7 +61,7 @@ Make sure to replace `/path/to/aw-sync-agent.yaml` with the path to your configu
 > [!Tip]
 > - You can find the images of the latest release [here](https://hub.docker.com/r/phrp5/aw-sync-agent/tags).
 > - Docker-compose Examples can be found [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent/docker-examples).
-> - More information about agent configuration can be found [here](https://github.com/phrp720/aw-sync-agent?tab=readme-ov-file#configuration-options)
+> - More information about agent configuration can be found [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent#configuration-options)
 
 ### 4. Visualize in Grafana
 - Open Grafana.
