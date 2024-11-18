@@ -1,10 +1,24 @@
 # Aw-Sync-Center
 
-The **aw-sync-center** is a **centralized monitoring and reporting solution** using **Grafana and Prometheus**, designed to collect and visualize user activity data.
 
-## Overview
+<details>
 
-This component provides a **Docker Compose setup** to deploy Grafana and Prometheus as a centralized hub, collecting data from ActivityWatch Sync Agents ([aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent)) monitoring user activity on various systems.
+<summary>Table of Contents</summary>
+
+1. [About](#about)
+2. [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Setup Options](#setup-options)
+    - [Installation and Running](#installation-and-running)
+3. [Prometheus with NGINX (Secure Setup)](#prometheus-with-nginx-secure-setup)
+    - [Generating Bearer Tokens](#generating-bearer-tokens)
+
+</details>
+
+## About
+
+The **aw-sync-center** is a **centralized monitoring and reporting solution** using **Grafana and Prometheus**, designed to collect and visualize user activity data collected from ActivityWatch Sync Agents ([aw-sync-agents](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent)).
+
 
 ## Getting Started
 
@@ -43,7 +57,7 @@ This repository offers two Docker Compose configurations:
 
 The **docker-compose-with-nginx.yml** configuration uses an **NGINX reverse proxy** to protect Prometheus endpoints (`/api/v1/write` and `/-/healthy`) with Bearer token authentication.
 
-#### Generating Bearer Tokens
+### Generating Bearer Tokens
 
 To generate tokens for authentication, use the `createBearerToken.py` script. This will create a `tokens.conf` file in the NGINX directory with the specified tokens, allowing secure access to Prometheus.
 
