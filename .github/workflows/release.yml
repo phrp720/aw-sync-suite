@@ -58,11 +58,6 @@ jobs:
           zip -r aw-sync-agent-linux.zip linux
           zip -r aw-sync-agent-windows.zip windows
           zip -r aw-sync-center.zip aw-sync-center
-
-      # Combine files into aw-sync-suite.zip
-      - name: Create aw-sync-suite.zip
-        run: |
-          cd release
           mkdir aw-sync-suite
           mkdir aw-sync-suite/aw-sync-agent
           cp -r linux aw-sync-suite/aw-sync-agent/
@@ -70,9 +65,9 @@ jobs:
           cp -r aw-sync-center aw-sync-suite/
           zip -r aw-sync-suite.zip aw-sync-suite
 
-      - name: Upload aw-sync-suite.zip
+      - name: Upload artifacts
         run: |
-          gh release upload ${{github.event.release.tag_name}} release/aw-sync-suite.zip
+          gh release upload ${{github.event.release.tag_name}} release/aw-sync-suite.zip release/aw-sync-agent-linux.zip release/aw-sync-agent-windows.zip release/aw-sync-center.zip
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         shell: bash
