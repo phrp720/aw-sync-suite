@@ -1,7 +1,7 @@
 package util
 
 import (
-	"aw-sync-agent/aw-sync-agent/system_error"
+	"aw-sync-agent/system_error"
 	"fmt"
 	"log"
 	"net/http"

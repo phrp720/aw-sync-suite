@@ -1,12 +1,12 @@
 package main
 
 import (
-	"aw-sync-agent/aw-sync-agent/cron"
-	"aw-sync-agent/aw-sync-agent/filter"
-	service2 "aw-sync-agent/aw-sync-agent/service"
-	"aw-sync-agent/aw-sync-agent/settings"
-	"aw-sync-agent/aw-sync-agent/synchronizer"
-	"aw-sync-agent/aw-sync-agent/util"
+	"aw-sync-agent/cron"
+	"aw-sync-agent/filter"
+	service2 "aw-sync-agent/service"
+	"aw-sync-agent/settings"
+	"aw-sync-agent/synchronizer"
+	"aw-sync-agent/util"
 	"log"
 	"os"
 )

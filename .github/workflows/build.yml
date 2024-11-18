@@ -1,0 +1,75 @@
+name: Build
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-package:
+    name: Build and Package Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Go environment
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.23.2' # Use your Go version
+
+      # Cache Go modules
+      - name: Cache Go Modules
+        uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      # Build aw-sync-agent for Linux
+      - name: Build aw-sync-agent for Linux
+        working-directory: aw-sync-agent
+        run: |
+          mkdir -p ../release/linux
+          GOOS=linux GOARCH=amd64 go build -o ../release/linux/aw-sync-agent
+          cp aw-sync-agent.yaml ../release/linux/
+
+      # Build aw-sync-agent for Windows
+      - name: Build aw-sync-agent for Windows
+        working-directory: aw-sync-agent
+        run: |
+          mkdir -p ../release/windows
+          GOOS=windows GOARCH=amd64 go build -o ../release/windows/aw-sync-agent.exe
+          cp aw-sync-agent.yaml ../release/windows/
+
+      # Package aw-sync-center
+      - name: Package aw-sync-center
+        run: |
+          mkdir -p release/aw-sync-center
+          cp -r aw-sync-center/* release/aw-sync-center/
+      - name: Set version variable
+        run: echo "version=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+
+      # Create separate ZIP files
+      - name: Create ZIP files
+        run: |
+          cd release
+          zip -r aw-sync-agent-${version}-linux.zip linux
+          zip -r aw-sync-agent-${version}-windows.zip windows
+          zip -r aw-sync-center-${version}.zip aw-sync-center
+          mkdir aw-sync-suite-${version}
+          mkdir aw-sync-suite-${version}/aw-sync-agent
+          cp -r linux aw-sync-suite-${version}/aw-sync-agent/
+          cp -r windows aw-sync-suite-${version}/aw-sync-agent/
+          cp -r aw-sync-center aw-sync-suite-${version}/
+          zip -r aw-sync-suite-${version}.zip aw-sync-suite-${version}
+
+      - name: Upload artifacts
+        run: |
+          gh release upload ${version} release/aw-sync-suite-${version}.zip release/aw-sync-agent-${version}-linux.zip release/aw-sync-agent-${version}-windows.zip release/aw-sync-center-${version}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        shell: bash

@@ -1,11 +1,11 @@
 package datamanager
 
 import (
-	aw2 "aw-sync-agent/aw-sync-agent/aw"
-	"aw-sync-agent/aw-sync-agent/checkpoint"
-	"aw-sync-agent/aw-sync-agent/filter"
-	prometheus2 "aw-sync-agent/aw-sync-agent/prometheus"
-	util2 "aw-sync-agent/aw-sync-agent/util"
+	aw2 "aw-sync-agent/aw"
+	"aw-sync-agent/checkpoint"
+	"aw-sync-agent/filter"
+	prometheus2 "aw-sync-agent/prometheus"
+	util2 "aw-sync-agent/util"
 	"context"
 	"errors"
 	"fmt"
