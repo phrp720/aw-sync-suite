@@ -70,43 +70,9 @@ jobs:
           cp -r aw-sync-center aw-sync-suite/
           zip -r aw-sync-suite.zip aw-sync-suite
 
-      # Upload release assets
-      - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: release/aw-sync-agent-linux.zip
-          asset_name: aw-sync-agent-linux.zip
-          asset_content_type: application/zip
-
-      - name: Upload aw-sync-agent-windows.zip
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: release/aw-sync-agent-windows.zip
-          asset_name: aw-sync-agent-windows.zip
-          asset_content_type: application/zip
-
-      - name: Upload aw-sync-center.zip
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: release/aw-sync-center.zip
-          asset_name: aw-sync-center.zip
-          asset_content_type: application/zip
-
       - name: Upload aw-sync-suite.zip
-        uses: actions/upload-release-asset@v1
+        run: |
+          gh release upload ${{github.event.release.tag_name}} release/aw-sync-suite.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: release/aw-sync-suite.zip
-          asset_name: aw-sync-suite.zip
-          asset_content_type: application/zip
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+        shell: bash
