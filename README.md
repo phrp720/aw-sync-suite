@@ -53,10 +53,10 @@ This repository simplifies the deployment and integration process, making it eas
 ## Flow Diagrams
 
 
-### 1. ActivityWatch Sync Suite Flow Diagram without Bearer Token Authentication
+### 1. Sync-Suite Flow Diagram without Bearer Token Authentication
 ![aw-sync-diagram.png](aw-sync-diagram.png)
 
-### 2. ActivityWatch Sync Suite Flow Diagram with Bearer Token Authentication
+### 2. Sync-Suite Flow Diagram with Bearer Token Authentication
 ![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png)
 
 ## Quick Start
@@ -137,5 +137,7 @@ Contributions are welcomed! If you have ideas, improvements, or bug fixes, feel 
 - [ ] Grafana dashboard template for data visualization
 
 ### Upcoming Features
+- [ ] Testing workflow for aw-sync-suite
+- [ ] Go tests for aw-sync-agent
 - [ ] Complete project documentation
 - [ ] Publish version 0.1.0 of aw-sync-suite
