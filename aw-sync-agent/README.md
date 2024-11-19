@@ -287,6 +287,12 @@ Filters:
     - `title` must match `"test.*"` (e.g., "test case").
 - **drop**: If set to `true`, the record will be dropped if the `target` conditions are met.
 
+> [!Note]
+> - Filters can be combined to perform multiple operations on the same data record.
+> - Filters are applied in the order they are defined in the configuration file.
+> - Filters can be disabled by setting the `enabled` field to `false`.
+> - Filters that have the drop field set to `true` will not perform any replacement operations.
+
 ## Quick Start
 
 ## Makefile Commands
