@@ -57,11 +57,16 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 	var timeSeriesList []prometheus.TimeSeries
 
 	watcherFilters := filter.GetMatchingFilters(filters, watcher)
+	var dropEvent bool
 	for _, event := range events {
 
 		//Apply the filters
-		event.Data = filter.Apply(event.Data, watcherFilters)
+		event.Data, dropEvent = filter.Apply(event.Data, watcherFilters)
 
+		// Drop the event if it matches the filter
+		if dropEvent {
+			continue
+		}
 		var labels []prometheus.Label
 		labels = append(labels, prometheus.Label{
 			Name:  "__name__",

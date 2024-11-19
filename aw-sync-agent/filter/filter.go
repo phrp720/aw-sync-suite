@@ -60,7 +60,8 @@ func ValidateFilters(filters []Filter) ([]Filter, int, int, int) {
 	return validFilters, total, invalid, disabled
 }
 
-func Apply(data map[string]interface{}, filters []Filter) map[string]interface{} {
+// Apply applies the filters to the data
+func Apply(data map[string]interface{}, filters []Filter) (map[string]interface{}, bool) {
 	for _, filter := range filters {
 		allMatch := true
 		for _, target := range filter.Target {
@@ -78,25 +79,37 @@ func Apply(data map[string]interface{}, filters []Filter) map[string]interface{}
 		}
 
 		if allMatch {
+			// Drop the event if the filter matches
+			if filter.Drop {
+				return nil, true
+			}
+			// Apply replacements
 			data = Replace(data, filter.PlainReplace, filter.RegexReplace)
+
 		}
 	}
-	return data
+	return data, false
 }
 
+// Replace replaces the values in the data
 func Replace(data map[string]interface{}, plain []PlainReplace, regex []RegexReplace) map[string]interface{} {
 
 	// Apply replacements
+
+	// Plain replacements
 	for _, replace := range plain {
 		if _, exists := data[replace.Key]; exists {
 			data[replace.Key] = replace.Value
 		}
 	}
+
+	// Regex replacements
 	for _, replace := range regex {
-		if _, exists := data[replace.Key]; exists {
+		if value, exists := data[replace.Key]; exists {
 			// Check if the value matches the target's regex
-			if replace.Expression.MatchString(fmt.Sprintf("%v", data[replace.Key])) {
-				data[replace.Key] = replace.Value
+			if replace.Expression.MatchString(fmt.Sprintf("%v", value)) {
+				// Replace the value with the formatted string
+				data[replace.Key] = replace.Expression.ReplaceAllString(fmt.Sprintf("%v", value), replace.Value)
 			}
 		}
 	}
