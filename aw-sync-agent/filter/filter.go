@@ -14,7 +14,7 @@ type Filter struct {
 	Target       []Target       `yaml:"target"`        // Target is the key-value pair to be matched
 	PlainReplace []PlainReplace `yaml:"plain-replace"` // Replace is the key-value pair to be replaced
 	RegexReplace []RegexReplace `yaml:"regex-replace"` // Replace is the key-value pair to be replaced
-	Enabled      bool           `yaml:"enabled"`       // Enabled is the flag to enable or disable the filter
+	Enable       bool           `yaml:"enable"`        // Enabled is the flag to enable or disable the filter
 	Drop         bool           `yaml:"drop"`          // Drop is the flag to drop the event if the filter matches
 }
 
@@ -42,7 +42,7 @@ func ValidateFilters(filters []Filter) ([]Filter, int, int, int) {
 	disabled := 0
 	total := len(filters)
 	for _, filter := range filters {
-		if filter.Enabled {
+		if filter.Enable {
 			for _, target := range filter.Target {
 				if target.Key != "" && target.Value != nil {
 					targetList = append(targetList, target)

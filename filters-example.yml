@@ -40,7 +40,7 @@ Filters:
         value: "Email" ## value to replace
 
   - Filter:
-    filter-name: "Drop of Data" ## Name of the filter (optional)
+    filter-name: "Drop of the Record" ## Name of the filter (optional)
     watchers: ## watchers where the filter will be applied (optional)
       - "aw-watcher-window"
 
