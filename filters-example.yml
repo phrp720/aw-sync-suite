@@ -1,0 +1,54 @@
+Filters:
+
+  - Filter:
+    filter-name: "Plain Replace of Data" ## Name of the filter (optional)
+    enable: "true" ## Enable the filter (by default it is true)
+    watchers: ## watchers where the filter will be applied (optional)
+      - "aw-watcher-window"
+
+    target: ## Data Records that if match , do the filtering (mandatory)
+
+      - key: "app" ## key to filter on
+        value: "Google.*" ## value to filter on REGEX
+
+      - key: "title" ## key to filter on
+        value: "mail.*" ## value to filter on REGEX
+
+    plain-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
+
+      - key: "title" ## key of record
+        value: "Email" ## value to replace
+
+  - Filter:
+    filter-name: "Partial Regex Replace of data" ## Name of the filter (optional)
+    enable: "false" ## Enable the filter
+    watchers: ## watchers where the filter will be applied (optional)
+      - "aw-watcher-window"
+
+    target: ## Data Records that if match , do the filtering (mandatory)
+
+      - key: "app" ## key to filter on
+        value: "Google.*" ## value to filter on REGEX
+
+      - key: "title" ## key to filter on
+        value: "test.*" ## value to filter on REGEX
+
+    regex-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
+
+      - key: "title" ## key of record
+        expression: "test.*" ## REGEX to replace
+        value: "Email" ## value to replace
+
+  - Filter:
+    filter-name: "Drop of the Record" ## Name of the filter (optional)
+    watchers: ## watchers where the filter will be applied (optional)
+      - "aw-watcher-window"
+
+    target: ## Data Records that if match , do the filtering (mandatory)
+
+      - key: "app" ## key to filter on
+        value: "Google.*" ## value to filter on REGEX
+
+      - key: "title" ## key to filter on
+        value: "test.*" ## value to filter on REGEX
+    drop: "true" ## Drop the record if matched

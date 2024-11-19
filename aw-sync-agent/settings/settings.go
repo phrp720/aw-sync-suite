@@ -25,6 +25,7 @@ const (
 	PrometheusSecretKey SettingsKey = "prometheus-secret-key"
 	AsService           SettingsKey = "service"
 	Immediate           SettingsKey = "immediate"
+	IncludeHostname     SettingsKey = "includeHostname"
 )
 const configFile = "aw-sync-agent.yaml"
 
@@ -34,6 +35,7 @@ type sett struct {
 	PrometheusSecretKey string   `yaml:"prometheus-secret-key"`
 	ExcludedWatchers    []string `yaml:"excluded-watchers"`
 	UserID              string   `yaml:"userId"`
+	IncludeHostname     bool     `yaml:"include-hostname"`
 	Cron                string   `yaml:"cron"`
 	AsService           bool     `yaml:"-"`
 	Immediate           bool     `yaml:"-"`
@@ -102,6 +104,9 @@ func loadEnvVariables(config *Configuration) {
 	if value, exists := os.LookupEnv("PROMETHEUS_SECRET_KEY"); exists {
 		config.Settings.PrometheusSecretKey = value
 	}
+	if value, exists := os.LookupEnv("INCLUDE_HOSTNAME"); exists {
+		config.Settings.IncludeHostname = value == "true"
+	}
 
 }
 
@@ -109,7 +114,8 @@ func loadEnvVariables(config *Configuration) {
 func loadFlags(config *Configuration) {
 	flag.StringVar(&config.Settings.AWUrl, string(AWUrl), config.Settings.AWUrl, "Activity Watch URL")
 	flag.StringVar(&config.Settings.PrometheusUrl, string(PrometheusUrl), config.Settings.PrometheusUrl, "Prometheus URL")
-	flag.StringVar(&config.Settings.UserID, string(UserID), config.Settings.UserID, "User")
+	flag.StringVar(&config.Settings.UserID, string(UserID), config.Settings.UserID, "User Identification")
+	flag.BoolVar(&config.Settings.IncludeHostname, string(IncludeHostname), config.Settings.IncludeHostname, "Include hostname in the metrics")
 	flag.StringVar(&config.Settings.Cron, string(Cron), config.Settings.Cron, "Cron expression")
 	flag.StringVar(&config.Settings.PrometheusSecretKey, string(PrometheusSecretKey), config.Settings.PrometheusSecretKey, "Prometheus Secret Key")
 	flag.BoolVar(&config.Settings.AsService, string(AsService), config.Settings.AsService, "Run as service")
@@ -145,6 +151,7 @@ func printSettings(config *Configuration) {
 		PrometheusSecretKey: config.Settings.PrometheusSecretKey,
 		ExcludedWatchers:    strings.Join(config.Settings.ExcludedWatchers, ", "),
 		UserID:              config.Settings.UserID,
+		IncludeHostname:     fmt.Sprintf("%t", config.Settings.IncludeHostname),
 		Cron:                config.Settings.Cron,
 	}
 
@@ -155,6 +162,7 @@ func printSettings(config *Configuration) {
 		PrometheusSecretKey,
 		ExcludedWatchers,
 		UserID,
+		IncludeHostname,
 		Cron,
 	}
 

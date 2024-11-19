@@ -79,6 +79,13 @@ func GetUserID(userID string) string {
 
 	return id.String()
 }
+func GetHostname() string {
+	hostname, err := os.Hostname()
+	if err != nil {
+		return "unknown"
+	}
+	return hostname
+}
 
 // Contains checks if a slice contains a given string
 func Contains(slice []string, item string) bool {

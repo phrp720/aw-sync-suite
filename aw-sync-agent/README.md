@@ -20,6 +20,9 @@
     - [Filter Format](#filter-format)
     - [Filter Field Descriptions](#filter-field-descriptions)
     - [Filter Example Scenario](#filter-example)
+      - [Plain Replace of Data](#plain-replace-of-data)
+      - [Regex Replace of Data](#regex-replace-of-data)
+      - [Drop of the Record](#drop-of-the-record)
 7. [Makefile Commands](#makefile-commands)
 
 </details>
@@ -81,6 +84,7 @@ The following table provides details on configurable settings:
 | `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                   | ❌        | Every 5 minutes          |
 | `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | List of watchers to exclude(Pipe-separated for env or flag).         | ❌        | -                        |
 | `-userId`           | `USER_ID`            | `userId`            | Identifier for user nickname; defaults to hostname if not specified. | ❌        | hostname or Generated ID |
+| `-includeHostname`  | `INCLUDE_HOSTNAME`   | `include-hostname`  | if true,agent adds the hostname to its metrics                       | ❌        | false                    |
 
 ### Configuration Hierarchy
 
@@ -100,6 +104,7 @@ This guide explains the rules for configuring filters in the `aw-sync-agent.yaml
 Filters:
 
   - Filter:
+    filter-name: "Plain Replace of Data" ## Name of the filter (optional)
     watchers: ##(Optional) watchers where the filter will be applied. If empty, the filter will apply to all watchers
       - <watcher_name>
 
@@ -112,7 +117,7 @@ Filters:
       - key: <key_name>
         value: <value_to_match>
 
-    replace:  ## Mapping for Values to be replaced
+    plain_replace:  ## Mapping for Values to be plain replaced
       - key: <key_name>
         value: <new_value>
         .
@@ -120,23 +125,64 @@ Filters:
         .
       - key: <key_name>
         value: <new_value>
-      
+  - Filter:
+      filter-name: "Partial Regex Replace of data" ## Name of the filter (optional)
+      watchers: ##(Optional) watchers where the filter will be applied. If empty, the filter will apply to all watchers
+        - <watcher_name>
+
+      target:  ## Conditions that if match , it will apply the filtering for the specific record
+        - key: <key_name>
+          value: <value_to_match>
+          .
+          .
+          .
+        - key: <key_name>
+          value: <value_to_match>
+
+      regex_replace:  ## Mapping for Values to be replaced
+        - key: <key_name>
+          expression: <regex_expression>
+          value: <new_value>
+          .
+          .
+          .
+        - key: <key_name>
+          expression: <regex_expression>
+          value: <new_value>
+  - Filter:
+      filter-name: "Drop of the Record" ## Name of the filter (optional)
+      watchers: ##(Optional) watchers where the filter will be applied. If empty, the filter will apply to all watchers
+        - <watcher_name>
+      target:  ## Conditions that if match , it will apply the filtering for the specific record
+        - key: <key_name>
+          value: <value_to_match>
+          .
+          .
+          .
+        - key: <key_name>
+          value: <value_to_match>
+    
+      drop: "true" ## if true, the record will be dropped if the target conditions are met
+          
 
 ```
 
 ### Filter Field Descriptions
-
-- **watchers**(Optional): Specifies the watchers to apply the filter to, like `aw-watcher-window`. If this field is omitted or empty, the filter will apply to all watchers.
-
-- **target**: Contains key-value pairs that the data record must match for filtering to occur. Each entry includes:
-    - **key**: The data field name, e.g., app.
-    - **value**: A regex pattern to match against the field's value.
-
-- **replace**: Specifies key-value pairs for replacement. If the target key-values match, the specified keys in replace will be updated to the new values in the data record. Each entry includes:
-    - **key**: The field name to replace.
-    - **value**: The new value for the specified key.
+| Field             | Description                                                                                                                                                                                                                                                                                                                                                                           |
+|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **filter-name**   | (Optional) Specifies a name for the filter.                                                                                                                                                                                                                                                                                                                                           |
+| **enabled**       | (Optional) If set to `false`, the filter will be disabled.                                                                                                                                                                                                                                                                                                                            |
+| **watchers**      | (Optional) Specifies the watchers to apply the filter to, like `aw-watcher-window`. If this field is omitted or empty, the filter will apply to all watchers.                                                                                                                                                                                                                         |
+| **target**        | Contains key-value pairs that the data record must match for filtering to occur. Each entry includes: <br> - **key**: The data field name, e.g., app. <br> - **value**: A regex pattern to match against the field's value.                                                                                                                                                           |
+| **plain_replace** | Specifies key-value pairs for replacement. If the target key-values match, the specified keys in replace will be updated to the new values in the data record. Each entry includes: <br> - **key**: The field name to replace. <br> - **value**: The new value for the specified key.                                                                                                 |
+| **regex_replace** | Specifies key-value pairs for replacement using regex patterns. If the target key-values match, the specified keys in replace will be updated to the new values in the data record. Each entry includes: <br> - **key**: The field name to replace. <br> - **expression**: A regex pattern to match against the field's value. <br> - **value**: The new value for the specified key. |
+| **drop**          | If set to `true`, the record will be dropped if the target conditions are met.                                                                                                                                                                                                                                                                                                        |
 
 ### Filter Example
+
+#### Plain Replace of Data
+
+This filter configuration performs a plain text replacement on data records.
 
 ```yaml
 Filters:
@@ -152,7 +198,7 @@ Filters:
       - key: "title" ## key to filter on     
         value: "mail.*"  ## value to filter on RegEX
 
-    replace:  ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
+    plain_replace:  ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
       - key: "title"  ## key of record
         value: "Email" ## value to replace
 
@@ -161,7 +207,7 @@ Filters:
 **Explanation**:
 
 - **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
-
+ 
 - **target**: Specifies matching conditions:
 
     - `app` must match `"Google.*"` (e.g., "Google Chrome").
@@ -170,11 +216,84 @@ Filters:
 
 Both conditions must match for the filter to apply.
 
-- **replace**: When the `target` conditions are met, this section replaces values in the matching record:
+- **plain_replace**: When the `target` conditions are met, this section replaces plain values in the matching record:
     - Sets the title field to "Email".
 
 **Outcome**: For records in `"aw-watcher-window"` where `app` starts with "Google" and `title` starts with "mail," this filter changes the `title` field’s value to `"Email"`.
+### Regex Replace of Data
 
+This filter configuration performs a partial regex replacement on data records.
+
+```yaml
+Filters:
+  - Filter:
+    filter-name: "Partial Regex Replace of data" ## Name of the filter (optional)
+    enable: "false" ## Enable the filter
+    watchers: ## watchers where the filter will be applied (optional)
+      - "aw-watcher-window"
+
+    target: ## Data Records that if match , do the filtering (mandatory)
+
+      - key: "app" ## key to filter on
+        value: "Google.*" ## value to filter on REGEX
+
+      - key: "title" ## key to filter on
+        value: "test.*" ## value to filter on REGEX
+
+    regex-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
+
+      - key: "title" ## key of record
+        expression: "test.*" ## REGEX to replace
+        value: "Email" ## value to replace
+```
+
+**Explanation**:
+
+- **filter-name**: Specifies a name for the filter.
+- **enable**: Indicates whether the filter is enabled (`false` means the filter is disabled).
+- **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
+- **target**: Specifies matching conditions:
+    - `app` must match `"Google.*"` (e.g., "Google Chrome").
+    - `title` must match `"test.*"` (e.g., "test case").
+- **regex-replace**: When the `target` conditions are met, this section replaces values in the matching record using regex:
+    - For the `title` field, if a part of `title` matches the regex `"test.*"`, it will be replaced with `"Email"`.
+
+### Drop of the Record
+
+This filter configuration drops data records that match specified conditions.
+
+```yaml
+Filters:
+  filter-name: "Drop of the Record" ## Name of the filter (optional)
+  watchers: ## watchers where the filter will be applied (optional)
+    - "aw-watcher-window"
+
+  target: ## Data Records that if match , do the filtering (mandatory)
+
+    - key: "app" ## key to filter on
+      value: "Google.*" ## value to filter on REGEX
+
+    - key: "title" ## key to filter on
+      value: "test.*" ## value to filter on REGEX
+  drop: "true" ## Drop the record if matched
+```
+
+**Explanation**:
+
+- **filter-name**: Specifies a name for the filter.
+- **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
+- **target**: Specifies matching conditions:
+    - `app` must match `"Google.*"` (e.g., "Google Chrome").
+    - `title` must match `"test.*"` (e.g., "test case").
+- **drop**: If set to `true`, the record will be dropped if the `target` conditions are met.
+
+> [!Note]
+> - Filters can be combined to perform multiple operations on the same data record.
+> - Filters are applied in the order they are defined in the configuration file.
+> - Filters can be disabled by setting the `enabled` field to `false`.
+> - Filters that have the drop field set to `true` will not perform any replacement operations.
+
+## Quick Start
 
 ## Makefile Commands
 

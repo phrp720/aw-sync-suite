@@ -1,26 +1,12 @@
-Settings:
+## This is the configuration file for the agent
+Settings: ## Settings for the agent
   aw-url: <activitywatch_url>
   prometheus-url: <prometheus_url>
   excluded-watchers:
     - <watcher_name>
-  userId: <nickname>
+  userId: <user_identification>
   prometheus-secret-key:
+  include-hostname: true
 
-Filters:
-
-  - Filter:
-    watchers: ## watchers where the filter will be applied
-      - "aw-watcher-window"
-
-    target: ## Data Records that if match , do the filtering
-
-      - key: "app" ## key to filter on
-        value: "Google.*" ## value to filter on REGEX
-
-      - key: "title" ## key to filter on
-        value: "mail.*" ## value to filter on REGEX
-
-    replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
-
-      - key: "title" ## key of record
-        value: "Email" ## value to replace
+## Write the filters here
+#Filters:
