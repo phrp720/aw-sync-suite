@@ -19,9 +19,9 @@ func main() {
 	Configs := settings.InitConfigurations()
 
 	log.Print("Validating filters...")
-	var totalFilters, invalidFilters int
-	Configs.Filters, totalFilters, invalidFilters = filter.ValidateFilters(Configs.Filters)
-	log.Print("| Total filters: ", totalFilters, " | Valid filters: ", totalFilters-invalidFilters, " | Invalid filters: ", invalidFilters, " |")
+	var totalFilters, invalidFilters, disabledFilters int
+	Configs.Filters, totalFilters, invalidFilters, disabledFilters = filter.ValidateFilters(Configs.Filters)
+	log.Print("| Total filters: ", totalFilters, "| Disabled Filters: ", disabledFilters, " | Valid filters: ", totalFilters-invalidFilters, " | Invalid filters: ", invalidFilters, " |")
 
 	//	filter.PrintFilters(Configs.Filters)
 	// If immediate flag is set, run the sync routine and exit

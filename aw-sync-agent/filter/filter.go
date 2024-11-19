@@ -35,24 +35,29 @@ type RegexReplace struct {
 }
 
 // ValidateFilters validates the filters in the List
-func ValidateFilters(filters []Filter) ([]Filter, int, int) {
+func ValidateFilters(filters []Filter) ([]Filter, int, int, int) {
 	validFilters := []Filter{}
 	var targetList []Target
 	invalid := 0
+	disabled := 0
 	total := len(filters)
 	for _, filter := range filters {
-		for _, target := range filter.Target {
-			if target.Key != "" && target.Value != nil {
-				targetList = append(targetList, target)
+		if filter.Enabled {
+			for _, target := range filter.Target {
+				if target.Key != "" && target.Value != nil {
+					targetList = append(targetList, target)
+				}
 			}
-		}
-		if len(targetList) != 0 { // Check if the filter has at least one valid target
-			validFilters = append(validFilters, filter)
+			if len(targetList) != 0 { // Check if the filter has at least one valid target
+				validFilters = append(validFilters, filter)
+			} else {
+				invalid++
+			}
 		} else {
-			invalid++
+			disabled++
 		}
 	}
-	return validFilters, total, invalid
+	return validFilters, total, invalid, disabled
 }
 
 func Apply(data map[string]interface{}, filters []Filter) map[string]interface{} {
@@ -73,11 +78,25 @@ func Apply(data map[string]interface{}, filters []Filter) map[string]interface{}
 		}
 
 		if allMatch {
-			// Apply replacements
-			for _, replace := range filter.PlainReplace {
-				if _, exists := data[replace.Key]; exists {
-					data[replace.Key] = replace.Value
-				}
+			data = Replace(data, filter.PlainReplace, filter.RegexReplace)
+		}
+	}
+	return data
+}
+
+func Replace(data map[string]interface{}, plain []PlainReplace, regex []RegexReplace) map[string]interface{} {
+
+	// Apply replacements
+	for _, replace := range plain {
+		if _, exists := data[replace.Key]; exists {
+			data[replace.Key] = replace.Value
+		}
+	}
+	for _, replace := range regex {
+		if _, exists := data[replace.Key]; exists {
+			// Check if the value matches the target's regex
+			if replace.Expression.MatchString(fmt.Sprintf("%v", data[replace.Key])) {
+				data[replace.Key] = replace.Value
 			}
 		}
 	}
