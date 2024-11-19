@@ -91,7 +91,7 @@ Once configured, you can run the **aw-sync-agent** in one of two ways:
     - Linux: 
     
     ```bash
-    ./aw-sync-agent -service`
+    ./aw-sync-agent -service
     ````
 - As a Docker container: Use the Docker image to run the agent in a container. Here’s an example:
 ```bash
