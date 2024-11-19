@@ -81,6 +81,7 @@ The following table provides details on configurable settings:
 | `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                   | ❌        | Every 5 minutes          |
 | `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | List of watchers to exclude(Pipe-separated for env or flag).         | ❌        | -                        |
 | `-userId`           | `USER_ID`            | `userId`            | Identifier for user nickname; defaults to hostname if not specified. | ❌        | hostname or Generated ID |
+| `-includeHostname`  | `INCLUDE_HOSTNAME`   | `include-hostname`  | if true,agent adds the hostname to its metrics                       | ❌        | false                    |
 
 ### Configuration Hierarchy
 
@@ -175,6 +176,8 @@ Both conditions must match for the filter to apply.
 
 **Outcome**: For records in `"aw-watcher-window"` where `app` starts with "Google" and `title` starts with "mail," this filter changes the `title` field’s value to `"Email"`.
 
+
+## Quick Start
 
 ## Makefile Commands
 

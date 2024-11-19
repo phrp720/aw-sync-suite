@@ -9,9 +9,13 @@ import (
 
 // Filter struct
 type Filter struct {
-	Watchers []string  `yaml:"watchers"` // Watchers is the list of watchers to be filtered
-	Target   []Target  `yaml:"target"`   // Target is the key-value pair to be matched
-	Replace  []Replace `yaml:"replace"`  // Replace is the key-value pair to be replaced
+	FilterName   string         `yaml:"filter-name"`   // FilterName is the name of the filter
+	Watchers     []string       `yaml:"watchers"`      // Watchers is the list of watchers to be filtered
+	Target       []Target       `yaml:"target"`        // Target is the key-value pair to be matched
+	PlainReplace []PlainReplace `yaml:"plain-replace"` // Replace is the key-value pair to be replaced
+	RegexReplace []RegexReplace `yaml:"regex-replace"` // Replace is the key-value pair to be replaced
+	Enabled      bool           `yaml:"enabled"`       // Enabled is the flag to enable or disable the filter
+	Drop         bool           `yaml:"drop"`          // Drop is the flag to drop the event if the filter matches
 }
 
 type Target struct {
@@ -19,9 +23,15 @@ type Target struct {
 	Value *regexp.Regexp `yaml:"value"`
 }
 
-type Replace struct {
+type PlainReplace struct {
 	Key   string `yaml:"key"`
 	Value string `yaml:"value"`
+}
+
+type RegexReplace struct {
+	Key        string         `yaml:"key"`
+	Expression *regexp.Regexp `yaml:"from"`
+	Value      string         `yaml:"value"`
 }
 
 // ValidateFilters validates the filters in the List
@@ -64,7 +74,7 @@ func Apply(data map[string]interface{}, filters []Filter) map[string]interface{}
 
 		if allMatch {
 			// Apply replacements
-			for _, replace := range filter.Replace {
+			for _, replace := range filter.PlainReplace {
 				if _, exists := data[replace.Key]; exists {
 					data[replace.Key] = replace.Value
 				}
@@ -99,10 +109,16 @@ func PrintFilters(filters []Filter) {
 			fmt.Printf("    Key: %s\n", target.Key)
 			fmt.Printf("    Value: %s\n", target.Value)
 		}
-		for j, replace := range filter.Replace {
-			fmt.Printf("  Replace %d:\n", j+1)
+		for j, replace := range filter.PlainReplace {
+			fmt.Printf("  Plain String Replace %d:\n", j+1)
 			fmt.Printf("    Key: %s\n", replace.Key)
 			fmt.Printf("    Value: %s\n", replace.Value)
+		}
+		for m, replace := range filter.RegexReplace {
+			fmt.Printf("  Regex Value Replace %d:\n", m+1)
+			fmt.Printf("    Key: %s\n", replace.Key)
+			fmt.Printf("    Value: %s\n", replace.Value)
+			fmt.Printf("    Expression: %s\n", replace.Expression)
 		}
 	}
 }
