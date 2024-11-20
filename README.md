@@ -16,7 +16,7 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 </p>
 
 <p align="center">
-  If you’ve ever wished for a simple, centralized solution to sync and visualize data from multiple instances of ActivityWatch, you’re in the right place.
+  If you’ve ever wished for a **simple, centralized solution** to sync and visualize data from multiple instances of ActivityWatch, you’re in the right place.
 
 </p>
 
@@ -27,8 +27,8 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 1. [About](#about)
 2. [Features](#features)
 3. [Flow Diagrams](#flow-diagrams)
-    - [Without Bearer Token Authentication](#1-activitywatch-sync-suite-flow-diagram-without-bearer-token-authentication)
-    - [With Bearer Token Authentication](#2-activitywatch-sync-suite-flow-diagram-with-bearer-token-authentication)
+    - [Without Bearer Token Authentication](#1-sync-suite-without-bearer-token-authentication)
+    - [With Bearer Token Authentication](#2-sync-suite-with-bearer-token-authentication)
 4. [Quick Start](#quick-start)
     - [Download the Latest Release](#1-download-the-latest-release)
     - [Deploy aw-sync-center (Cloud Setup)](#2-deploy-aw-sync-center-cloud-setup)
