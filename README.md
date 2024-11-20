@@ -2,11 +2,6 @@
 <p align="center">
 Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch Instances.  <br>
 </p>
-<p align="center">
-  If you’ve ever wished for a simple, centralized solution to sync and visualize data from multiple instances of ActivityWatch, you’re in the right place.
-
-</p>
-
 
 <p align="center">
   <a href="https://github.com/phrp720/aw-sync-suite/actions/workflows/build.yml?query=branch%3Amaster">
@@ -18,6 +13,11 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
   <a href="https://github.com/phrp720/aw-sync-suite/releases">
     <img title="Latest release" src="https://img.shields.io/github/v/release/phrp720/aw-sync-suite" alt="release">
   </a>
+</p>
+
+<p align="center">
+  If you’ve ever wished for a simple, centralized solution to sync and visualize data from multiple instances of ActivityWatch, you’re in the right place.
+
 </p>
 
 <details>
