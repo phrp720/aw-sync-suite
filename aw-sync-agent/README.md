@@ -62,19 +62,23 @@ To run the agent, you need only:
 
 ## Package Overview
 
-- **aw**: Client for ActivityWatch REST API interactions.
-- **prometheus**: Client for Prometheus REST API interactions.
-- **synchronizer**: Manages data synchronization from ActivityWatch to Prometheus.
-- **checkpoint**: Tracks the latest data synced for efficient operation.
-- **system_error**: Error handling utilities.
-- **datamanager**: Handles data processing and transmission to Prometheus(**Scrape**,**Aggregate** and **Push** data).
-- **settings**: Manages agent configuration settings.
-- **filter**: Filters data based on user-defined criteria.
-- **util**: Utility functions, including health checks.
-- **scripts**: Additional, optional scripts.
-- **cron**: Manages scheduled sync intervals.
-- **service**: Manages service mode operations.
-- **tests**: Contains unit tests for the agent.
+Here is the package structure of the agent:
+
+| Package          | Description                                                                                           |
+|------------------|-------------------------------------------------------------------------------------------------------|
+| **aw**           | Client for ActivityWatch REST API interactions.                                                       |
+| **prometheus**   | Client for Prometheus REST API interactions.                                                          |
+| **synchronizer** | Manages data synchronization from ActivityWatch to Prometheus.                                        |
+| **checkpoint**   | Tracks the latest data synced for efficient operation.                                                |
+| **system_error** | Error handling utilities.                                                                             |
+| **datamanager**  | Handles data processing and transmission to Prometheus (**Scrape**, **Aggregate** and **Push** data). |
+| **settings**     | Manages agent configuration settings.                                                                 |
+| **filter**       | Filters data based on user-defined criteria.                                                          |
+| **util**         | Utility functions, including health checks.                                                           |
+| **scripts**      | Additional, optional scripts.                                                                         |
+| **cron**         | Manages scheduled sync intervals.                                                                     |
+| **service**      | Manages service mode operations.                                                                      |
+| **tests**        | Contains unit tests for the agent.                                                                    |
 
 ## Configuration Options
 
