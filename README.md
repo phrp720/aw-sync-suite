@@ -16,7 +16,7 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 </p>
 
 <p align="center">
-  If you’ve ever wished for a **simple, centralized solution** to sync and visualize data from multiple instances of ActivityWatch, you’re in the right place.
+  If you’ve ever wished for <strong> a simple, centralized solution </strong> to sync and visualize data from multiple instances of ActivityWatch, you’re in the right place.
 
 </p>
 
