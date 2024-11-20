@@ -2,6 +2,11 @@
 <p align="center">
 Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch Instances.  <br>
 </p>
+<p align="center">
+  If you’ve ever wished for a simple, centralized solution to sync and visualize data from multiple instances of ActivityWatch, you’re in the right place.
+
+</p>
+
 
 <p align="center">
   <a href="https://github.com/phrp720/aw-sync-suite/actions/workflows/build.yml?query=branch%3Amaster">
@@ -14,6 +19,7 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
     <img title="Latest release" src="https://img.shields.io/github/v/release/phrp720/aw-sync-suite" alt="release">
   </a>
 </p>
+
 <details>
 
 <summary>Table of Contents</summary>
@@ -53,10 +59,10 @@ This repository simplifies the deployment and integration process, making it eas
 ## Flow Diagrams
 
 
-### 1. Sync-Suite Flow Diagram without Bearer Token Authentication
+### 1. Sync-Suite without Bearer Token Authentication
 ![aw-sync-diagram.png](aw-sync-diagram.png)
 
-### 2. Sync-Suite Flow Diagram with Bearer Token Authentication
+### 2. Sync-Suite with Bearer Token Authentication
 ![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png)
 
 ## Quick Start
