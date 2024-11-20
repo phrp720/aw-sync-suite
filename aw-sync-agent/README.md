@@ -24,6 +24,8 @@
       - [Regex Replace of Data](#regex-replace-of-data)
       - [Drop of the Record](#drop-of-the-record)
 7. [Makefile Commands](#makefile-commands)
+    - [General Commands](#general-commands)
+    - [Service Commands](#service-commands)
 
 </details>
 
@@ -74,17 +76,17 @@ To run the agent, you need:
 
 The following table provides details on configurable settings:
 
-| Flag                | Environment Variable | Config Key          | Description                                                          | Required | Default                  |
-|---------------------|----------------------|---------------------|----------------------------------------------------------------------|----------|--------------------------|
-| `-service`          | -                    | -                   | Runs the agent as a service.                                         | ❌        | -                        |
-| `-immediate`        | -                    | -                   | Runs the synchronizer once immediately.                              | ❌        | -                        |
-| `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                     | ✅        | http://localhost:5600    |
-| `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                        | ✅        | -                        |
-| `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Bearer Auth for prometheus(if prom is protected)                     | ❌        | -                        |
-| `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                   | ❌        | Every 5 minutes          |
-| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | List of watchers to exclude(Pipe-separated for env or flag).         | ❌        | -                        |
-| `-userId`           | `USER_ID`            | `userId`            | Identifier for user nickname; defaults to hostname if not specified. | ❌        | hostname or Generated ID |
-| `-includeHostname`  | `INCLUDE_HOSTNAME`   | `include-hostname`  | if true,agent adds the hostname to its metrics                       | ❌        | false                    |
+| Flag                | Environment Variable | Config Key          | Description                                                                                                                                                                | Required | Default                  |
+|---------------------|----------------------|---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|--------------------------|
+| `-service`          | -                    | -                   | Runs the agent as a service.                                                                                                                                               | ❌        | -                        |
+| `-immediate`        | -                    | -                   | Runs the synchronizer once immediately.                                                                                                                                    | ❌        | -                        |
+| `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                                                                                                                           | ✅        | http://localhost:5600    |
+| `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                                                                                                                              | ✅        | -                        |
+| `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Bearer Auth for prometheus(if prometheus is [protected via nginx](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center#prometheus-with-nginx-secure-setup)) | ❌        | -                        |
+| `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                                                                                                                         | ❌        | Every 5 minutes          |
+| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | List of watchers to exclude(Pipe-separated for env or flag).                                                                                                               | ❌        | -                        |
+| `-userId`           | `USER_ID`            | `userId`            | Identifier for user nickname; defaults to hostname if not specified.                                                                                                       | ❌        | hostname or Generated ID |
+| `-includeHostname`  | `INCLUDE_HOSTNAME`   | `include-hostname`  | if true,agent adds the hostname to its metrics                                                                                                                             | ❌        | false                    |
 
 ### Configuration Hierarchy
 
@@ -297,7 +299,27 @@ Filters:
 
 ## Makefile Commands
 
-- `make build`: Builds the agent.
-- `make run`: Runs the agent.
-- `make service-install`: Install and Starts the agent as a service.
-- `make format`: Formats the codebase.
+### General Commands
+
+| Command         | Description                                                           |
+|-----------------|-----------------------------------------------------------------------|
+| `run`           | Runs the `main.go` file.                                              |
+| `build`         | Builds the `aw-sync-agent` executable.                                |
+| `clean`         | Removes the `aw-sync-agent` executable.                               |
+| `test`          | Runs the go tests.                                                    |
+| `check-os`      | Determines the operating system by running the `detect_os.go` script. |
+| `clean-service` | Cleans the ActivityWatch Sync Agent service files.                    |
+| `format`        | Formats the Go code using `gofmt`.                                    |
+| `build-all`     | Builds executables for both Windows and Linux.                        |
+| `clean-all`     | Removes both Windows and Linux executables.                           |
+
+### Service Commands
+
+| Command           | Description                                                                       |
+|-------------------|-----------------------------------------------------------------------------------|
+| `service-install` | Builds the executable and runs it as a service.                                   |
+| `service-start`   | Starts the ActivityWatch Sync Agent service.                                      |
+| `service-stop`    | Stops the ActivityWatch Sync Agent service.                                       |
+| `service-status`  | Displays the status of the ActivityWatch Sync Agent service.                      |
+| `service-remove`  | Stops and removes the ActivityWatch Sync Agent service, and cleans service files. |
+| `service-restart` | Restarts the ActivityWatch Sync Agent service.                                    |

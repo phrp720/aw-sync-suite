@@ -95,7 +95,7 @@ Once configured, you can run the **aw-sync-agent** in one of two ways:
     ````
 - As a Docker container: Use the Docker image to run the agent in a container. Here’s an example:
 ```bash
-docker run -v /path/to/aw-sync-agent.yaml:/opt/aw-sync-agent/aw-sync-agent.yaml phrp720/aw-sync-agent:latest
+docker run -v /path/to/aw-sync-agent.yaml:/opt/aw-sync-agent/aw-sync-agent.yaml phrp5/aw-sync-agent:latest
 ```
 > [!CAUTION]
 > Make sure to replace `/path/to/aw-sync-agent.yaml` with the path to your configuration file.

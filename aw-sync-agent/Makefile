@@ -4,12 +4,25 @@ MAKEFLAGS += --no-print-directory
 OS := $(shell go run scripts/detect_os.go)
 ifeq ($(OS), windows)
  BUILD := go build -o aw-sync-agent.exe main.go
- CLEAN := rm -rf $(HOME)/AwSyncAgent
+ CLEAN := rm -rf aw-sync-agent.exe
+ CLEAN-SERVICE := rm -rf $(HOME)/AwSyncAgent
+
+ SERVICE-START := $(HOME)/AwSyncAgent/nssm.exe start aw-sync-agent
+ SERVICE-STOP := $(HOME)/AwSyncAgent/nssm.exe stop aw-sync-agent
+ SERVICE-REMOVE := $(HOME)/AwSyncAgent/nssm.exe remove aw-sync-agent confirm && $(CLEAN-SERVICE)
+ SERVICE-RESTART := $(HOME)/AwSyncAgent/nssm.exe restart aw-sync-agent
+ SERVICE-STATUS := $(HOME)/AwSyncAgent/nssm.exe status aw-sync-agent
 
 else
  BUILD := go build -o aw-sync-agent main.go
- CLEAN := rm -rf $(HOME)/.config/aw
+ CLEAN := rm -rf aw-sync-agent
+ CLEAN-SERVICE := rm -rf $(HOME)/.config/aw
 
+ SERVICE-START := systemctl --user start aw-sync-agent
+ SERVICE-STOP := systemctl --user stop aw-sync-agent
+ SERVICE-REMOVE := rm $(HOME)/.config/systemd/user/aw-sync-agent.service && systemctl --user daemon-reload
+ SERVICE-RESTART := systemctl --user restart aw-sync-agent
+ SERVICE-STATUS := systemctl --user status aw-sync-agent
 endif
 
 ##General commands
@@ -19,11 +32,15 @@ run:
 build:
 	@$(BUILD)
 
+clean:
+	@$(CLEAN)
+
 check-os:
 	@go run scripts/detect_os.go
 
-clean:
-	@$(CLEAN)
+clean-service:
+	@echo "Cleaning ActivityWatch Sync Agent service files..."
+	@$(CLEAN-SERVICE)
 
 format:
 	@gofmt -s -w .
@@ -49,28 +66,23 @@ service-install:
 
 service-start:
 	@echo "Starting ActivityWatch Sync Agent service..."
-	@systemctl --user start aw-sync-agent
+	@$(SERVICE-START)
 
 service-stop:
 	@echo "Stopping ActivityWatch Sync Agent service..."
-	@systemctl --user stop aw-sync-agent
+	@$(SERVICE-STOP)
 
 service-status:
 	@echo "ActivityWatch Sync Agent service status:"
-	@systemctl --user  status aw-sync-agent
+	@$(SERVICE-STATUS)
 
 service-remove:
 	@$(MAKE) service-stop
 	@echo "Deleting ActivityWatch Sync Agent service..."
-	@rm $(HOME)/.config/systemd/user/aw-sync-agent.service
-	@systemctl --user daemon-reload
-	@$(CLEAN)
+	@$(SERVICE-REMOVE)
+	@$(CLEAN-SERVICE)
 
 service-restart:
 	@echo "Restarting ActivityWatch Sync Agent service..."
-	@systemctl --user restart aw-sync-agent
+	@$(SERVICE-RESTART)
 
-service-update:
-	@echo "Re-Building ActivityWatch Sync Agent application..."
-	@go build -o $(HOME)/.config/aw/aw-sync-agent main.go
-	@$(MAKE) service-restart
