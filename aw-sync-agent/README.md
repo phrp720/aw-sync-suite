@@ -299,7 +299,6 @@ Filters:
 > - Filters can be disabled by setting the `enabled` field to `false`.
 > - Filters that have the drop field set to `true` will not perform any replacement operations.
 
-## Quick Start
 
 ## Makefile Commands
 
