@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const checkpointFile = "checkpoint.json"
+var checkpointFile = "checkpoint.json"
 
 // Read reads the checkpoint for the given watcher
 func Read(watcher string) *time.Time {
@@ -70,4 +70,14 @@ func Update(watcher string, timestamp time.Time) {
 	if err = file.Truncate(tmpFile); err != nil {
 		log.Fatalf("Failed to truncate checkpoint file: %v", err)
 	}
+}
+
+// GetCheckpointFile returns the checkpoint file name
+func GetCheckpointFile() string {
+	return checkpointFile
+}
+
+// SetCheckpointFile sets the checkpoint file name
+func SetCheckpointFile(file string) {
+	checkpointFile = file
 }
