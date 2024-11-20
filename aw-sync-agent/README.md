@@ -19,7 +19,7 @@
 6. [Filters](#filters)
     - [Filter Format](#filter-format)
     - [Filter Field Descriptions](#filter-field-descriptions)
-    - [Filter Example Scenario](#filter-example)
+    - [Filter Example Scenario](#filter-examples)
       - [Plain Replace of Data](#plain-replace-of-data)
       - [Regex Replace of Data](#regex-replace-of-data)
       - [Drop of the Record](#drop-of-the-record)
@@ -188,7 +188,7 @@ Filters:
 | **regex_replace** | Specifies key-value pairs for replacement using regex patterns. If the target key-values match, the specified keys in replace will be updated to the new values in the data record. Each entry includes: <br> - **key**: The field name to replace. <br> - **expression**: A regex pattern to match against the field's value. <br> - **value**: The new value for the specified key. |
 | **drop**          | If set to `true`, the record will be dropped if the target conditions are met.                                                                                                                                                                                                                                                                                                        |
 
-### Filter Example
+### Filter Examples
 
 #### Plain Replace of Data
 
