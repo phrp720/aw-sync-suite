@@ -42,6 +42,7 @@ func TestLoadConfiguration(t *testing.T) {
 	}
 }
 
+// TODO Check Later
 func TestValidateConfiguration(t *testing.T) {
 	config := settings.Configuration{
 		Settings: settings.Setts{

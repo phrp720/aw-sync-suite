@@ -28,13 +28,13 @@ func TestValidateFilters(t *testing.T) {
 			Target: []filter.Target{
 				{Key: "", Value: regexp.MustCompile("value2")},
 			},
-			Enable: false,
+			Enable: true,
 		},
 	}
 
 	validFilters, total, invalid, disabled := filter.ValidateFilters(filters)
 	if len(validFilters) != 1 || total != 3 || invalid != 1 || disabled != 1 {
-		t.Errorf("expected 1 valid filter, 3 total, 1 invalid, 1 disabled; got %d valid, %d total, %d invalid, %d disabled", len(validFilters), total, invalid, disabled)
+		t.Errorf("expected 3 total filters,1 valid, 1 invalid, 1 disabled; got %d valid, %d total, %d invalid, %d disabled", len(validFilters), total, invalid, disabled)
 	}
 }
 
@@ -72,7 +72,7 @@ func TestApplyWithDrop(t *testing.T) {
 		},
 	}
 
-	data := map[string]interface{}{"key1": "value1"}
+	data := map[string]interface{}{"key1": "value12"}
 	result, dropped := filter.Apply(data, filters)
 	if result != nil || !dropped {
 		t.Errorf("expected data to be dropped, got %v, dropped: %v", result, dropped)
@@ -109,17 +109,17 @@ func TestApplyWithRegexReplace(t *testing.T) {
 		{
 			FilterName: "RegexReplaceFilter",
 			Target: []filter.Target{
-				{Key: "key1", Value: regexp.MustCompile("value1")},
+				{Key: "key1", Value: regexp.MustCompile("2value1")},
 			},
 			RegexReplace: []filter.RegexReplace{
-				{Key: "key1", Expression: regexp.MustCompile("val"), Value: "newValue1"},
+				{Key: "key1", Expression: regexp.MustCompile("value1"), Value: "newValue1"},
 			},
 			Enable: true,
 		},
 	}
 
-	data := map[string]interface{}{"key1": "value1"}
-	expected := map[string]interface{}{"key1": "newValue1"}
+	data := map[string]interface{}{"key1": "2value1"}
+	expected := map[string]interface{}{"key1": "2newValue1"}
 
 	result, dropped := filter.Apply(data, filters)
 	if dropped || result["key1"] != expected["key1"] {

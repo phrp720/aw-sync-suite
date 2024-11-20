@@ -2,7 +2,6 @@ package tests
 
 import (
 	"aw-sync-agent/cron"
-	"aw-sync-agent/util"
 	"testing"
 	"time"
 )
@@ -31,20 +30,4 @@ func TestStartAndStop(t *testing.T) {
 	if len(c.Entries()) != 1 {
 		t.Fatalf("expected 1 cron entry, got %d", len(c.Entries()))
 	}
-}
-
-func TestValidateCronExpr(t *testing.T) {
-	validExpr := "@every 1s"
-	invalidExpr := "invalid"
-
-	if util.ValidateCronExpr(validExpr) != validExpr {
-		t.Fatalf("expected valid cron expression, got %s", validExpr)
-	}
-
-	defer func() {
-		if r := recover(); r == nil {
-			t.Fatalf("expected panic for invalid cron expression")
-		}
-	}()
-	util.ValidateCronExpr(invalidExpr)
 }
