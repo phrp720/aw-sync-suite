@@ -51,11 +51,14 @@ To modify the agent, ensure you have:
 - **Make**
 
 ### For Running the Agent
-To run the agent, you need:
-- **aw-sync-agent** executable
+
+To run the agent, you need only:
+- **aw-sync-agent** executable which can be built using the provided Makefile(or you can find the latest release [here](https://github.com/phrp720/aw-sync-suite/releases/)).
 - **configuration file** (optional but recommended; you can also use flags or environment variables)
-- Running instances of **ActivityWatch** and **Prometheus**
-- Running instance of **Grafana** (optional, for visualization)
+
+> [!Warning]
+> - The agent requires a reachable running instance of ActivityWatch and Prometheus to function.
+> - To use filters and other advanced features, you must provide the configuration file.
 
 ## Package Overview
 
@@ -71,6 +74,7 @@ To run the agent, you need:
 - **scripts**: Additional, optional scripts.
 - **cron**: Manages scheduled sync intervals.
 - **service**: Manages service mode operations.
+- **tests**: Contains unit tests for the agent.
 
 ## Configuration Options
 
@@ -290,7 +294,7 @@ Filters:
 - **drop**: If set to `true`, the record will be dropped if the `target` conditions are met.
 
 > [!Note]
-> - Filters can be combined to perform multiple operations on the same data record.
+> - Filters can be combined to perform multiple operations on the same data record(plain && regex replacement).
 > - Filters are applied in the order they are defined in the configuration file.
 > - Filters can be disabled by setting the `enabled` field to `false`.
 > - Filters that have the drop field set to `true` will not perform any replacement operations.
