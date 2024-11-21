@@ -126,3 +126,86 @@ func TestApplyWithRegexReplace(t *testing.T) {
 		t.Errorf("expected %v, got %v, dropped: %v", expected, result, dropped)
 	}
 }
+
+// TestApplyWithPlainAndRegex tests the Apply function with both Plain and Regex Replace in one filter
+func TestApplyWithPlainAndRegex(t *testing.T) {
+	filters := []filter.Filter{
+		{
+			FilterName: "Filter with both Plain and Regex Replace",
+			Target: []filter.Target{
+				{Key: "key1", Value: regexp.MustCompile("value1")},
+			},
+			PlainReplace: []filter.PlainReplace{
+				{Key: "key1", Value: "leValue1"},
+			},
+			RegexReplace: []filter.RegexReplace{
+				{Key: "key1", Expression: regexp.MustCompile("Value1"), Value: "changedValue1"},
+			},
+			Enable: true,
+		},
+	}
+
+	data := map[string]interface{}{"key1": "value1", "key2": "value2"}
+	expected := map[string]interface{}{"key1": "lechangedValue1"}
+
+	result, dropped := filter.Apply(data, filters)
+	if dropped || result["key1"] != expected["key1"] {
+		t.Errorf("expected %v, got %v, dropped: %v", expected, result, dropped)
+	}
+}
+
+// TestApplyWithMultipleFilters tests the Apply function with multiple filters
+func TestApplyWithDropAndFilters(t *testing.T) {
+	filters := []filter.Filter{
+		{
+			FilterName: "Just a Filter",
+			Target: []filter.Target{
+				{Key: "key1", Value: regexp.MustCompile("value1")},
+			},
+			PlainReplace: []filter.PlainReplace{
+				{Key: "key1", Value: "newValue1"},
+			},
+			Enable: true,
+		},
+		{
+			FilterName: "Just a Drop filter",
+			Target: []filter.Target{
+				{Key: "key2", Value: regexp.MustCompile("value2")},
+			},
+			Drop:   true,
+			Enable: true,
+		},
+	}
+
+	data := map[string]interface{}{"key1": "value1", "key2": "value2"}
+	expected := map[string]interface{}{}
+
+	result, dropped := filter.Apply(data, filters)
+	if !dropped {
+		t.Errorf("expected %v, got %v, dropped: %v", expected, result, dropped)
+	}
+}
+
+// TestApplyWithDisabledFilter tests the Apply function with a disabled filter
+func TestApplyWithDisabledFilter(t *testing.T) {
+	filters := []filter.Filter{
+		{
+			FilterName: "DisabledFilter",
+			Target: []filter.Target{
+				{Key: "key1", Value: regexp.MustCompile("value1")},
+			},
+			PlainReplace: []filter.PlainReplace{
+				{Key: "key1", Value: "newValue1"},
+			},
+			Enable: false,
+		},
+	}
+
+	data := map[string]interface{}{"key1": "value1"}
+	expected := map[string]interface{}{"key1": "value1"}
+	filters, _, _, _ = filter.ValidateFilters(filters)
+	result, dropped := filter.Apply(data, filters)
+	if dropped || result["key1"] != expected["key1"] {
+		t.Errorf("expected %v, got %v, dropped: %v", expected, result, dropped)
+	}
+}
