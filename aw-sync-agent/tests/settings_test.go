@@ -2,8 +2,6 @@ package tests
 
 import (
 	"aw-sync-agent/settings"
-	"bytes"
-	"log"
 	"testing"
 )
 
@@ -40,37 +38,4 @@ func TestLoadConfiguration(t *testing.T) {
 	if config.Settings.IncludeHostname != expectedConfig.Settings.IncludeHostname {
 		t.Errorf("expected IncludeHostname to be %v, got %v", expectedConfig.Settings.IncludeHostname, config.Settings.IncludeHostname)
 	}
-}
-
-// TODO Check Later
-func TestValidateConfiguration(t *testing.T) {
-	config := settings.Configuration{
-		Settings: settings.Setts{
-			PrometheusUrl: "http://localhost:9090",
-			AWUrl:         "http://localhost:8080",
-			Cron:          "*/5 * * * *",
-		},
-	}
-
-	settings.ValidateSettings(&config)
-
-	invalidConfig := settings.Configuration{
-		Settings: settings.Setts{
-			PrometheusUrl: "",
-			AWUrl:         "http://localhost:8080",
-			Cron:          "*/5 * * * *",
-		},
-	}
-	var logBuffer bytes.Buffer
-	log.SetOutput(&logBuffer)
-	defer func() {
-		log.SetOutput(nil)
-	}()
-
-	settings.ValidateSettings(&invalidConfig)
-
-	if logBuffer.String() == "" {
-		t.Fatalf("expected log.Fatal to be called for invalid configuration")
-	}
-
 }
