@@ -45,6 +45,9 @@ clean-service:
 format:
 	@gofmt -s -w .
 
+test:
+	@go test ./tests/
+
 ##(from linux only) Build executables for both windows and linux
 build-all:
 	@GOOS=windows GOARCH=amd64 go build -o aw-sync-agent.exe main.go
