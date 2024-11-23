@@ -38,7 +38,7 @@ jobs:
 
       - name: Build aw-sync-agent
         working-directory: aw-sync-agent
-        run: go build -o aw-sync-agent ./tests/
+        run: go build -o ./tests/aw-sync-agent
 
       - name: Run Go tests
         working-directory: aw-sync-agent
