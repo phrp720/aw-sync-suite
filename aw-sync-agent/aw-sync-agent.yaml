@@ -1,12 +1,12 @@
 ## This is the configuration file for the agent
 Settings: ## Settings for the agent
-  aw-url: <activitywatch_url>
-  prometheus-url: <prometheus_url>
-  excluded-watchers:
+  awUrl: <activitywatch_url>
+  prometheusUrl: <prometheus_url>
+  excludedWatchers:
     - <watcher_name>
   userId: <user_identification>
-  prometheus-secret-key:
-  include-hostname: true
+  prometheusAuth:
+  includeHostname: true
 
 ## Write the filters here
 #Filters:

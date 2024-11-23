@@ -22,7 +22,7 @@ const (
 	ExcludedWatchers    SettingsKey = "excludedWatchers"
 	UserID              SettingsKey = "userId"
 	Cron                SettingsKey = "cron"
-	PrometheusSecretKey SettingsKey = "prometheus-secret-key"
+	PrometheusSecretKey SettingsKey = "prometheusAuth"
 	AsService           SettingsKey = "service"
 	Immediate           SettingsKey = "immediate"
 	IncludeHostname     SettingsKey = "includeHostname"
@@ -30,12 +30,12 @@ const (
 const configFile = "aw-sync-agent.yaml"
 
 type Setts struct {
-	AWUrl               string   `yaml:"aw-url"`
-	PrometheusUrl       string   `yaml:"prometheus-url"`
-	PrometheusSecretKey string   `yaml:"prometheus-secret-key"`
-	ExcludedWatchers    []string `yaml:"excluded-watchers"`
+	AWUrl               string   `yaml:"AwUrl"`
+	PrometheusUrl       string   `yaml:"prometheusUrl"`
+	PrometheusSecretKey string   `yaml:"prometheusAuth"`
+	ExcludedWatchers    []string `yaml:"excludedWatchers"`
 	UserID              string   `yaml:"userId"`
-	IncludeHostname     bool     `yaml:"include-hostname"`
+	IncludeHostname     bool     `yaml:"includeHostname"`
 	Cron                string   `yaml:"cron"`
 	AsService           bool     `yaml:"-"`
 	Immediate           bool     `yaml:"-"`
@@ -101,7 +101,7 @@ func loadEnvVariables(config *Configuration) {
 	if value, exists := os.LookupEnv("CRON"); exists {
 		config.Settings.Cron = value
 	}
-	if value, exists := os.LookupEnv("PROMETHEUS_SECRET_KEY"); exists {
+	if value, exists := os.LookupEnv("PROMETHEUS_AUTH"); exists {
 		config.Settings.PrometheusSecretKey = value
 	}
 	if value, exists := os.LookupEnv("INCLUDE_HOSTNAME"); exists {
