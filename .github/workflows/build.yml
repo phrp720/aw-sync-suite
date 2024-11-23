@@ -57,19 +57,19 @@ jobs:
       - name: Create ZIP files
         run: |
           cd release
-          zip -r aw-sync-agent-${version}-linux.zip linux
-          zip -r aw-sync-agent-${version}-windows.zip windows
+          zip -r aw-sync-agent-${version}-linux-x86_64.zip linux
+          zip -r aw-sync-agent-${version}-windows-x86_64.zip windows
           zip -r aw-sync-center-${version}.zip aw-sync-center
-          mkdir aw-sync-suite-${version}
-          mkdir aw-sync-suite-${version}/aw-sync-agent
-          cp -r linux aw-sync-suite-${version}/aw-sync-agent/
-          cp -r windows aw-sync-suite-${version}/aw-sync-agent/
-          cp -r aw-sync-center aw-sync-suite-${version}/
-          zip -r aw-sync-suite-${version}.zip aw-sync-suite-${version}
+          mkdir aw-sync-suite-${version}-x86_64
+          mkdir aw-sync-suite-${version}-x86_64/aw-sync-agent
+          cp -r linux aw-sync-suite-${version}-x86_64/aw-sync-agent/
+          cp -r windows aw-sync-suite-${version}-x86_64/aw-sync-agent/
+          cp -r aw-sync-center aw-sync-suite-${version}-x86_64/
+          zip -r aw-sync-suite-${version}-x86_64.zip aw-sync-suite-${version}-x86_64
 
       - name: Upload artifacts
         run: |
-          gh release upload ${version} release/aw-sync-suite-${version}.zip release/aw-sync-agent-${version}-linux.zip release/aw-sync-agent-${version}-windows.zip release/aw-sync-center-${version}.zip
+          gh release upload ${version} release/aw-sync-suite-${version}-x86_64.zip release/aw-sync-agent-${version}-linux-x86_64.zip release/aw-sync-agent-${version}-windows-x86_64.zip release/aw-sync-center-${version}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         shell: bash
