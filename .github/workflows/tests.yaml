@@ -12,13 +12,9 @@ jobs:
 
       - name: Start Prometheus with Docker Compose
         run: |
-          docker network create monitoring || true
-          docker volume create prom_data || true
           docker run -d --name prometheus --restart unless-stopped \
-            --network monitoring \
             -p 9090:9090 \
-            -v ${{ github.workspace }}/aw-sync-suite/aw-sync-center/prometheus:/etc/prometheus \
-            -v prom_data:/prometheus \
+            -v ./aw-sync-suite/aw-sync-center/prometheus:/etc/prometheus \
             prom/prometheus \
             --config.file=/etc/prometheus/prometheus.yml \
             --web.enable-remote-write-receiver
