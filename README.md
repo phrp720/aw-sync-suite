@@ -16,7 +16,7 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
   </a>
 
   <a href="https://github.com/phrp720/aw-sync-suite/releases">
-    <img title="Latest release" src="https://img.shields.io/github/v/release/phrp720/aw-sync-suite" alt="release">
+    <img title="Latest release" src="https://img.shields.io/github/v/release/phrp720/aw-sync-suite" alt="Latest release">
   </a>
 </p>
 
