@@ -1,0 +1,52 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      prometheus:
+        image: prom/prometheus:latest
+        ports:
+          - 9090:9090
+        options: >-
+          --mount type=bind,source=${{ github.workspace }}/prometheus.yaml,target=/etc/prometheus/prometheus.yml
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.23.2'
+
+      - name: Build aw-sync-agent
+        working-directory: aw-sync-agent
+        run: go build -o aw-sync-agent ./path/to/aw-sync-agent
+
+      - name: Run Go tests
+        working-directory: aw-sync-agent
+        run: go test ./...
+
+      - name: Set up ActivityWatch and agent
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget jq
+          LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ActivityWatch/activitywatch/releases/latest | jq -r '.assets[] | select(.name | endswith("linux-x86_64.zip")) | .browser_download_url')
+          wget $LATEST_RELEASE_URL -O activitywatch-latest-linux-x86_64.zip
+          unzip activitywatch-latest-linux-x86_64.zip -d activitywatch
+          ./activitywatch/aw-qt &
+          
+          # Run the built agent binary
+          ./aw-sync-agent -prometheus-url http://localhost:9090 -aw-url http://localhost:5600 -immediate
+
+      - name: Check logs for success
+        run: |
+          if grep -q "Synchronization process finished successfully" <(docker logs aw-sync-agent); then
+            echo "Test passed"
+          else
+            echo "Test failed"
+            exit 1
