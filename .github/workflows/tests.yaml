@@ -6,15 +6,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-  services:
-    prometheus:
-      image: prom/prometheus:latest
-      ports:
-        - 9090:9090
+    services:
+      prometheus:
+        image: prom/prometheus:latest
+        ports:
+          - 9090:9090
+
       options: >-
         --mount type=bind,source=${{ github.workspace }}/aw-sync-suite/aw-sync-center/prometheus/prometheus.yml,target=/etc/prometheus/prometheus.yml
       command: >
         --config.file=/etc/prometheus/prometheus.yml --web.enable-remote-write-receiver
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
