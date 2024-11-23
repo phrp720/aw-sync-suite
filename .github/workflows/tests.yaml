@@ -11,8 +11,8 @@ jobs:
         image: prom/prometheus:latest
         ports:
           - 9090:9090
-        options: >-
-          --mount type=bind,source=${{ github.workspace }}/aw-sync-center/prometheus/prometheus.yml,target=/etc/prometheus/prometheus.yml
+        volumes:
+          - ${{ github.workspace }}/aw-sync-suite/aw-sync-center/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
     steps:
       - name: Checkout code
