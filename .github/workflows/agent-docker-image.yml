@@ -1,4 +1,4 @@
-name: Build and Push Agent Docker Image
+name: Docker-Image
 
 on:
   release:

@@ -8,11 +8,11 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
    <a href="https://github.com/phrp720/aw-sync-suite/actions/workflows/tests.yaml?query=branch%3Amaster">
     <img title="Tests" src="https://github.com/phrp720/aw-sync-suite/actions/workflows/tests.yaml/badge.svg?branch=master" alt="tests"/>
   </a>
-  <a href="https://github.com/phrp720/aw-sync-suite/actions/workflows/build.yml?query=branch%3Amaster">
-    <img title="Build Status GitHub" src="https://github.com/phrp720/aw-sync-suite/actions/workflows/build.yml/badge.svg?branch=master"  alt="build"/>
+  <a href="https://github.com/phrp720/aw-sync-suite/actions/workflows/build.yml">
+    <img title="Build Status GitHub" src="https://github.com/phrp720/aw-sync-suite/actions/workflows/build.yml/badge.svg"  alt="build"/>
   </a>
-  <a href="https://github.com/phrp720/aw-sync-suite/actions/workflows/agent-docker-image.yml?query=branch%3Amaster">
-    <img title="Docker Build" src="https://github.com/phrp720/aw-sync-suite/actions/workflows/agent-docker-image.yml/badge.svg?branch=master" alt="docker build">
+  <a href="https://github.com/phrp720/aw-sync-suite/actions/workflows/agent-docker-image.yml">
+    <img title="Docker Build" src="https://github.com/phrp720/aw-sync-suite/actions/workflows/agent-docker-image.yml/badge.svg" alt="docker build">
   </a>
 
   <a href="https://github.com/phrp720/aw-sync-suite/releases">
