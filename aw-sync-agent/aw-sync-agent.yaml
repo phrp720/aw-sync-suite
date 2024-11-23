@@ -1,11 +1,10 @@
 ## This is the configuration file for the agent
 Settings: ## Settings for the agent
-  aw-url: <activitywatch_url>
-  prometheus-url: <prometheus_url>
+  aw-url: http://localhost:5600
+  prometheus-url: http://localhost:80
   excluded-watchers:
-    - <watcher_name>
-  userId: <user_identification>
-  prometheus-secret-key:
+  userId: Phillip
+  prometheus-secret-key: 7b8c43219399db04ad62642eb6c3e47f09af3b44a0d4b74f45ad9baf09b1ac62
   include-hostname: true
 
 ## Write the filters here
