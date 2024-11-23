@@ -11,10 +11,11 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Start Prometheus with Docker Compose
+        working-directory: aw-sync-center/prometheus
         run: |
           docker run -d --name prometheus --restart unless-stopped \
             -p 9090:9090 \
-            -v ./aw-sync-suite/aw-sync-center/prometheus:/etc/prometheus \
+            -v ./prometheus:/etc/prometheus \
             prom/prometheus \
             --config.file=/etc/prometheus/prometheus.yml \
             --web.enable-remote-write-receiver
