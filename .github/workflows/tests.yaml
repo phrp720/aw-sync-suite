@@ -24,7 +24,7 @@ jobs:
             --web.enable-remote-write-receiver
 
       - name: Wait for Prometheus to start
-        run: sleep 10
+        run: sleep 50
 
       - name: Verify Prometheus is running
         run: curl -s http://prometheus:9090/-/ready
