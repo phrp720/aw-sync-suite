@@ -19,11 +19,13 @@
 6. [Filters](#filters)
     - [Filter Format](#filter-format)
     - [Filter Field Descriptions](#filter-field-descriptions)
-    - [Filter Example Scenario](#filter-example)
+    - [Filter Example Scenario](#filter-examples)
       - [Plain Replace of Data](#plain-replace-of-data)
       - [Regex Replace of Data](#regex-replace-of-data)
       - [Drop of the Record](#drop-of-the-record)
 7. [Makefile Commands](#makefile-commands)
+    - [General Commands](#general-commands)
+    - [Service Commands](#service-commands)
 
 </details>
 
@@ -49,42 +51,50 @@ To modify the agent, ensure you have:
 - **Make**
 
 ### For Running the Agent
-To run the agent, you need:
-- **aw-sync-agent** executable
+
+To run the agent, you need only:
+- **aw-sync-agent** executable which can be built using the provided Makefile(or you can find the latest release [here](https://github.com/phrp720/aw-sync-suite/releases/)).
 - **configuration file** (optional but recommended; you can also use flags or environment variables)
-- Running instances of **ActivityWatch** and **Prometheus**
-- Running instance of **Grafana** (optional, for visualization)
+
+> [!Warning]
+> - The agent requires a reachable running instance of ActivityWatch and Prometheus to function.
+> - To use filters and other advanced features, you must provide the configuration file.
 
 ## Package Overview
 
-- **aw**: Client for ActivityWatch REST API interactions.
-- **prometheus**: Client for Prometheus REST API interactions.
-- **synchronizer**: Manages data synchronization from ActivityWatch to Prometheus.
-- **checkpoint**: Tracks the latest data synced for efficient operation.
-- **system_error**: Error handling utilities.
-- **datamanager**: Handles data processing and transmission to Prometheus(**Scrape**,**Aggregate** and **Push** data).
-- **settings**: Manages agent configuration settings.
-- **filter**: Filters data based on user-defined criteria.
-- **util**: Utility functions, including health checks.
-- **scripts**: Additional, optional scripts.
-- **cron**: Manages scheduled sync intervals.
-- **service**: Manages service mode operations.
+Here is the package structure of the agent:
+
+| Package          | Description                                                                                           |
+|------------------|-------------------------------------------------------------------------------------------------------|
+| **aw**           | Client for ActivityWatch REST API interactions.                                                       |
+| **prometheus**   | Client for Prometheus REST API interactions.                                                          |
+| **synchronizer** | Manages data synchronization from ActivityWatch to Prometheus.                                        |
+| **checkpoint**   | Tracks the latest data synced for efficient operation.                                                |
+| **system_error** | Error handling utilities.                                                                             |
+| **datamanager**  | Handles data processing and transmission to Prometheus (**Scrape**, **Aggregate** and **Push** data). |
+| **settings**     | Manages agent configuration settings.                                                                 |
+| **filter**       | Filters data based on user-defined criteria.                                                          |
+| **util**         | Utility functions, including health checks.                                                           |
+| **scripts**      | Additional, optional scripts.                                                                         |
+| **cron**         | Manages scheduled sync intervals.                                                                     |
+| **service**      | Manages service mode operations.                                                                      |
+| **tests**        | Contains unit tests for the agent.                                                                    |
 
 ## Configuration Options
 
 The following table provides details on configurable settings:
 
-| Flag                | Environment Variable | Config Key          | Description                                                          | Required | Default                  |
-|---------------------|----------------------|---------------------|----------------------------------------------------------------------|----------|--------------------------|
-| `-service`          | -                    | -                   | Runs the agent as a service.                                         | ❌        | -                        |
-| `-immediate`        | -                    | -                   | Runs the synchronizer once immediately.                              | ❌        | -                        |
-| `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                     | ✅        | http://localhost:5600    |
-| `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                        | ✅        | -                        |
-| `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Bearer Auth for prometheus(if prom is protected)                     | ❌        | -                        |
-| `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                   | ❌        | Every 5 minutes          |
-| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | List of watchers to exclude(Pipe-separated for env or flag).         | ❌        | -                        |
-| `-userId`           | `USER_ID`            | `userId`            | Identifier for user nickname; defaults to hostname if not specified. | ❌        | hostname or Generated ID |
-| `-includeHostname`  | `INCLUDE_HOSTNAME`   | `include-hostname`  | if true,agent adds the hostname to its metrics                       | ❌        | false                    |
+| Flag                | Environment Variable | Config Key          | Description                                                                                                                                                                | Required | Default                  |
+|---------------------|----------------------|---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|--------------------------|
+| `-service`          | -                    | -                   | Runs the agent as a service.                                                                                                                                               | ❌        | -                        |
+| `-immediate`        | -                    | -                   | Runs the synchronizer once immediately.                                                                                                                                    | ❌        | -                        |
+| `-awUrl`            | `ACTIVITY_WATCH_URL` | `aw-url`            | URL of the ActivityWatch server.                                                                                                                                           | ✅        | http://localhost:5600    |
+| `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheus-url`    | URL of the Prometheus server.                                                                                                                                              | ✅        | -                        |
+| `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheus-auth`   | Bearer Auth for prometheus(if prometheus is [protected via nginx](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center#prometheus-with-nginx-secure-setup)) | ❌        | -                        |
+| `-cron`             | `CRON`               | `cron`              | Cron expression to schedule syncs.                                                                                                                                         | ❌        | Every 5 minutes          |
+| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excluded-watchers` | List of watchers to exclude(Pipe-separated for env or flag).                                                                                                               | ❌        | -                        |
+| `-userId`           | `USER_ID`            | `userId`            | Identifier for user nickname; defaults to hostname if not specified.                                                                                                       | ❌        | hostname or Generated ID |
+| `-includeHostname`  | `INCLUDE_HOSTNAME`   | `include-hostname`  | if true,agent adds the hostname to its metrics                                                                                                                             | ❌        | false                    |
 
 ### Configuration Hierarchy
 
@@ -178,7 +188,7 @@ Filters:
 | **regex_replace** | Specifies key-value pairs for replacement using regex patterns. If the target key-values match, the specified keys in replace will be updated to the new values in the data record. Each entry includes: <br> - **key**: The field name to replace. <br> - **expression**: A regex pattern to match against the field's value. <br> - **value**: The new value for the specified key. |
 | **drop**          | If set to `true`, the record will be dropped if the target conditions are met.                                                                                                                                                                                                                                                                                                        |
 
-### Filter Example
+### Filter Examples
 
 #### Plain Replace of Data
 
@@ -288,16 +298,35 @@ Filters:
 - **drop**: If set to `true`, the record will be dropped if the `target` conditions are met.
 
 > [!Note]
-> - Filters can be combined to perform multiple operations on the same data record.
+> - Filters can be combined to perform multiple operations on the same data record(plain && regex replacement).
 > - Filters are applied in the order they are defined in the configuration file.
 > - Filters can be disabled by setting the `enabled` field to `false`.
 > - Filters that have the drop field set to `true` will not perform any replacement operations.
 
-## Quick Start
 
 ## Makefile Commands
 
-- `make build`: Builds the agent.
-- `make run`: Runs the agent.
-- `make service-install`: Install and Starts the agent as a service.
-- `make format`: Formats the codebase.
+### General Commands
+
+| Command         | Description                                                           |
+|-----------------|-----------------------------------------------------------------------|
+| `run`           | Runs the `main.go` file.                                              |
+| `build`         | Builds the `aw-sync-agent` executable.                                |
+| `clean`         | Removes the `aw-sync-agent` executable.                               |
+| `test`          | Runs the go tests.                                                    |
+| `check-os`      | Determines the operating system by running the `detect_os.go` script. |
+| `clean-service` | Cleans the ActivityWatch Sync Agent service files.                    |
+| `format`        | Formats the Go code using `gofmt`.                                    |
+| `build-all`     | Builds executables for both Windows and Linux.                        |
+| `clean-all`     | Removes both Windows and Linux executables.                           |
+
+### Service Commands
+
+| Command           | Description                                                                       |
+|-------------------|-----------------------------------------------------------------------------------|
+| `service-install` | Builds the executable and runs it as a service.                                   |
+| `service-start`   | Starts the ActivityWatch Sync Agent service.                                      |
+| `service-stop`    | Stops the ActivityWatch Sync Agent service.                                       |
+| `service-status`  | Displays the status of the ActivityWatch Sync Agent service.                      |
+| `service-remove`  | Stops and removes the ActivityWatch Sync Agent service, and cleans service files. |
+| `service-restart` | Restarts the ActivityWatch Sync Agent service.                                    |

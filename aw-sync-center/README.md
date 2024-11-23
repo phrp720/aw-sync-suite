@@ -28,7 +28,7 @@ The **aw-sync-center** is a **centralized monitoring and reporting solution** us
 ### Setup Options
 
 This repository offers two Docker Compose configurations:
-- **docker-compose-with-nginx.yml**: Includes NGINX with Bearer token authentication for added security.
+- **docker-compose-with-nginx.yml**: Includes NGINX with Bearer token authentication for added Prometheus security.
 - **docker-compose-default.yml**: A simpler setup without authentication.
 
 ### Installation and Running
@@ -41,6 +41,8 @@ This repository offers two Docker Compose configurations:
 2. **Choose a Docker Compose Configuration**:
 
    - For the secure setup with Bearer token authentication:
+     - Read the [Generating Bearer Tokens](#generating-bearer-tokens) section to create tokens for authentication.
+     - Run the following command:
     ```bash
     docker-compose -f docker-compose-with-nginx.yml up -d
     ```
@@ -62,9 +64,9 @@ The **docker-compose-with-nginx.yml** configuration uses an **NGINX reverse prox
 To generate tokens for authentication, use the `createBearerToken.py` script. This will create a `tokens.conf` file in the NGINX directory with the specified tokens, allowing secure access to Prometheus.
 
 1. Run the following command:
-```bash
-python3 createBearerToken.py
-```
+   ```bash
+   python3 createBearerToken.py
+   ```
 2. **Follow the prompts** to specify the number of tokens. The script will output a new `tokens.conf` file(if not exists) within the nginx directory.
 3. Using the Generated Tokens
    - Requests sent to Prometheus endpoints through NGINX must include a valid token.

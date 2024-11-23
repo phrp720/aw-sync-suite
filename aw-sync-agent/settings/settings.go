@@ -29,7 +29,7 @@ const (
 )
 const configFile = "aw-sync-agent.yaml"
 
-type sett struct {
+type Setts struct {
 	AWUrl               string   `yaml:"aw-url"`
 	PrometheusUrl       string   `yaml:"prometheus-url"`
 	PrometheusSecretKey string   `yaml:"prometheus-secret-key"`
@@ -43,22 +43,22 @@ type sett struct {
 
 // Configuration struct
 type Configuration struct {
-	Settings sett            `yaml:"Settings"`
+	Settings Setts           `yaml:"Settings"`
 	Filters  []filter.Filter `yaml:"Filters"`
 }
 
 // InitConfigurations initializes the settings
 func InitConfigurations() *Configuration {
-	settings := loadYAMLConfig(configFile)
+	settings := LoadYAMLConfig(configFile)
 	loadEnvVariables(&settings)
 	loadFlags(&settings)
-	validateSettings(&settings)
+	ValidateSettings(&settings)
 	printSettings(&settings)
 	return &settings
 }
 
-// Load the YAML config file
-func loadYAMLConfig(filename string) Configuration {
+// LoadYAMLConfig  Load the YAML config file
+func LoadYAMLConfig(filename string) Configuration {
 	file, err := os.Open(filename)
 	var config Configuration
 
@@ -126,7 +126,7 @@ func loadFlags(config *Configuration) {
 }
 
 // Validate the settings
-func validateSettings(config *Configuration) {
+func ValidateSettings(config *Configuration) {
 	if config.Settings.AWUrl == "" {
 		log.Print("Activity Watch URL is mandatory but it isn't defined! Setting it to default value: http://localhost:5600")
 		config.Settings.AWUrl = "http://localhost:5600"

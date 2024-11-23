@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 )
 
 // Filter struct
@@ -37,14 +38,14 @@ type RegexReplace struct {
 // ValidateFilters validates the filters in the List
 func ValidateFilters(filters []Filter) ([]Filter, int, int, int) {
 	validFilters := []Filter{}
-	var targetList []Target
 	invalid := 0
 	disabled := 0
 	total := len(filters)
 	for _, filter := range filters {
 		if filter.Enable {
+			var targetList []Target
 			for _, target := range filter.Target {
-				if target.Key != "" && target.Value != nil {
+				if strings.TrimSpace(target.Key) != "" && target.Value != nil {
 					targetList = append(targetList, target)
 				}
 			}
