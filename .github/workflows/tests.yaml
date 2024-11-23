@@ -18,6 +18,8 @@ jobs:
             prom/prometheus \
             --config.file=/etc/prometheus/prometheus.yml \
             --web.enable-remote-write-receiver
+      - name: Debug Prometheus container
+        run: docker logs prometheus
 
       - name: Wait for Prometheus to start
         run: sleep 50
