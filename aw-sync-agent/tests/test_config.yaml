@@ -1,10 +1,10 @@
 ## This is the configuration file for the agent
 Settings: ## Settings for the agent
-  aw-url: http://localhost:5600
-  prometheus-url: http://localhost:80
-  excluded-watchers:
+  awUrl: http://localhost:5600
+  prometheusUrl: http://localhost:80
+  excludedWatchers:
     - watcher1
     - watcher2
   userId: Tester
-  prometheus-secret-key: secretKey
-  include-hostname: true
+  prometheusAuth: secretKey
+  includeHostname: true

@@ -30,7 +30,7 @@ const (
 const configFile = "aw-sync-agent.yaml"
 
 type Setts struct {
-	AWUrl               string   `yaml:"AwUrl"`
+	AWUrl               string   `yaml:"awUrl"`
 	PrometheusUrl       string   `yaml:"prometheusUrl"`
 	PrometheusSecretKey string   `yaml:"prometheusAuth"`
 	ExcludedWatchers    []string `yaml:"excludedWatchers"`
