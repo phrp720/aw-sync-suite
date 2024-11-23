@@ -24,6 +24,8 @@ jobs:
             --config.file=/etc/prometheus/prometheus.yml \
             --web.enable-remote-write-receiver
 
+      - name: Sleep for 10 seconds to let Prometheus start
+        run: sleep 10
       - name: Verify Prometheus is running
         run: curl -s http://localhost:9090/-/ready
       - name: Checkout code
