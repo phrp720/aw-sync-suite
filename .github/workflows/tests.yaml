@@ -1,4 +1,4 @@
-name: CI
+name: Tests
 
 on: [push, pull_request]
 
@@ -12,7 +12,7 @@ jobs:
         ports:
           - 9090:9090
         options: >-
-          --mount type=bind,source=${{ github.workspace }}/prometheus.yaml,target=/etc/prometheus/prometheus.yml
+          --mount type=bind,source=${{ github.workspace }}/aw-sync-center/prometheus/prometheus.yaml,target=/etc/prometheus/prometheus.yml
 
     steps:
       - name: Checkout code
