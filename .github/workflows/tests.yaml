@@ -44,7 +44,7 @@ jobs:
         working-directory: aw-sync-agent
         run: go test ./tests/
 
-      - name: Set up ActivityWatch and agent
+      - name: Set up ActivityWatch
         working-directory: aw-sync-agent/tests
         run: |
           sudo apt-get install -y wget jq
@@ -53,9 +53,9 @@ jobs:
           unzip activitywatch-latest-linux-x86_64.zip -d activitywatch
           ./activitywatch/aw-qt &
           
-          # Run the built agent binary
-          ./aw-sync-agent -prometheus-url http://localhost:9090 -aw-url http://localhost:5600 -immediate
-
+      - name: Run agent
+        working-directory: aw-sync-agent/tests
+        run: ./aw-sync-agent -prometheus-url http://localhost:9090 -aw-url http://localhost:5600 -immediate
       - name: Check logs for success
         run: |
           if grep -q "Synchronization process finished successfully" <(docker logs aw-sync-agent); then
