@@ -23,11 +23,6 @@ jobs:
             prom/prometheus \
             --config.file=/etc/prometheus/prometheus.yml \
             --web.enable-remote-write-receiver
-      - name: Debug Prometheus container
-        run: docker logs prometheus
-
-      - name: Wait for Prometheus to start
-        run: sleep 50
 
       - name: Verify Prometheus is running
         run: curl -s http://localhost:9090/-/ready
@@ -40,14 +35,15 @@ jobs:
           go-version: '1.23.2'
 
       - name: Build aw-sync-agent
-        working-directory: aw-sync-agent
-        run: go build -o aw-sync-agent ./path/to/aw-sync-agent
+        working-directory: aw-sync-agent/tests
+        run: go build -o aw-sync-agent
 
       - name: Run Go tests
         working-directory: aw-sync-agent
         run: go test ./...
 
       - name: Set up ActivityWatch and agent
+        working-directory: aw-sync-agent/tests
         run: |
           sudo apt-get update
           sudo apt-get install -y wget jq
