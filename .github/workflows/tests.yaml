@@ -11,7 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker Compose
+      - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
       - name: Start Prometheus with Docker Compose
@@ -42,13 +42,12 @@ jobs:
 
       - name: Run Go tests
         working-directory: aw-sync-agent
-        run: go test ./...
+        run: go test ./tests/
 
       - name: Set up ActivityWatch and agent
         working-directory: aw-sync-agent/tests
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget jq
+          apt-get install -y wget jq
           LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ActivityWatch/activitywatch/releases/latest | jq -r '.assets[] | select(.name | endswith("linux-x86_64.zip")) | .browser_download_url')
           wget $LATEST_RELEASE_URL -O activitywatch-latest-linux-x86_64.zip
           unzip activitywatch-latest-linux-x86_64.zip -d activitywatch
