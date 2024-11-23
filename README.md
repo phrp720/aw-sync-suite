@@ -150,7 +150,5 @@ Contributions are welcomed! If you have ideas, improvements, or bug fixes, feel 
 - [ ] Grafana dashboard template for data visualization
 
 ### Upcoming Features
-- [ ] Testing workflow for aw-sync-suite
-- [ ] Go tests for aw-sync-agent
 - [ ] Complete project documentation
 - [ ] Publish version 0.1.0 of aw-sync-suite
