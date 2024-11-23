@@ -23,7 +23,7 @@ jobs:
         run: sleep 50
 
       - name: Verify Prometheus is running
-        run: curl -s http://prometheus:9090/-/ready
+        run: curl -s http://localhost:9090/-/ready
       - name: Checkout code
         uses: actions/checkout@v2
 
