@@ -51,11 +51,11 @@ jobs:
           LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ActivityWatch/activitywatch/releases/latest | jq -r '.assets[] | select(.name | endswith("linux-x86_64.zip")) | .browser_download_url')
           wget $LATEST_RELEASE_URL -O activitywatch-latest-linux-x86_64.zip
           unzip activitywatch-latest-linux-x86_64.zip -d activitywatch
-          ./activitywatch/aw-qt &
+          ./activitywatch/activitywatch/aw-qt
           
       - name: Run agent
         working-directory: aw-sync-agent/tests
-        run: ./aw-sync-agent -prometheus-url http://localhost:9090 -aw-url http://localhost:5600 -immediate
+        run: ./aw-sync-agent -prometheusUrl http://localhost:9090 -awUrl http://localhost:5600 -immediate
       - name: Check logs for success
         run: |
           if grep -q "Synchronization process finished successfully" <(docker logs aw-sync-agent); then
