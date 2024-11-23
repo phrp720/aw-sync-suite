@@ -11,9 +11,8 @@ jobs:
         image: prom/prometheus:latest
         ports:
           - 9090:9090
-
-      options: >-
-        --mount type=bind,source=${{ github.workspace }}/aw-sync-suite/aw-sync-center/prometheus/prometheus.yml,target=/etc/prometheus/prometheus.yml
+        volumes:
+          - ./aw-sync-suite/aw-sync-center/prometheus:/etc/prometheus
       command: >
         --config.file=/etc/prometheus/prometheus.yml --web.enable-remote-write-receiver
 
