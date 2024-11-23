@@ -4,16 +4,27 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 </p>
 
 <p align="center">
+
+   <a href="https://github.com/phrp720/aw-sync-suite/actions/workflows/tests.yaml?query=branch%3Amaster">
+    <img title="Tests" src="https://github.com/phrp720/aw-sync-suite/actions/workflows/tests.yaml/badge.svg?branch=master" alt="tests"/>
+  </a>
   <a href="https://github.com/phrp720/aw-sync-suite/actions/workflows/build.yml?query=branch%3Amaster">
     <img title="Build Status GitHub" src="https://github.com/phrp720/aw-sync-suite/actions/workflows/build.yml/badge.svg?branch=master"  alt="build"/>
   </a>
   <a href="https://github.com/phrp720/aw-sync-suite/actions/workflows/agent-docker-image.yml?query=branch%3Amaster">
-    <img title="Docker Build" src="https://github.com/phrp720/aw-sync-suite/actions/workflows/build.yml/badge.svg?branch=master" alt="docker build">
+    <img title="Docker Build" src="https://github.com/phrp720/aw-sync-suite/actions/workflows/agent-docker-image.yml/badge.svg?branch=master" alt="docker build">
   </a>
+
   <a href="https://github.com/phrp720/aw-sync-suite/releases">
     <img title="Latest release" src="https://img.shields.io/github/v/release/phrp720/aw-sync-suite" alt="release">
   </a>
 </p>
+
+<p align="center">
+  If you’ve ever wished for <strong> a simple, centralized solution </strong> to sync and visualize data from multiple instances of ActivityWatch, you’re in the right place.
+
+</p>
+
 <details>
 
 <summary>Table of Contents</summary>
@@ -21,14 +32,16 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 1. [About](#about)
 2. [Features](#features)
 3. [Flow Diagrams](#flow-diagrams)
-    - [Without Bearer Token Authentication](#1-activitywatch-sync-suite-flow-diagram-without-bearer-token-authentication)
-    - [With Bearer Token Authentication](#2-activitywatch-sync-suite-flow-diagram-with-bearer-token-authentication)
+    - [Without Bearer Token Authentication](#1-sync-suite-without-bearer-token-authentication)
+    - [With Bearer Token Authentication](#2-sync-suite-with-bearer-token-authentication)
 4. [Quick Start](#quick-start)
     - [Download the Latest Release](#1-download-the-latest-release)
     - [Deploy aw-sync-center (Cloud Setup)](#2-deploy-aw-sync-center-cloud-setup)
     - [Configure and Run aw-sync-agent (On Each Computer)](#3-configure-and-run-aw-sync-agent-on-each-computer)
     - [Visualize in Grafana](#4-visualize-in-grafana)
 5. [Components](#components)
+    - [aw-sync-agent](#aw-sync-agent)
+    - [aw-sync-center](#aw-sync-center)
 6. [Requirements](#requirements)
 7. [Contributing](#contributing)
 </details>
@@ -42,7 +55,7 @@ This project operates independently of **ActivityWatch** and is compatible with 
 - **[aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent):**  A lightweight agent that runs on each computer you want to sync data from. It connects to ActivityWatch, retrieves the data,filter them, and pushes it to Prometheus.
 - **[aw-sync-center](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center):** A cloud-based setup containing Prometheus and Grafana for centralized data storage and visualization. It is set up once to handle the aggregation and visualization of data from all agents.
 
-This repository simplifies the deployment and integration process, making it easy to get started with ActivityWatch-based analytics.
+This repository simplifies the deployment and integration process, making it easy to get started with ActivityWatch-based  user analytics.
 
 ## Features
 - Sync data from multiple ActivityWatch instances to a centralized Prometheus database.
@@ -53,10 +66,10 @@ This repository simplifies the deployment and integration process, making it eas
 ## Flow Diagrams
 
 
-### 1. Sync-Suite Flow Diagram without Bearer Token Authentication
+### 1. Sync-Suite without Bearer Token Authentication
 ![aw-sync-diagram.png](aw-sync-diagram.png)
 
-### 2. Sync-Suite Flow Diagram with Bearer Token Authentication
+### 2. Sync-Suite with Bearer Token Authentication
 ![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png)
 
 ## Quick Start
@@ -95,7 +108,7 @@ Once configured, you can run the **aw-sync-agent** in one of two ways:
     ````
 - As a Docker container: Use the Docker image to run the agent in a container. Here’s an example:
 ```bash
-docker run -v /path/to/aw-sync-agent.yaml:/opt/aw-sync-agent/aw-sync-agent.yaml phrp720/aw-sync-agent:latest
+docker run -v /path/to/aw-sync-agent.yaml:/opt/aw-sync-agent/aw-sync-agent.yaml phrp5/aw-sync-agent:latest
 ```
 > [!CAUTION]
 > Make sure to replace `/path/to/aw-sync-agent.yaml` with the path to your configuration file.
