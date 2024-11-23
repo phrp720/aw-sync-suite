@@ -13,7 +13,6 @@ jobs:
           - 9090:9090
         volumes:
           - ./aw-sync-suite/aw-sync-center/prometheus:/etc/prometheus
-        entrypoint: ["/bin/prometheus"]
         options: >
           --config.file=/etc/prometheus/prometheus.yml 
           --web.enable-remote-write-receiver
