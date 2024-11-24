@@ -153,7 +153,7 @@ You can run **aw-sync-agent** in one of the following ways:
       > [!Important]  
       > Replace `/path/to/aw-sync-agent.yaml` with the actual path to your configuration file.
 
-> [!Tips]
+> [!Tip]
 > - Find the latest Docker images [here](https://hub.docker.com/r/phrp5/aw-sync-agent/tags).
 > - Example Docker Compose setups are available [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent/docker-examples).
 > - For detailed configuration options, check [this guide](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent#configuration-options).
