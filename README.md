@@ -46,8 +46,6 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 7. [Contributing](#contributing)
 </details>
 
-## Aw-Sync-Suite
-
 ## About
 **Aw-Sync-Suite** provides an easy-to-deploy solution on syncing data from multiple [ActivityWatch](https://github.com/ActivityWatch/activitywatch) instances to a centralized [Prometheus](https://prometheus.io/) database with easy visualization in [Grafana](https://grafana.com/).
 
