@@ -34,11 +34,11 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 3. [Flow Diagrams](#flow-diagrams)
     - [Without Bearer Token Authentication](#1-sync-suite-without-bearer-token-authentication)
     - [With Bearer Token Authentication](#2-sync-suite-with-bearer-token-authentication)
-4. [Quick Start](#quick-start)
-    - [Download the Latest Release](#1-download-the-latest-release)
-    - [Deploy aw-sync-center (Cloud Setup)](#2-deploy-aw-sync-center-cloud-setup)
-    - [Configure and Run aw-sync-agent (On Each Computer)](#3-configure-and-run-aw-sync-agent-on-each-computer)
-    - [Visualize in Grafana](#4-visualize-in-grafana)
+4. [Quick Start Guide](#quick-start-guide)
+    - [Step 1: Download the Latest Release](#step-1-download-the-latest-release)
+    - [Step 2: Deploy aw-sync-center (Cloud Setup)](#step-2-deploy-aw-sync-center-cloud-setup)
+    - [Step 3: Configure and Run aw-sync-agent](#step-3-configure-and-run-aw-sync-agent)
+    - [Step 4: Visualize in Grafana](#step-4-visualize-in-grafana)
 5. [Components](#components)
     - [aw-sync-agent](#aw-sync-agent)
     - [aw-sync-center](#aw-sync-center)
@@ -46,25 +46,27 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 7. [Contributing](#contributing)
 </details>
 
-## About
-**Aw-Sync-Suite** provides an easy-to-deploy solution for syncing data from multiple [ActivityWatch](https://github.com/ActivityWatch/activitywatch) instances to [Prometheus](https://prometheus.io/) and visualizing the data with [Grafana](https://grafana.com/). 
+## Aw-Sync-Suite
 
-This project operates independently of **ActivityWatch** and is compatible with all versions of ActivityWatch that support the REST API feature.
+## About
+**Aw-Sync-Suite** provides an easy-to-deploy solution on syncing data from multiple [ActivityWatch](https://github.com/ActivityWatch/activitywatch) instances to a centralized [Prometheus](https://prometheus.io/) database with easy visualization in [Grafana](https://grafana.com/).
 
 ### This suite consists of two main components:
-- **[aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent):**  A lightweight agent that runs on each computer you want to sync data from. It connects to ActivityWatch, retrieves the data,[filter](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent#filters) them, and pushes it to Prometheus.
-- **[aw-sync-center](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center):** A cloud-based setup containing Prometheus and Grafana for centralized data storage and visualization. It is set up once to handle the aggregation and visualization of data from all agents.
+- **[aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent):**  
+  Runs on each device, retrieves and filters ActivityWatch data, and sends it securely to Prometheus via remote-write.
+- **[aw-sync-center](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center):**  
+  A centralized Prometheus and Grafana setup for aggregating and visualizing data.
 
-This repository simplifies the deployment and integration process, making it easy to get started with ActivityWatch-based  user analytics.
+This repository simplifies the deployment and integration process, allowing you to monitor user activity across multiple devices with ease.
 
 ## Features
-- Sync data from multiple ActivityWatch instances to a centralized Prometheus database.
-- Visualize the synced data through pre-built Grafana dashboards.
-- Simple deployment using Docker Compose for the **aw-sync-center**.
-- Modular design: Run the **aw-sync-agent** on each computer where ActivityWatch data is being collected.
+- **Centralized Monitoring:** Collect and analyze data from multiple ActivityWatch instances.
+- **Data Filtering:** Filter data on the agent side, offering options to ignore, sanitize, or partially sanitize sensitive information before syncing.
+- **Ready-to-Use Visualization:** Includes pre-configured Grafana dashboards for instant analytics and insights.
+- **Effortless Deployment:** Quickly deploy the **aw-sync-center** with Docker Compose and run lightweight **aw-sync-agents** on any supported platform.
+
 
 ## Flow Diagrams
-
 
 ### 1. Sync-Suite without Bearer Token Authentication
 ![aw-sync-diagram.png](aw-sync-diagram.png)
@@ -72,56 +74,101 @@ This repository simplifies the deployment and integration process, making it eas
 ### 2. Sync-Suite with Bearer Token Authentication
 ![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png)
 
-## Quick Start
 
-### 1. Download the latest Release
+## Quick Start Guide
 
-Download the latest  aw-sync-suite `.zip` from the [release page](https://github.com/phrp720/aw-sync-suite/releases/) and extract it to a directory.
+### Step 1: Download the Latest Release
 
-### 2. Deploy aw-sync-center (Cloud Setup)
+1. Visit the [Releases Page](https://github.com/phrp720/aw-sync-suite/releases/).
+2. Choose the appropriate `.zip` file based on your needs:
+    - **aw-sync-suite-{version}-86_64.zip**: Contains all components (**aw-sync-agent** for both Windows and Linux, and **aw-sync-center**) bundled together.
+    - **aw-sync-agent-{version}-windows-86_64.zip**: Contains the Windows sync-agent and its configuration file `.
+    - **aw-sync-agent-{version}-linux-86_64.zip**: Contains the Linux sync-agent and its configuration file .
+    - **aw-sync-center.zip**: Contains the Docker Compose setup and related configurations for the cloud-based Prometheus and Grafana setup.
+3. Extract the contents of the selected `.zip` file(s) into your desired directory.
 
-Inside the extracted folder, navigate to the `aw-sync-center` directory and run Docker Compose to set up the cloud-based components (Prometheus and Grafana):
+---
 
-    cd aw-sync-center
-    docker-compose -f docker-compose-default.yaml up
+### Step 2: Deploy **aw-sync-center** (Cloud Setup)
 
-This will start the necessary services to collect and visualize the data.
-> [!IMPORTANT]
-> If you want to protect the exposed Prometheus endpoints with Bearer token authentication read more [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center#prometheus-with-nginx-secure-setup).
-### 3. Configure and Run aw-sync-agent (On Each Computer)
+If you downloaded **aw-sync-suite** or **aw-sync-center**:
 
-On each computer you want to track ActivityWatch data from, go to the `aw-sync-agent` folder and configure the `aw-sync-agent.yaml` file to specify the Prometheus endpoint and any other settings.
-
-Once configured, you can run the **aw-sync-agent** in one of three ways:
-
-- As an executable: Run the executable directly.
-- As a service: Run the executable as a service on Windows or Linux with a single command:
-  - Windows: 
-
-  ```cmd
-  .\aw-sync-agent.exe -service
+1. Navigate to the `aw-sync-center` directory:
+   ```bash
+   cd aw-sync-center
    ```
-  - Linux: 
-    
-  ```bash
-  ./aw-sync-agent -service
-  ````
-- As a Docker container: Use the Docker image to run the agent in a container. Here’s an example:
-```bash
-docker run -v /path/to/aw-sync-agent.yaml:/opt/aw-sync-agent/aw-sync-agent.yaml phrp5/aw-sync-agent:latest
-```
-> [!CAUTION]
-> Make sure to replace `/path/to/aw-sync-agent.yaml` with the path to your configuration file.
+2. Start the cloud components (Prometheus and Grafana) using Docker Compose:
+   ```bash
+   docker-compose -f docker-compose-default.yaml up
+   ```
 
-> [!Tip]
-> - You can find the images of the latest release [here](https://hub.docker.com/r/phrp5/aw-sync-agent/tags).
-> - Docker-compose Examples can be found [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent/docker-examples).
-> - More information about agent configuration can be found [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent#configuration-options)
+This command launches all necessary services for centralized data collection and visualization.
 
-### 4. Visualize in Grafana
-- Open Grafana.
-- Set up Prometheus as a data source
-- Import the pre-built dashboards that you can find [here]() to start visualizing the ActivityWatch data.
+> [!Note]
+> To secure Prometheus endpoints with Bearer token authentication, follow the instructions [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center#prometheus-with-nginx-secure-setup).
+
+---
+
+### Step 3: Configure and Run **aw-sync-agent**
+
+If you downloaded **aw-sync-suite**, **aw-sync-agent-windows**, or **aw-sync-agent-linux**, follow these steps:
+
+1. Navigate to the place where each agent is located:
+    - **aw-sync-suite**: `aw-sync-suite/aw-sync-agent/windows` or `aw-sync-suite/aw-sync-agent/linux`
+    - **aw-sync-agent-windows**: `aw-sync-agent-windows/windows`
+    - **aw-sync-agent-linux**: `aw-sync-agent-linux/linux`
+2. Open and configure the `aw-sync-agent.yaml` file:
+    - Specify the Prometheus endpoint.
+    - Adjust other [settings](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent#configuration-options) and [filters](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent#filters) as needed.
+
+#### Run the Agent:
+You can run **aw-sync-agent** in one of the following ways:
+
+1. **As an Executable**
+    - Run the executable directly. The terminal needs to remain open:
+        - Windows:
+          ```cmd
+          .\aw-sync-agent.exe
+          ```
+        - Linux:
+          ```bash
+          ./aw-sync-agent
+          ```
+
+2. **As a System Service**
+    - Run the agent as a background service.
+    - **Important**:
+        - On **Windows**, you must run the terminal as an administrator to create the service successfully:
+          ```cmd
+          .\aw-sync-agent.exe -service
+          ```
+        - On **Linux**, use the following command:
+          ```bash
+          ./aw-sync-agent -service
+          ```
+
+3. **As a Docker Container**
+    - Use Docker to run the agent in a container:
+      ```bash
+      docker run -v /path/to/aw-sync-agent.yaml:/opt/aw-sync-agent/aw-sync-agent.yaml phrp5/aw-sync-agent:latest
+      ```
+      > [!Important]  
+      > Replace `/path/to/aw-sync-agent.yaml` with the actual path to your configuration file.
+
+> [!Tips]
+> - Find the latest Docker images [here](https://hub.docker.com/r/phrp5/aw-sync-agent/tags).
+> - Example Docker Compose setups are available [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent/docker-examples).
+> - For detailed configuration options, check [this guide](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent#configuration-options).
+
+---
+
+### Step 4: Visualize in Grafana
+
+1. Open Grafana in your browser.
+2. Add Prometheus as a data source.
+3. Import the pre-built dashboards (available [here]()) to visualize ActivityWatch data.
+
+
 ## Components
 
 ### aw-sync-agent
