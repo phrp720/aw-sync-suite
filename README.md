@@ -49,11 +49,11 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 ## About
 **Aw-Sync-Suite** provides an easy-to-deploy solution on syncing data from multiple [ActivityWatch](https://github.com/ActivityWatch/activitywatch) instances to a centralized [Prometheus](https://prometheus.io/) database with easy visualization in [Grafana](https://grafana.com/).
 
+The project operates independently of **ActivityWatch** and supports all ActivityWatch versions with a REST API.
+
 ### This suite consists of two main components:
-- **[aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent):**  
-  Runs on each device, retrieves and filters ActivityWatch data, and sends it securely to Prometheus via remote-write.
-- **[aw-sync-center](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center):**  
-  A centralized Prometheus and Grafana setup for aggregating and visualizing data.
+- **[aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent):** Runs on each device, retrieves and filters ActivityWatch data, and sends it securely to Prometheus via remote-write.
+- **[aw-sync-center](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center):** A centralized Prometheus and Grafana setup for aggregating and visualizing data.
 
 This repository simplifies the deployment and integration process, allowing you to monitor user activity across multiple devices with ease.
 
