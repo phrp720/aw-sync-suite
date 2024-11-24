@@ -52,7 +52,7 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 This project operates independently of **ActivityWatch** and is compatible with all versions of ActivityWatch that support the REST API feature.
 
 ### This suite consists of two main components:
-- **[aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent):**  A lightweight agent that runs on each computer you want to sync data from. It connects to ActivityWatch, retrieves the data,filter them, and pushes it to Prometheus.
+- **[aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent):**  A lightweight agent that runs on each computer you want to sync data from. It connects to ActivityWatch, retrieves the data,[filter](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent#filters) them, and pushes it to Prometheus.
 - **[aw-sync-center](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center):** A cloud-based setup containing Prometheus and Grafana for centralized data storage and visualization. It is set up once to handle the aggregation and visualization of data from all agents.
 
 This repository simplifies the deployment and integration process, making it easy to get started with ActivityWatch-based  user analytics.
