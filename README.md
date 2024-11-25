@@ -44,7 +44,7 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
     - [aw-sync-agent](#aw-sync-agent)
     - [aw-sync-center](#aw-sync-center)
 7. [Requirements](#-requirements)
-8. [Contributing](#contributing)
+8. [Contributing](#-contributing)
 </details>
 
 ## 🔍 About
@@ -188,7 +188,7 @@ Here there will be a preview of the Grafana dashboard with data from ActivityWat
 - Docker and Docker Compose for easy setup of `aw-sync-center`.
 - A running instance of ActivityWatch on the computers you want to monitor.
 
-## Contributing
+## 👥 Contributing
 Contributions are welcomed! If you have ideas, improvements, or bug fixes, feel free to open an issue or submit a pull request.
 
 ## Roadmap
