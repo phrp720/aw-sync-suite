@@ -26,6 +26,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
+      # Test Build aw-sync-agent for Linux
+      - name: Test build aw-sync-agent
+        working-directory: aw-sync-agent
+        run: |
+          GOOS=linux GOARCH=amd64 go build
+      # Run Go tests
       - name: Run Go tests
         working-directory: aw-sync-agent
         run: go test ./tests/
