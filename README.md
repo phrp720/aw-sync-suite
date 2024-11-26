@@ -22,7 +22,8 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 
 <p align="center">
   If you’ve ever wished for <strong> a simple, centralized solution </strong> to sync and visualize data from multiple instances of ActivityWatch, you’re in the right place.
-
+ <br>
+  📖 For detailed documentation, visit our <a href="https://github.com/phrp720/aw-sync-suite/wiki">GitHub Wiki</a>.
 </p>
 
 <details>
@@ -61,6 +62,7 @@ This repository simplifies the deployment and integration process, allowing you 
 ## 🌟  Features
 - 🌐 **Centralized Monitoring:** Aggregate data from multiple devices effortlessly.
 - 🛡️ **Data Filtering:** Protect sensitive information by filtering or sanitizing it at the source.
+- 📍 **Checkpointing Mechanism:** Smart synchronization with automatic tracking of synced data.
 -  📈 **Pre-Built Dashboards:** Use intuitive Grafana dashboards for instant insights.
 - ⚙️ **Effortless Deployment:** Simple setup for both agent and central components.
 
@@ -117,7 +119,7 @@ If you downloaded **Aw-Sync-Suite** or **Windows/Linux Agent**, follow these ste
     - **Linux Agent**: `aw-sync-agent-{version}-linux-86_64/linux`
 2. Open and configure the `aw-sync-agent.yaml` file:
     - Specify the Prometheus endpoint.
-    - Adjust other [settings](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent#configuration-options) and [filters](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent#filters) as needed.
+    - Adjust other [settings](https://github.com/phrp720/aw-sync-suite/wiki/Agent-Configuration) and [filters](https://github.com/phrp720/aw-sync-suite/wiki/Data-Filtering) as needed.
 
 #### Run the Agent:
 You can run **aw-sync-agent** in one of the following ways:

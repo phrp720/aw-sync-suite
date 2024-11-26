@@ -106,8 +106,15 @@ Settings are prioritized in the following order:
 
 ## Filters
 
-This guide explains the rules for configuring filters in the `aw-sync-agent.yaml` file, allowing you to filter data records based on key-value conditions and replace values as specified.
+### Filter Overview
 
+The `aw-sync-agent.yaml` file supports three types of filtering, which can be applied individually or mixed for advanced filtering needs:
+
+1. **Plain Replace**: Replaces field values with specified new values when target conditions are met.
+2. **Regex Replace**: Performs partial or full replacements using regex patterns for flexible matching and substitution.
+3. **Drop Record**: Removes records entirely when the specified target conditions are met.
+
+These filtering methods can be combined in a single filter, allowing you to replace some fields while dropping others based on the same or different conditions.
 ### Filter Format
 
 ```yaml
