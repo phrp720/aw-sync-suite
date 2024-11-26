@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"gopkg.in/yaml.v3"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -68,7 +69,7 @@ func LoadYAMLConfig(filename string) Configuration {
 		log.Print("Loading settings from aw-sync-agent.yaml file.")
 		defer file.Close()
 		decoder := yaml.NewDecoder(file)
-		if err := decoder.Decode(&config); err != nil {
+		if err = decoder.Decode(&config); err != nil && err != io.EOF {
 			log.Fatalf("Failed to decode settings file: %v", err)
 		}
 		// Remove loading of SERVICE and STANDALONE from YAML config
