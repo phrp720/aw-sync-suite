@@ -40,7 +40,7 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
     - [Deploy aw-sync-center (Cloud Setup)](#step-2-deploy-aw-sync-center-cloud-setup)
     - [Configure and Run aw-sync-agent](#step-3-configure-and-run-aw-sync-agent)
     - [Visualize in Grafana](#step-4-visualize-in-grafana)
-5. [Preview](#-preview)
+5. [Preview](#%EF%B8%8F-preview)
 6. [Components](#-components)
     - [aw-sync-agent](#aw-sync-agent)
     - [aw-sync-center](#aw-sync-center)
