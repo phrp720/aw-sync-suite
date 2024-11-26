@@ -58,11 +58,11 @@ The project operates independently of **ActivityWatch** and supports all Activit
 
 This repository simplifies the deployment and integration process, allowing you to monitor user activity across multiple devices with ease.
 
-## 💡 Features
-- 🌐 **Centralized Monitoring:** Collect and analyze data from multiple ActivityWatch instances.
-- 🛡️ **Data Filtering:** Filter data on the agent side, offering options to ignore, sanitize, or partially sanitize sensitive information before syncing.
--  📈 **Ready-to-Use Visualization:** Includes pre-configured Grafana dashboards for instant analytics and insights.
-- ⚙️ **Effortless Deployment:** Quickly deploy the **aw-sync-center** with Docker Compose and run lightweight **aw-sync-agents** on any supported platform.
+## 🌟  Features
+- 🌐 **Centralized Monitoring:** Aggregate data from multiple devices effortlessly.
+- 🛡️ **Data Filtering:** Protect sensitive information by filtering or sanitizing it at the source.
+-  📈 **Pre-Built Dashboards:** Use intuitive Grafana dashboards for instant insights.
+- ⚙️ **Effortless Deployment:** Simple setup for both agent and central components.
 
 
 ## 📊 Flow Diagrams
@@ -166,7 +166,7 @@ You can run **aw-sync-agent** in one of the following ways:
 2. Add Prometheus as a data source.
 3. Import the pre-built dashboards (available [here]()) to visualize ActivityWatch data.
 
-## 🌟 Preview
+## 👁️ Preview
 Here there will be a preview of the Grafana dashboard with data from ActivityWatch.
 
 ## 🧩 Components
