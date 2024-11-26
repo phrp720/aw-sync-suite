@@ -152,7 +152,7 @@ You can run **aw-sync-agent** in one of the following ways:
       ```bash
       docker run -v /path/to/aw-sync-agent.yaml:/opt/aw-sync-agent/aw-sync-agent.yaml phrp5/aw-sync-agent:latest
       ```
-      > [!Important]  
+      > [!IMPORTANT]
       > Replace `/path/to/aw-sync-agent.yaml` with the actual path to your configuration file.
 
 > [!Tip]
