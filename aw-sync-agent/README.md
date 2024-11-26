@@ -16,6 +16,8 @@
 4. [Package Overview](#package-overview)
 5. [Configuration Options](#configuration-options)
     - [Configuration Hierarchy](#configuration-hierarchy)
+    - [Configurable Settings](#configurable-settings)
+    - [Configuration Examples](#configuration-examples)
 6. [Filters](#filters)
     - [Filter Format](#filter-format)
     - [Filter Field Descriptions](#filter-field-descriptions)
@@ -82,27 +84,62 @@ Here is the package structure of the agent:
 
 ## Configuration Options
 
-The following table provides details on configurable settings:
+<p>The <code inline="">aw-sync-agent</code> offers flexibility in configuration through three layers: <strong>configuration file</strong>, <strong>environment variables</strong>, and <strong>command-line flags</strong>.
 
-| Flag                | Environment Variable | Config Key         | Description                                                                                                                                                                | Required | Default                  |
-|---------------------|----------------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|--------------------------|
-| `-service`          | -                    | -                  | Runs the agent as a service.                                                                                                                                               | ❌        | -                        |
-| `-immediate`        | -                    | -                  | Runs the synchronizer once immediately.                                                                                                                                    | ❌        | -                        |
-| `-awUrl`            | `ACTIVITY_WATCH_URL` | `awUrl`            | URL of the ActivityWatch server.                                                                                                                                           | ✅        | http://localhost:5600    |
-| `-prometheusUrl`    | `PROMETHEUS_URL`     | `prometheusUrl`    | URL of the Prometheus server.                                                                                                                                              | ✅        | -                        |
-| `-prometheusAuth`   | `PROMETHEUS_AUTH`    | `prometheusAuth`   | Bearer Auth for prometheus(if prometheus is [protected via nginx](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center#prometheus-with-nginx-secure-setup)) | ❌        | -                        |
-| `-cron`             | `CRON`               | `cron`             | Cron expression to schedule syncs.                                                                                                                                         | ❌        | Every 5 minutes          |
-| `-excludedWatchers` | `EXCLUDED_WATCHERS`  | `excludedWatchers` | List of watchers to exclude(Pipe-separated for env or flag).                                                                                                               | ❌        | -                        |
-| `-userId`           | `USER_ID`            | `userId`           | Identifier for user nickname; defaults to hostname if not specified.                                                                                                       | ❌        | hostname or Generated ID |
-| `-includeHostname`  | `INCLUDE_HOSTNAME`   | `includeHostname`  | if true,agent adds the hostname to its metrics                                                                                                                             | ❌        | false                    |
+However, note that <strong>filters can only be defined in the configuration file</strong> and cannot be set via environment variables or command-line flags.
+
+The table below details all configurable settings, their purpose, and their defaults.</p>
 
 ### Configuration Hierarchy
+<p>Settings are applied in the following order of priority:</p>
 
-Settings are prioritized in the following order:
-1. **Configuration File** (`aw-sync-agent.yaml`): Base configuration settings and filtering.
-2. **Environment Variables**: Override settings from the configuration file.
-3. **Command-Line Flags**: Highest priority, override both file and environment settings.
+1. **Command-Line Flags**: Highest priority, overrides all other settings.
+2. **Environment Variables**: Override settings in the configuration file.
+3. **Configuration File** (`aw-sync-agent.yaml`): Base settings, used if no overrides are provided.
 
+
+### Configurable Settings
+
+| Flag              | Environment Variable | Config Key       | Description                                                                                                                    | Required | Default                  |
+|-------------------|----------------------|------------------|--------------------------------------------------------------------------------------------------------------------------------|----------|--------------------------|
+| -service          | -                    | -                | Runs the agent as a continuous service.                                                                                        | ❌        | -                        |
+| -immediate        | -                    | -                | Executes the synchronization process once immediately.                                                                         | ❌        | -                        |
+| -awUrl            | ACTIVITY_WATCH_URL   | awUrl            | URL of the ActivityWatch server to fetch data from.                                                                            | ✅        | http://localhost:5600    |
+| -prometheusUrl    | PROMETHEUS_URL       | prometheusUrl    | URL of the Prometheus server for sending metrics.                                                                              | ✅        | -                        |
+| -prometheusAuth   | PROMETHEUS_AUTH      | prometheusAuth   | Bearer token for Prometheus authentication (useful when secured via NGINX).                                                    | ❌        | -                        |
+| -cron             | CRON                 | cron             | Cron expression to schedule periodic syncs (e.g., */5 * * * * for every 5 minutes).                                            | ❌        | Every 5 minutes          |
+| -excludedWatchers | EXCLUDED_WATCHERS    | excludedWatchers | List of ActivityWatch watchers to exclude from syncing (use pipe `\|` for multiple entries in flags or environment variables). | ❌        | -                        |
+| -userId           | USER_ID              | userId           | Custom identifier for the user; defaults to the system hostname or a generated ID if unspecified.                              | ❌        | Hostname or Generated ID |
+| -includeHostname  | INCLUDE_HOSTNAME     | includeHostname  | When set to true, appends the hostname to the exported metrics for better identification in multi-user environments.           | ❌        | false                    |
+
+#### Configuration Examples
+<ol>
+<li>
+<p><strong>Using Command-Line Flags</strong>:</p>
+<pre><code class="language-bash">./aw-sync-agent -awUrl=http://localhost:5600 -prometheusUrl=http://prometheus.local -cron="*/5 * * * *"
+</code></pre>
+</li>
+<li>
+<p><strong>Using Environment Variables</strong>:</p>
+<pre><code class="language-bash">export ACTIVITY_WATCH_URL=http://localhost:5600
+export PROMETHEUS_URL=http://prometheus.local/api/v1/write
+export CRON="*/5 * * * *"
+./aw-sync-agent
+</code></pre>
+</li>
+<li>
+<p><strong>Using the Configuration File (<code inline="">aw-sync-agent.yaml</code>)</strong>:</p>
+<pre><code class="language-yaml">awUrl: "http://localhost:5600"
+prometheusUrl: "http://prometheus.local/api/v1/write"
+cron: "*/5 * * * *"
+excludedWatchers:
+  - "aw-watcher-afk"
+  - "aw-watcher-window"
+userId: "custom-user-id"
+includeHostname: true
+</code></pre>
+</li>
+</ol>
 
 ## Filters
 
