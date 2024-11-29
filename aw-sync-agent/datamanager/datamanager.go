@@ -29,6 +29,7 @@ func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEvents
 	for name, bucket := range buckets {
 		log.Print("Fetching events from ", bucket.Client, " ...")
 		startPoint := checkpoint.Read(bucket.Client)
+
 		//endPoint := time.Now().AddDate(0, 0, -1) // Set end date to one day before the current date
 		events, err := aw.GetEvents(awUrl, name, startPoint, nil, nil)
 		if err != nil {
@@ -107,6 +108,9 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 // PushData pushes  data to the server via the Prometheus Client
 func PushData(client *prometheus.Client, prometheusUrl string, prometheusSecretKey string, timeseries []prometheus.TimeSeries, watcher string) error {
 	const chunkSize = 20
+
+	log.Print("Pushing data for [", watcher, "] ...")
+
 	for i := 0; i < len(timeseries); i += chunkSize {
 		if !util.PromHealthCheck(prometheusUrl, prometheusSecretKey) {
 			return errors.New("prometheus is not reachable or Internet connection is lost. Data will be pushed when health is recovered")
@@ -121,9 +125,18 @@ func PushData(client *prometheus.Client, prometheusUrl string, prometheusSecretK
 			log.Printf("Error pushing data: %v", err)
 			return err
 		}
+
 		checkpoint.Update(watcher, chunk[len(chunk)-1].Sample.Time)
 		log.Printf("Pushed %d time series records", len(chunk))
+
 	}
+	if len(timeseries) == 0 {
+		log.Print("No data to push for [", watcher, "]")
+	} else {
+		log.Print("Data pushed successfully for [", watcher, "]")
+	}
+	log.Print("------------------------------------------------------------------")
+
 	return nil
 
 }

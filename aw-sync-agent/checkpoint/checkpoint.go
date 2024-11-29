@@ -19,19 +19,22 @@ func Read(watcher string) *time.Time {
 	}
 	defer file.Close()
 
-	var checkpoints map[string]time.Time
+	var checkpoints map[string]string
 	decoder := json.NewDecoder(file)
 	if err := decoder.Decode(&checkpoints); err != nil {
 		// If the file is empty or invalid, initialize an empty map
-		checkpoints = make(map[string]time.Time)
+		checkpoints = make(map[string]string)
 	}
 
 	// Get the checkpoint for the given watcher
-	timestamp, ok := checkpoints[watcher]
+	timestampStr, ok := checkpoints[watcher]
 	if !ok {
 		return nil
 	}
-
+	timestamp, err := time.Parse(time.RFC3339Nano, timestampStr)
+	if err != nil {
+		log.Fatalf("Failed to parse timestamp: %v", err)
+	}
 	return &timestamp
 }
 
@@ -45,20 +48,20 @@ func Update(watcher string, timestamp time.Time) {
 	}
 	defer file.Close()
 
-	var checkpoints map[string]time.Time
+	var checkpoints map[string]string
 	decoder := json.NewDecoder(file)
 	if err := decoder.Decode(&checkpoints); err != nil {
 		// If the file is empty or invalid, initialize an empty map
-		checkpoints = make(map[string]time.Time)
+		checkpoints = make(map[string]string)
 	}
 
 	// Update the checkpoint for the given watcher
-	checkpoints[watcher] = timestamp
+	checkpoints[watcher] = timestamp.Format("2006-01-02T15:04:05.000000-07:00")
 
 	// Write the updated data back to the file
 	file.Seek(0, 0) // Move the file pointer to the beginning
 	encoder := json.NewEncoder(file)
-	if err := encoder.Encode(checkpoints); err != nil {
+	if err = encoder.Encode(checkpoints); err != nil {
 		log.Fatalf("Failed to write to checkpoint file: %v", err)
 	}
 

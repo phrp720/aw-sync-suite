@@ -23,16 +23,19 @@ func Start(Config settings.Configuration) error {
 	if err != nil {
 		return err
 	}
+
 	for watcher, data := range scrapedData {
-		log.Print("Pushing data for ", watcher, " ...")
+		log.Print("------------------------------------------------------------------")
+		log.Print("Processing data for watcher: ", watcher)
+		log.Print("------------------------------------------------------------------")
+
 		aggregatedData := datamanager.AggregateData(data, watcher, userID, Config.Settings.IncludeHostname, Config.Filters) //metric names must not have '-'
 		err = datamanager.PushData(prometheusClient, Config.Settings.PrometheusUrl, Config.Settings.PrometheusSecretKey, aggregatedData, watcher)
 		if err != nil {
 			return err
 		}
-		log.Print("Data pushed successfully for ", watcher, "\n")
-	}
 
+	}
 	log.Print("==================================================================")
 	log.Print("Synchronization process finished successfully\n")
 	log.Print("==================================================================")

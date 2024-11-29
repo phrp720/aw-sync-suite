@@ -32,7 +32,7 @@ func TestReadAndUpdate(t *testing.T) {
 	if readTimestamp == nil {
 		t.Fatalf("expected timestamp, got nil")
 	}
-	if !readTimestamp.Equal(timestamp) {
+	if (readTimestamp.Format("2006-01-02T15:04:05.000000-07:00")) != (timestamp.Format("2006-01-02T15:04:05.000000-07:00")) {
 		t.Errorf("expected %v, got %v", timestamp, readTimestamp)
 	}
 }

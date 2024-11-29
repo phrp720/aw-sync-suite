@@ -126,7 +126,7 @@ func GetMatchingFilters(filters []Filter, watcher string) []Filter {
 		}
 	}
 	if len(matchingFilters) > 0 {
-		log.Print(watcher, " filters applied : ", len(matchingFilters))
+		log.Print("Filters applied for [", watcher, "]: ", len(matchingFilters))
 	}
 
 	return matchingFilters

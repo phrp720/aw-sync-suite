@@ -14,12 +14,17 @@ func TestAggregateData(t *testing.T) {
 		{
 			Timestamp: time.Now().Add(-2 * time.Hour),
 			Duration:  30,
-			Data:      map[string]interface{}{"activity": "coding"},
+			Data:      map[string]interface{}{"activity": "nothing"},
 		},
 		{
 			Timestamp: time.Now().Add(-1 * time.Hour),
 			Duration:  45,
 			Data:      map[string]interface{}{"activity": "meeting"},
+		},
+		{
+			Timestamp: time.Now().Add(-3 * time.Hour),
+			Duration:  45,
+			Data:      map[string]interface{}{"activity": "coding"},
 		},
 	}
 
@@ -46,7 +51,7 @@ func TestAggregateData(t *testing.T) {
 		}
 	}
 
-	if timeSeries[0].Sample.Value != 30 {
-		t.Errorf("Expected sample value 30, got %v", timeSeries[0].Sample.Value)
+	if timeSeries[0].Sample.Value != 45 {
+		t.Errorf("Expected sample value 45, got %v", timeSeries[0].Sample.Value)
 	}
 }
