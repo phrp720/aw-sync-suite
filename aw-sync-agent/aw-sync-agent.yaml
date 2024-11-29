@@ -10,22 +10,3 @@
 
 ## Write the filters here
 #Filters:
-Filters:
-
-  - Filter:
-    filter-name: "Plain Replace of Data" ## Name of the filter (optional)
-    enable: true
-    watchers: ## watchers where the filter will be applied (optional)
-
-    target: ## Data Records that if match , do the filtering (mandatory)
-
-      - key: "app" ## key to filter on
-        value: "Google.*" ## value to filter on REGEX
-
-      - key: "title" ## key to filter on
-        value: "mail.*" ## value to filter on REGEX
-
-    plain-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
-
-      - key: "title" ## key of record
-        value: "Email" ## value to replace
