@@ -5,7 +5,7 @@ import (
 	"aw-sync-agent/prometheus"
 	"aw-sync-agent/settings"
 	"aw-sync-agent/system_error"
-	util "aw-sync-agent/util"
+	"aw-sync-agent/util"
 	"fmt"
 	"log"
 )
