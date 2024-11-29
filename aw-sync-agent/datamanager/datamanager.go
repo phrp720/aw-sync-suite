@@ -51,7 +51,7 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 
 	// Remove the newest event because it might be incomplete.
 	if len(events) > 0 {
-		events = events[:len(events)-1]
+		events = events[:len(events)-2]
 	}
 
 	var timeSeriesList []prometheus.TimeSeries
