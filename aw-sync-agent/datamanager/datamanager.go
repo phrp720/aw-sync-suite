@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -52,7 +53,7 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 
 	// Remove the newest event because it might be incomplete.
 	if len(events) > 0 {
-		events = events[:len(events)-2]
+		events = events[:len(events)-1]
 	}
 
 	var timeSeriesList []prometheus.TimeSeries
@@ -72,6 +73,11 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 		labels = append(labels, prometheus.Label{
 			Name:  "__name__",
 			Value: strings.ReplaceAll(watcher, "-", "_"),
+		})
+		// Unique ID for each event to avoid duplicate errors of timestamp seconds
+		labels = append(labels, prometheus.Label{
+			Name:  "unique_id",
+			Value: util.CreateUniqueID(strconv.Itoa(event.ID)),
 		})
 		labels = append(labels, prometheus.Label{
 			Name:  "user",

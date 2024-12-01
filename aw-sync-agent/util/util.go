@@ -87,6 +87,19 @@ func GetHostname() string {
 	return hostname
 }
 
+// GetRandomUUID generates a random UUID
+func GetRandomUUID() string {
+	id, err := uuid.NewUUID()
+	if err != nil {
+		return "unknown"
+	}
+	return id.String()
+}
+
+func CreateUniqueID(eventID string) string {
+	return eventID + "_" + GetRandomUUID()
+}
+
 // Contains checks if a slice contains a given string
 func Contains(slice []string, item string) bool {
 	for _, s := range slice {
