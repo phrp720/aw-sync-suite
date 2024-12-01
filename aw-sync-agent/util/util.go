@@ -96,6 +96,7 @@ func GetRandomUUID() string {
 	return id.String()
 }
 
+// CreateUniqueID creates a unique ID for an event using the event ID and a random UUID suffix
 func CreateUniqueID(eventID string) string {
 	if eventID == "" {
 		return GetRandomUUID()
