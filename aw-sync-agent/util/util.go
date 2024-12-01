@@ -97,6 +97,9 @@ func GetRandomUUID() string {
 }
 
 func CreateUniqueID(eventID string) string {
+	if eventID == "" {
+		return GetRandomUUID()
+	}
 	return eventID + "_" + GetRandomUUID()
 }
 
