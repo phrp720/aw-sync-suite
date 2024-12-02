@@ -910,7 +910,7 @@
             "valueMode": "color"
           },
           "pluginVersion": "11.2.0",
-          "title": "Top Browser Domains",
+          "title": "Top Browser URLs",
           "type": "bargauge"
         }
       ],
@@ -1352,6 +1352,6 @@
   "timezone": "browser",
   "title": "Prototype",
   "uid": "ae587m3gg5j40b",
-  "version": 21,
+  "version": 23,
   "weekStart": ""
 }
