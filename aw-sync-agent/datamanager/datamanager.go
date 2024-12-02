@@ -141,7 +141,6 @@ func PushData(client *prometheus.Client, prometheusUrl string, prometheusSecretK
 	} else {
 		log.Print("Data pushed successfully for [", watcher, "]")
 	}
-	log.Print("------------------------------------------------------------------")
 
 	return nil
 
