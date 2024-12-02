@@ -126,10 +126,10 @@ func loadFlags(config *Configuration) {
 	log.Print("Loading settings from flags.")
 }
 
-// Validate the settings
+// ValidateSettings Validate the settings
 func ValidateSettings(config *Configuration) {
 	if config.Settings.AWUrl == "" {
-		log.Print("Activity Watch URL is mandatory but it isn't defined! Setting it to default value: http://localhost:5600")
+		log.Print("Warning: Activity Watch URL is not defined. Defaulting to http://localhost:5600")
 		config.Settings.AWUrl = "http://localhost:5600"
 	}
 	if config.Settings.PrometheusUrl == "" {
