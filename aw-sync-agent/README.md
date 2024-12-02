@@ -72,7 +72,7 @@ Here is the package structure of the agent:
 | **prometheus**   | Client for Prometheus REST API interactions.                                                          |
 | **synchronizer** | Manages data synchronization from ActivityWatch to Prometheus.                                        |
 | **checkpoint**   | Tracks the latest data synced for efficient operation.                                                |
-| **system_error** | Error handling utilities.                                                                             |
+| **errors**       | Error handling utilities.                                                                             |
 | **datamanager**  | Handles data processing and transmission to Prometheus (**Scrape**, **Aggregate** and **Push** data). |
 | **settings**     | Manages agent configuration settings.                                                                 |
 | **filter**       | Filters data based on user-defined criteria.                                                          |
@@ -374,3 +374,9 @@ Filters:
 | `service-status`  | Displays the status of the ActivityWatch Sync Agent service.                      |
 | `service-remove`  | Stops and removes the ActivityWatch Sync Agent service, and cleans service files. |
 | `service-restart` | Restarts the ActivityWatch Sync Agent service.                                    |
+
+Debug
+
+```bash
+./aw-sync-agent -prometheusUrl=http://localhost:9090 -userId=Phillip -awUrl=http://localhost:5600 -includeHostname=true -immediate
+```

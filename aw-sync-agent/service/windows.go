@@ -1,8 +1,8 @@
 package service
 
 import (
+	"aw-sync-agent/errors"
 	"aw-sync-agent/settings"
-	"aw-sync-agent/system_error"
 	"aw-sync-agent/util"
 	"fmt"
 	"github.com/phrp720/go-service-builder/nssm"
@@ -24,14 +24,14 @@ func CreateWindowsService(config settings.Configuration) {
 	// Construct paths relative to the user's home directory
 	// Get the user's home directory
 	homeDir, err := os.UserHomeDir()
-	system_error.HandleFatal("Failed to get user home directory: ", err)
+	errors.HandleFatal("Failed to get user home directory: ", err)
 
 	windowsRootPath := filepath.Join(homeDir, WinFolder)
 	windowsAppPath := filepath.Join(windowsRootPath, WinExecutable)
 	windowsConfigPath := filepath.Join(windowsRootPath, WinConfig)
 
 	err = nssm.InitNssm(windowsRootPath)
-	system_error.HandleFatal("", err)
+	errors.HandleFatal("", err)
 
 	// Stop and remove the service if it already exists
 	StopAndRemoveService(WinService, nssm.GetNssmPath())
@@ -40,7 +40,7 @@ func CreateWindowsService(config settings.Configuration) {
 
 	// Create the config file that will be used for the service(Based on the settings) and loads it  to /opt/aw/ path
 	err = settings.CreateConfigFile(config, windowsConfigPath)
-	system_error.HandleFatal("Failed to create config file: ", err)
+	errors.HandleFatal("Failed to create config file: ", err)
 
 	builder := nssm.NewServiceBuilder()
 
@@ -52,10 +52,10 @@ func CreateWindowsService(config settings.Configuration) {
 		Build()
 
 	err = nssm.CreateService(service)
-	system_error.HandleFatal("Failed to create service: ", err)
+	errors.HandleFatal("Failed to create service: ", err)
 
 	err = nssm.StartService(WinService)
-	system_error.HandleFatal("Failed to start service: ", err)
+	errors.HandleFatal("Failed to start service: ", err)
 
 	log.Print("Running as a service In Windows...")
 

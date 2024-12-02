@@ -1,7 +1,7 @@
 package util
 
 import (
-	"aw-sync-agent/system_error"
+	"aw-sync-agent/errors"
 	"github.com/google/uuid"
 
 	"github.com/robfig/cron"
@@ -16,7 +16,7 @@ import (
 // ValidateCronExpr validates the cron expression
 func ValidateCronExpr(cronExpr string) string {
 	_, err := cron.ParseStandard(cronExpr)
-	system_error.HandleFatal("Invalid cron expression: ", err)
+	errors.HandleFatal("Invalid cron expression: ", err)
 	return cronExpr
 }
 
@@ -48,16 +48,16 @@ func CopyBinary(appPath string, binaryName string) {
 	defer src.Close()
 
 	dst, err := os.Create(appPath)
-	system_error.HandleFatal("Failed to create destination binary: ", err)
+	errors.HandleFatal("Failed to create destination binary: ", err)
 	defer dst.Close()
 
 	if _, err := io.Copy(dst, src); err != nil {
-		log.Fatalf("Failed to copy binary: %v", err)
+		log.Fatalf("Error: Failed to copy binary: %v", err)
 	}
 
 	// Set the executable permissions for everyone
 	if err := os.Chmod(appPath, 0755); err != nil {
-		log.Fatalf("Failed to set executable permissions: %v", err)
+		log.Fatalf("Error: Failed to set executable permissions: %v", err)
 	}
 }
 
@@ -85,6 +85,23 @@ func GetHostname() string {
 		return "unknown"
 	}
 	return hostname
+}
+
+// GetRandomUUID generates a random UUID
+func GetRandomUUID() string {
+	id, err := uuid.NewUUID()
+	if err != nil {
+		return "unknown"
+	}
+	return id.String()
+}
+
+// CreateUniqueID creates a unique ID for an event using the event ID and a random UUID suffix
+func CreateUniqueID(eventID string) string {
+	if eventID == "" {
+		return GetRandomUUID()
+	}
+	return eventID + "_" + GetRandomUUID()
 }
 
 // Contains checks if a slice contains a given string

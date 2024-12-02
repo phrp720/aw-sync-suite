@@ -194,11 +194,3 @@ Here there will be a preview of the Grafana dashboard with data from ActivityWat
 ## 👥 Contributing
 Contributions are welcomed! If you have ideas, improvements, or bug fixes, feel free to open an issue or submit a pull request.
 
-## Roadmap
-
-### In Progress
-- [ ] Grafana dashboard template for data visualization
-
-### Upcoming Features
-- [ ] Complete project documentation
-- [ ] Publish version 0.1.0 of aw-sync-suite

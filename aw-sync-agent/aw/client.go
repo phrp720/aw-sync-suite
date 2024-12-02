@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -36,28 +37,40 @@ func GetEvents(awUrl string, bucket string, start *time.Time, end *time.Time, li
 	defer resp.Body.Close()
 
 	var events Events
-	if err := json.NewDecoder(resp.Body).Decode(&events); err != nil {
+	if err = json.NewDecoder(resp.Body).Decode(&events); err != nil {
 		return nil, err
 	}
+
+	// Filter out events that have the same timestamp as the start point
+	if start != nil {
+		filteredEvents := make(Events, 0, len(events))
+		for _, event := range events {
+			if !event.Timestamp.Equal(*start) {
+				filteredEvents = append(filteredEvents, event)
+			}
+		}
+		events = filteredEvents
+	}
+
 	return events, nil
 }
 
 // addQueryParams adds query parameters to the get Events url
-func addQueryParams(url string, start *time.Time, end *time.Time, limit *int) string {
+func addQueryParams(BaseUrl string, start *time.Time, end *time.Time, limit *int) string {
 	// Add start and end time parameters if they are provided
 	if start != nil && end != nil {
-		url = fmt.Sprintf("%s?start=%s&end=%s", url, start.Format("2006-01-02T15:04:05"), end.Format("2006-01-02T15:04:05"))
+		BaseUrl = fmt.Sprintf("%s?start=%s&end=%s", BaseUrl, url.QueryEscape(start.Format("2006-01-02T15:04:05.000000-07:00")), url.QueryEscape(end.Format("2006-01-02T15:04:05.000000-07:00")))
 	} else if start != nil {
-		url = fmt.Sprintf("%s?start=%s", url, start.Format("2006-01-02T15:04:05"))
+		BaseUrl = fmt.Sprintf("%s?start=%s", BaseUrl, url.QueryEscape(start.Format("2006-01-02T15:04:05.000000-07:00")))
 	} else if end != nil {
-		url = fmt.Sprintf("%s?end=%s", url, end.Format("2006-01-02T15:04:05"))
+		BaseUrl = fmt.Sprintf("%s?end=%s", BaseUrl, url.QueryEscape(end.Format("2006-01-02T15:04:05.000000-07:00")))
 	}
 	if limit != nil {
 		if start != nil || end != nil {
-			url = fmt.Sprintf("%s&limit=%d", url, *limit)
+			BaseUrl = fmt.Sprintf("%s&limit=%d", BaseUrl, *limit)
 		} else {
-			url = fmt.Sprintf("%s?limit=%d", url, *limit)
+			BaseUrl = fmt.Sprintf("%s?limit=%d", BaseUrl, *limit)
 		}
 	}
-	return url
+	return BaseUrl
 }
