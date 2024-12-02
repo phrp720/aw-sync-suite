@@ -1,7 +1,7 @@
 package util
 
 import (
-	"aw-sync-agent/system_error"
+	"aw-sync-agent/errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -35,7 +35,7 @@ func MakeRequest(url string, secretKey string) (*http.Response, error) {
 	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		system_error.HandleNormal("Failed to create Prometheus health-check request: ", err)
+		errors.HandleNormal("Failed to create Prometheus health-check request: ", err)
 	}
 
 	// Set Bearer if exists

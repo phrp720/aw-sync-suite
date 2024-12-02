@@ -1,4 +1,4 @@
-package system_error
+package errors
 
 import (
 	"fmt"
@@ -27,7 +27,7 @@ func HandleNormal(message string, err error) {
 func HandleFatal(message string, err error) {
 	if err != nil {
 		if message != "" {
-			log.Fatal(message, err)
+			log.Fatal("Error: "+message, err)
 		} else {
 			log.Fatal(err)
 		}

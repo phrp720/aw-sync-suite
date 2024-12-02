@@ -70,7 +70,7 @@ func LoadYAMLConfig(filename string) Configuration {
 		defer file.Close()
 		decoder := yaml.NewDecoder(file)
 		if err = decoder.Decode(&config); err != nil && err != io.EOF {
-			log.Fatalf("Failed to decode settings file: %v", err)
+			log.Fatalf("Error: Failed to decode settings file: %v", err)
 		}
 		// Remove loading of SERVICE and STANDALONE from YAML config
 		config.Settings.AsService = false
@@ -133,7 +133,7 @@ func ValidateSettings(config *Configuration) {
 		config.Settings.AWUrl = "http://localhost:5600"
 	}
 	if config.Settings.PrometheusUrl == "" {
-		log.Fatal("Prometheus URL is mandatory")
+		log.Fatal("Error: Prometheus URL is mandatory")
 	}
 	if config.Settings.Cron == "" {
 		log.Print("Cron expression is empty, setting it to default value: */5 * * * * (every 5 minutes)")

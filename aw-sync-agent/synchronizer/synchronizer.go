@@ -2,9 +2,9 @@ package synchronizer
 
 import (
 	"aw-sync-agent/datamanager"
+	"aw-sync-agent/errors"
 	"aw-sync-agent/prometheus"
 	"aw-sync-agent/settings"
-	"aw-sync-agent/system_error"
 	"aw-sync-agent/util"
 	"fmt"
 	"log"
@@ -51,7 +51,7 @@ func SyncRoutine(Config settings.Configuration) func() {
 			log.Print("Something went wrong with Prometheus or Internet connection is lost!")
 		} else {
 			err := Start(Config)
-			system_error.HandleNormal("", err)
+			errors.HandleNormal("", err)
 		}
 
 	}
