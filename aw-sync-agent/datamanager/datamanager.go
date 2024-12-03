@@ -59,6 +59,11 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 	var timeSeriesList []prometheus.TimeSeries
 
 	watcherFilters := filter.GetMatchingFilters(filters, watcher)
+
+	// Sort watcherFilters so filters with a Category take priority
+	sort.Slice(watcherFilters, func(i, j int) bool {
+		return watcherFilters[i].Category != "" && watcherFilters[j].Category == ""
+	})
 	var dropEvent bool
 	for _, event := range events {
 

@@ -341,7 +341,7 @@ This filter configuration drops data records that match specified conditions.
       value: "Google.*" ## value to filter on REGEX
     
     - key: "title" ## key to filter on
-      value: "mail.*" ## value to filter on REGEX
+      value: "Gmail|Yahoo|Hotmail|Thunderbird" ## value to filter on REGEX
     category: "Email" ## Categorization of the metric
 ```
 
@@ -351,7 +351,7 @@ This filter configuration drops data records that match specified conditions.
 - **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
 - **target**: Specifies matching conditions:
     - `app` must match `"Google.*"` (e.g., "Google Chrome").
-    - `title` must match `"test.*"` (e.g., "test case").
+    - `title` must match `"Gmail|Yahoo|Hotmail|Thunderbird"` (e.g., "Gmail").
 - **category**: Adds to the metric the category `Email` so it can be categorized in the Grafana Dashboards.
 
 > [!Caution]
@@ -392,7 +392,7 @@ This filter configuration drops data records that match specified conditions.
 
 > [!Note]
 > - Filters can be combined to perform multiple operations on the same data record(plain && regex replacement).
-> - Filters are applied in the order they are defined in the configuration file.
+> - Category Filters take precedence over other filters.
 > - Filters can be disabled by setting the `enabled` field to `false`.
 > - Filters that have the drop field set to `true` will not perform any replacement operations.
 > - Filters that have a category field must not perform any replacement operations otherwise it will be marked as invalid.

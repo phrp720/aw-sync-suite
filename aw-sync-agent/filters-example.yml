@@ -63,5 +63,5 @@ Filters:
         value: "Google.*" ## value to filter on REGEX
 
       - key: "title" ## key to filter on
-        value: "mail.*" ## value to filter on REGEX
+        value: "Gmail|Yahoo|Hotmail|Thunderbird" ## value to filter on REGEX
     category: "Email" ## Categorization of the metric
