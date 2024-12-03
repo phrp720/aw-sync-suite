@@ -29,7 +29,7 @@ func main() {
 		if len(categories) > 0 {
 			filter.PrintCategories(categories)
 		} else {
-			log.Print("No Categories found!")
+			log.Print("No Categories found.")
 		}
 	}
 
