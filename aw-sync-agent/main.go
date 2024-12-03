@@ -18,12 +18,14 @@ func main() {
 	log.Print("Initializing configurations...")
 	Configs := settings.InitConfigurations()
 
-	log.Print("Validating filters...")
-	var totalFilters, invalidFilters, disabledFilters int
-	Configs.Filters, totalFilters, invalidFilters, disabledFilters = filter.ValidateFilters(Configs.Filters)
-	log.Print("| Total filters: ", totalFilters, "| Disabled Filters: ", disabledFilters, " | Valid filters: ", totalFilters-invalidFilters, " | Invalid filters: ", invalidFilters, " |")
+	if Configs.Filters != nil {
+		log.Print("Validating filters...")
+		var totalFilters, invalidFilters, disabledFilters int
+		Configs.Filters, totalFilters, invalidFilters, disabledFilters = filter.ValidateFilters(Configs.Filters)
+		log.Print("| Total filters: ", totalFilters, " | Valid filters: ", totalFilters-invalidFilters, " | Invalid filters: ", invalidFilters, "| Disabled Filters: ", disabledFilters, " |")
+		//	filter.PrintFilters(Configs.Filters)
+	}
 
-	//	filter.PrintFilters(Configs.Filters)
 	// If immediate flag is set, run the sync routine and exit
 	if Configs.Settings.Immediate {
 		synchronizer.SyncRoutine(*Configs)()
