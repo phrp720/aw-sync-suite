@@ -39,6 +39,7 @@ func CreateLinuxService(config settings.Configuration) {
 	workingDirectory := filepath.Dir(appPath)
 
 	builder := systemd.NewServiceBuilder()
+	//Note https://unix.stackexchange.com/questions/438064/failed-to-determine-supplementary-groups-operation-not-permitted
 	service := builder.
 		// Unit
 		Description("ActivityWatch Sync Agent").
@@ -46,8 +47,6 @@ func CreateLinuxService(config settings.Configuration) {
 		// Service
 		ExecStart(appPath).
 		Restart("always").
-		User(currentUser.Username).
-		Group(currentUser.Username).
 		WorkingDirectory(workingDirectory).
 		RestartSec("5").
 		// Install
