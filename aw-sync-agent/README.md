@@ -255,19 +255,17 @@ Filters:
 This filter configuration performs a plain text replacement on data records.
 
 ```yaml
-Filters:
-
-  - Filter:
+- Filter:
     watchers:  ## watchers where the filter will be applied. If empty, the filter will apply to all watchers
       - "aw-watcher-window"
-
+    
     target: ## Data Records that if match , do the filtering for the specific record
       - key: "app" ## key to filter on
         value: "Google.*" ## value to filter on RegEX
-
+    
       - key: "title" ## key to filter on     
         value: "mail.*"  ## value to filter on RegEX
-
+    
     plain_replace:  ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
       - key: "title"  ## key of record
         value: "Email" ## value to replace
@@ -295,23 +293,22 @@ Both conditions must match for the filter to apply.
 This filter configuration performs a partial regex replacement on data records.
 
 ```yaml
-Filters:
-  - Filter:
+- Filter:
     filter-name: "Partial Regex Replace of data" ## Name of the filter (optional)
     enable: "false" ## Enable the filter
     watchers: ## watchers where the filter will be applied (optional)
       - "aw-watcher-window"
-
+    
     target: ## Data Records that if match , do the filtering (mandatory)
-
+    
       - key: "app" ## key to filter on
         value: "Google.*" ## value to filter on REGEX
-
+    
       - key: "title" ## key to filter on
         value: "test.*" ## value to filter on REGEX
-
+    
     regex-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
-
+    
       - key: "title" ## key of record
         expression: "test.*" ## REGEX to replace
         value: "Email" ## value to replace
@@ -333,19 +330,19 @@ Filters:
 This filter configuration drops data records that match specified conditions.
 
 ```yaml
-Filters:
-  filter-name: "Email Category" ## Name of the filter (optional)
-  watchers: ## watchers where the filter will be applied (optional)
+- Filter:
+    filter-name: "Email Category" ## Name of the filter (optional)
+    watchers: ## watchers where the filter will be applied (optional)
     - "aw-watcher-window"
-
-  target: ## Data Records that if match , do the filtering (mandatory)
-
+    
+    target: ## Data Records that if match , do the filtering (mandatory)
+    
     - key: "app" ## key to filter on
       value: "Google.*" ## value to filter on REGEX
-
+    
     - key: "title" ## key to filter on
       value: "mail.*" ## value to filter on REGEX
-  category: "Email" ## Categorization of the metric
+    category: "Email" ## Categorization of the metric
 ```
 
 **Explanation**:
@@ -368,7 +365,7 @@ Filters:
 This filter configuration drops data records that match specified conditions.
 
 ```yaml
-Filters:
+- Filter:
   filter-name: "Drop of the Record" ## Name of the filter (optional)
   watchers: ## watchers where the filter will be applied (optional)
     - "aw-watcher-window"
