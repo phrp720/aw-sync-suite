@@ -3,7 +3,7 @@ package main
 import (
 	"aw-sync-agent/cron"
 	"aw-sync-agent/filter"
-	service2 "aw-sync-agent/service"
+	"aw-sync-agent/service"
 	"aw-sync-agent/settings"
 	"aw-sync-agent/synchronizer"
 	"aw-sync-agent/util"
@@ -19,11 +19,18 @@ func main() {
 	Configs := settings.InitConfigurations()
 
 	if Configs.Filters != nil {
-		log.Print("Validating filters...")
+		log.Print("Validating Filters...")
 		var totalFilters, invalidFilters, disabledFilters int
 		Configs.Filters, totalFilters, invalidFilters, disabledFilters = filter.ValidateFilters(Configs.Filters)
-		log.Print("| Total filters: ", totalFilters, " | Valid filters: ", totalFilters-invalidFilters, " | Invalid filters: ", invalidFilters, "| Disabled Filters: ", disabledFilters, " |")
-		//	filter.PrintFilters(Configs.Filters)
+		filter.PrintFilters(totalFilters, invalidFilters, disabledFilters)
+
+		log.Print("Extracting Categories from Filters...")
+		categories := filter.GetCategories(Configs.Filters)
+		if len(categories) > 0 {
+			filter.PrintCategories(categories)
+		} else {
+			log.Print("No Categories found!")
+		}
 	}
 
 	// If immediate flag is set, run the sync routine and exit
@@ -39,9 +46,9 @@ func main() {
 	if Configs.Settings.AsService {
 
 		if util.IsWindows() {
-			service2.CreateWindowsService(*Configs)
+			service.CreateWindowsService(*Configs)
 		} else if util.IsLinux() {
-			service2.CreateLinuxService(*Configs)
+			service.CreateLinuxService(*Configs)
 		}
 		os.Exit(0)
 
