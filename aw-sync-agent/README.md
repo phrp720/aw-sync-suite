@@ -24,6 +24,7 @@
     - [Filter Example Scenario](#filter-examples)
       - [Plain Replace of Data](#plain-replace-of-data)
       - [Regex Replace of Data](#regex-replace-of-data)
+      - [Categorizing a Metric](#categorizing-a-metric)
       - [Drop of the Record](#drop-of-the-record)
 7. [Makefile Commands](#makefile-commands)
     - [General Commands](#general-commands)
@@ -145,13 +146,14 @@ includeHostname: true
 
 ### Filter Overview
 
-The `aw-sync-agent.yaml` file supports three types of filtering, which can be applied individually or mixed for advanced filtering needs:
+The `aw-sync-agent.yaml` file supports three types of data filtering and one categorization filtering, which can be applied individually or mixed for advanced filtering needs:
 
 1. **Plain Replace**: Replaces field values with specified new values when target conditions are met.
 2. **Regex Replace**: Performs partial or full replacements using regex patterns for flexible matching and substitution.
 3. **Drop Record**: Removes records entirely when the specified target conditions are met.
+4. **Categorize Metric**: Assigns a category to the metric based on the target conditions.
 
-These filtering methods can be combined in a single filter, allowing you to replace some fields while dropping others based on the same or different conditions.
+These filtering methods can be combined in a single filter(except Categorize Metric), allowing you to replace some fields while dropping others based on the same or different conditions.
 ### Filter Format
 
 ```yaml
@@ -164,7 +166,7 @@ Filters:
 
     target:  ## Conditions that if match , it will apply the filtering for the specific record
       - key: <key_name>
-        value: <value_to_match> 
+        value: <value_to_match>
         .
         .
         .
@@ -215,9 +217,23 @@ Filters:
           .
         - key: <key_name>
           value: <value_to_match>
-    
+
       drop: "true" ## if true, the record will be dropped if the target conditions are met
-          
+  - Filter:
+      filter-name: "Categorize of a Metric" ## Name of the filter (optional)
+      watchers: ## watchers where the filter will be applied (optional)
+        - <watcher_name>
+
+      target: ## Data Records that if match , do the filtering (mandatory)
+
+        - key: <key_name>
+          value: <value_to_match>
+          .
+          .
+          .
+        - key: <key_name>
+          value: <value_to_match>
+      category: <category> ## Categorization of the metric
 
 ```
 
@@ -248,7 +264,7 @@ Filters:
     target: ## Data Records that if match , do the filtering for the specific record
       - key: "app" ## key to filter on
         value: "Google.*" ## value to filter on RegEX
-      
+
       - key: "title" ## key to filter on     
         value: "mail.*"  ## value to filter on RegEX
 
@@ -261,7 +277,7 @@ Filters:
 **Explanation**:
 
 - **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
- 
+
 - **target**: Specifies matching conditions:
 
     - `app` must match `"Google.*"` (e.g., "Google Chrome").
@@ -274,7 +290,7 @@ Both conditions must match for the filter to apply.
     - Sets the title field to "Email".
 
 **Outcome**: For records in `"aw-watcher-window"` where `app` starts with "Google" and `title` starts with "mail," this filter changes the `title` field’s value to `"Email"`.
-### Regex Replace of Data
+#### Regex Replace of Data
 
 This filter configuration performs a partial regex replacement on data records.
 
@@ -312,7 +328,7 @@ Filters:
 - **regex-replace**: When the `target` conditions are met, this section replaces values in the matching record using regex:
     - For the `title` field, if a part of `title` matches the regex `"test.*"`, it will be replaced with `"Email"`.
 
-### Categorizing a Metric
+#### Categorizing a Metric
 
 This filter configuration drops data records that match specified conditions.
 
@@ -347,7 +363,7 @@ Filters:
 > - The category field is optional, but it is recommended to categorize the metrics for better visualization in Grafana Dashboards.
 > - The category field CANNOT be used in combination with other filters at the same time.
 
-### Drop of the Record
+#### Drop of the Record
 
 This filter configuration drops data records that match specified conditions.
 
