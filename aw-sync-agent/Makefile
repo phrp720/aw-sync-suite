@@ -16,11 +16,11 @@ ifeq ($(OS), windows)
 else
  BUILD := go build -o aw-sync-agent main.go
  CLEAN := rm -rf aw-sync-agent
- CLEAN-SERVICE := rm -rf $HOME/.config/aw
+ CLEAN-SERVICE := rm -rf $(HOME)/.config/aw
 
  SERVICE-START := systemctl --user start aw-sync-agent
  SERVICE-STOP := systemctl --user stop aw-sync-agent
- SERVICE-REMOVE := rm $HOME/.config/systemd/user/aw-sync-agent.service && systemctl --user daemon-reload
+ SERVICE-REMOVE := rm $(HOME)/.config/systemd/user/aw-sync-agent.service && systemctl --user daemon-reload
  SERVICE-RESTART := systemctl --user restart aw-sync-agent
  SERVICE-STATUS := systemctl --user status aw-sync-agent
 endif
