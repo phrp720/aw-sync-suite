@@ -107,6 +107,11 @@ func Apply(data map[string]interface{}, filters []Filter) (map[string]interface{
 			if filter.Drop {
 				return nil, true
 			}
+
+			// If the metric has no category assigned yet, assign a default category
+			if !util.Contains(filter.Watchers, "aw-watcher-afk") && data["category"] == nil {
+				data["category"] = "Other"
+			}
 			// Apply replacements
 			data = Replace(data, filter.PlainReplace, filter.RegexReplace)
 

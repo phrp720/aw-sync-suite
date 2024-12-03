@@ -231,7 +231,7 @@ Filters:
 | **plain_replace** | Specifies key-value pairs for replacement. If the target key-values match, the specified keys in replace will be updated to the new values in the data record. Each entry includes: <br> - **key**: The field name to replace. <br> - **value**: The new value for the specified key.                                                                                                 |
 | **regex_replace** | Specifies key-value pairs for replacement using regex patterns. If the target key-values match, the specified keys in replace will be updated to the new values in the data record. Each entry includes: <br> - **key**: The field name to replace. <br> - **expression**: A regex pattern to match against the field's value. <br> - **value**: The new value for the specified key. |
 | **drop**          | If set to `true`, the record will be dropped if the target conditions are met.                                                                                                                                                                                                                                                                                                        |
-
+| **category**      | Specifies the category of the metric                                                                                                                                                                                                                                                                                                                                                  |
 ### Filter Examples
 
 #### Plain Replace of Data
@@ -312,6 +312,41 @@ Filters:
 - **regex-replace**: When the `target` conditions are met, this section replaces values in the matching record using regex:
     - For the `title` field, if a part of `title` matches the regex `"test.*"`, it will be replaced with `"Email"`.
 
+### Categorizing a Metric
+
+This filter configuration drops data records that match specified conditions.
+
+```yaml
+Filters:
+  filter-name: "Email Category" ## Name of the filter (optional)
+  watchers: ## watchers where the filter will be applied (optional)
+    - "aw-watcher-window"
+
+  target: ## Data Records that if match , do the filtering (mandatory)
+
+    - key: "app" ## key to filter on
+      value: "Google.*" ## value to filter on REGEX
+
+    - key: "title" ## key to filter on
+      value: "mail.*" ## value to filter on REGEX
+  category: "Email" ## Categorization of the metric
+```
+
+**Explanation**:
+
+- **filter-name**: Specifies a name for the filter.
+- **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
+- **target**: Specifies matching conditions:
+    - `app` must match `"Google.*"` (e.g., "Google Chrome").
+    - `title` must match `"test.*"` (e.g., "test case").
+- **category**: Adds to the metric the category `Email` so it can be categorized in the Grafana Dashboards.
+
+> [!Caution]
+> - If the category is not specified, the metric will be categorized as `Other` by default.
+> - The category field is case-sensitive.
+> - The category field is optional, but it is recommended to categorize the metrics for better visualization in Grafana Dashboards.
+> - The category field CANNOT be used in combination with other filters at the same time.
+
 ### Drop of the Record
 
 This filter configuration drops data records that match specified conditions.
@@ -341,11 +376,13 @@ Filters:
     - `title` must match `"test.*"` (e.g., "test case").
 - **drop**: If set to `true`, the record will be dropped if the `target` conditions are met.
 
+
 > [!Note]
 > - Filters can be combined to perform multiple operations on the same data record(plain && regex replacement).
 > - Filters are applied in the order they are defined in the configuration file.
 > - Filters can be disabled by setting the `enabled` field to `false`.
 > - Filters that have the drop field set to `true` will not perform any replacement operations.
+> - Filters that have a category field must not perform any replacement operations otherwise it will be marked as invalid.
 
 
 ## Makefile Commands
