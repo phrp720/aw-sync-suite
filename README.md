@@ -87,7 +87,7 @@ This repository simplifies the deployment and integration process, allowing you 
    - 📦 **Aw-Sync-Suite**: Includes everything in one bundle.
 3. Extract the contents of the selected `.zip` file(s) into your desired directory.
 
----
+
 
 ### Step 2: Deploy **aw-sync-center** (Cloud Setup)
 
@@ -107,7 +107,7 @@ This command launches all necessary services for centralized data collection and
 > [!Note]
 > To secure Prometheus endpoints with Bearer token authentication, follow the instructions [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center#prometheus-with-nginx-secure-setup).
 
----
+
 
 ### Step 3: Configure and Run **aw-sync-agent**
 
@@ -161,7 +161,7 @@ You can run **aw-sync-agent** in one of the following ways:
 > - Example Docker Compose setups are available [here](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent/docker-examples).
 > - For detailed configuration options, check [this guide](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent#configuration-options).
 
----
+
 
 ### Step 4: Visualize in Grafana
 
