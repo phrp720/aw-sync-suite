@@ -3,5 +3,6 @@
 # of the sample is >= TSDB.MaxTime-out_of_order_time_window.
 storage:
   tsdb:
-    out_of_order_time_window: 60d # We can import async timestamps from 2 months before
+    out_of_order_time_window: 1y # We can import async timestamps from 1 year before
+
 
