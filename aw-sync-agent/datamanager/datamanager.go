@@ -73,6 +73,7 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 
 		//Apply the filters
 		if watcher != "aw-watcher-afk" {
+			event.Data["category"] = "Other" //Default category
 			event.Data, dropEvent = filter.Apply(event.Data, watcherFilters)
 		}
 
