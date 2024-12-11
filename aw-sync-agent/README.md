@@ -112,7 +112,7 @@ The table below details all configurable settings, their purpose, and their defa
 | -excludedWatchers | EXCLUDED_WATCHERS    | excludedWatchers | List of ActivityWatch watchers to exclude from syncing (use pipe `\|` for multiple entries in flags or environment variables). | ❌        | -                        |
 | -userId           | USER_ID              | userId           | Custom identifier for the user; defaults to the system hostname or a generated ID if unspecified.                              | ❌        | Hostname or Generated ID |
 | -includeHostname  | INCLUDE_HOSTNAME     | includeHostname  | When set to true, appends the hostname to the exported metrics for better identification in multi-user environments.           | ❌        | false                    |
-
+| -testConfig       | -                    | -                | Prints the agent settings,filter(not raw) and categories results                                                               | ❌        | -                        |
 #### Configuration Examples
 <ol>
 <li>
