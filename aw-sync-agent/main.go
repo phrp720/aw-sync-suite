@@ -33,7 +33,7 @@ func main() {
 		}
 	}
 	if Configs.Settings.TestConfigs {
-		log.Print("Test Settings and Filters is finished. Exiting...")
+		log.Print("Testing Configuration Settings and Filters is finished. Exiting...")
 		os.Exit(1)
 	}
 
