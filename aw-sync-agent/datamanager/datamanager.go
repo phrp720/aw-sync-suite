@@ -89,18 +89,25 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 		// Unique ID for each event to avoid duplicate errors of timestamp seconds
 		labels = append(labels, prometheus.Label{
 			Name:  "unique_id",
-			Value: util.CreateUniqueID(strconv.Itoa(event.ID)),
+			Value: util.GetRandomUUID(),
+		})
+		//Event ID created from activityWatch
+		labels = append(labels, prometheus.Label{
+			Name:  "aw_id",
+			Value: strconv.Itoa(event.ID),
 		})
 		labels = append(labels, prometheus.Label{
 			Name:  "user",
 			Value: userID,
 		})
 		if includeHostName {
+			// Hostname of the machine
 			labels = append(labels, prometheus.Label{
 				Name:  "host",
 				Value: util.GetHostname(),
 			})
 		}
+		// Add the data as labels
 		for key, value := range event.Data {
 			labels = append(labels, prometheus.Label{
 				Name:  key,
@@ -113,7 +120,7 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 		}
 
 		timeSeries := prometheus.TimeSeries{
-			Labels: labels, // Add more labels as needed
+			Labels: labels,
 			Sample: sample,
 		}
 
