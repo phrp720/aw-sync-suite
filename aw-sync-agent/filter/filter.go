@@ -123,9 +123,7 @@ func Replace(data map[string]interface{}, plain []PlainReplace, regex []RegexRep
 	// Plain replacements
 	for _, replace := range plain {
 		if _, exists := data[replace.Key]; exists {
-			fmt.Print("Replacing ", data[replace.Key], " with ", replace.Value, "\n")
 			data[replace.Key] = replace.Value
-
 		}
 	}
 
