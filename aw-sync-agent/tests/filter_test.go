@@ -248,3 +248,24 @@ func TestApplyWithCategory(t *testing.T) {
 		t.Errorf("expected %v, got %v, dropped: %v", expected, result, dropped)
 	}
 }
+
+// TestApplyWithDefaultCategory tests the Apply function with the default category when no category is set
+func TestApplyWithDefaultCategory(t *testing.T) {
+	filters := []filter.Filter{
+		{
+			FilterName: "NoCategoryFilter",
+			Target: []filter.Target{
+				{Key: "key1", Value: regexp.MustCompile("value1")},
+			},
+			Enable: true,
+		},
+	}
+
+	data := map[string]interface{}{"key1": "value1"}
+	expected := map[string]interface{}{"key1": "value1", "category": "Other"}
+
+	result, dropped := filter.Apply(data, filters)
+	if dropped || result["category"] != expected["category"] {
+		t.Errorf("expected %v, got %v, dropped: %v", expected, result, dropped)
+	}
+}

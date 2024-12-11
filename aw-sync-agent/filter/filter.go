@@ -101,7 +101,7 @@ func Apply(data map[string]interface{}, filters []Filter) (map[string]interface{
 			if filter.Category != "" {
 				// Add the category to the data
 				data["category"] = filter.Category
-				return data, false
+				continue
 			}
 			// Drop the event if the filter matches
 			if filter.Drop {
@@ -123,7 +123,9 @@ func Replace(data map[string]interface{}, plain []PlainReplace, regex []RegexRep
 	// Plain replacements
 	for _, replace := range plain {
 		if _, exists := data[replace.Key]; exists {
+			fmt.Print("Replacing ", data[replace.Key], " with ", replace.Value, "\n")
 			data[replace.Key] = replace.Value
+
 		}
 	}
 
