@@ -32,12 +32,14 @@ func main() {
 			log.Print("No Categories found.")
 		}
 	}
+
+	// If the -testConfig flag is set, test the configurations and filters and exit
 	if Configs.Settings.TestConfigs {
 		log.Print("Testing Configuration Settings and Filters is finished. Exiting...")
 		os.Exit(1)
 	}
 
-	// If immediate flag is set, run the sync routine and exit
+	// If -immediate flag is set, run the sync routine and exit
 	if Configs.Settings.Immediate {
 		synchronizer.SyncRoutine(*Configs)()
 		os.Exit(0)
