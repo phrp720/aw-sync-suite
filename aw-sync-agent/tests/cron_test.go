@@ -15,7 +15,7 @@ func TestInit(t *testing.T) {
 
 func TestAdd(t *testing.T) {
 	c := cron.Init()
-	cron.Add(c, "@every 1s", func() {})
+	cron.Add(c, "* * * * *", func() {})
 	if len(c.Entries()) != 1 {
 		t.Fatalf("expected 1 cron entry, got %d", len(c.Entries()))
 	}
