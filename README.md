@@ -32,11 +32,11 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 
 1. [About](#-about)
 2. [Features](#-features)
-3. [Flow Diagrams](#-flow-diagrams)
+3. [Installation & Usage](#-installation--usage)
 4. [Components](#-components)
     - [aw-sync-agent](#aw-sync-agent)
     - [aw-sync-center](#aw-sync-center)
-5. [Installation & Usage](#-installation--usage)
+5. [Architecture](#-architecture)
 6. [Requirements](#-requirements)
 7. [Contributing](#-contributing)
 </details>
@@ -64,19 +64,11 @@ The project operates independently of **ActivityWatch** and supports all Activit
 -  📈 **Pre-Built Dashboards:** Use intuitive Grafana dashboards for instant insights.
 - ⚙️ **Effortless Deployment:** Simple setup for both agent and central components.
 
+## 🚀 Installation & Usage
 
+Downloads are available on the [releases page](https://github.com/phrp720/aw-sync-suite/releases).
 
-## 📊 Flow Diagrams
-
-Sync-Suite contains two available setups: one **without Bearer Token Authentication** and another **with Bearer Token Authentication**.
-
-The latter provides an additional layer of security by securing the Prometheus endpoints with a Bearer token if it is exposed to the internet.
-This setup uses a Nginx reverse proxy to secure the Prometheus endpoints.
-
-| Without Bearer Token Authentication 🔓      | With Bearer Token Authentication 🔐                     |
-|---------------------------------------------|---------------------------------------------------------|
-| ![aw-sync-diagram.png](aw-sync-diagram.png) | ![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png) |
-
+For instructions on how to get started, please see the [guide in the documentation](https://github.com/phrp720/aw-sync-suite/wiki/Installation-Guide).
 
 ## 🧩 Components
 
@@ -91,12 +83,18 @@ This setup uses a Nginx reverse proxy to secure the Prometheus endpoints.
 - **Purpose**: Centralized cloud setup that includes Prometheus and Grafana for monitoring and visualization.
 - **Deployment**: Set up once for centralized control and management.
 - **Included Services**: Prometheus, Grafana, and necessary dashboards.
+ 
+## 📊 Architecture
 
-## 🚀 Installation & Usage
+Sync-Suite contains two available setups: one **without Bearer Token Authentication** and another **with Bearer Token Authentication**.
 
-Downloads are available on the [releases page](https://github.com/phrp720/aw-sync-suite/releases).
+The latter provides an additional layer of security by securing the Prometheus endpoints with a Bearer token if it is exposed to the internet.
+This setup uses a Nginx reverse proxy to secure the Prometheus endpoints.
 
-For instructions on how to get started, please see the [guide in the documentation](https://github.com/phrp720/aw-sync-suite/wiki/Installation-Guide).
+| Without Bearer Token Authentication 🔓      | With Bearer Token Authentication 🔐                     |
+|---------------------------------------------|---------------------------------------------------------|
+| ![aw-sync-diagram.png](aw-sync-diagram.png) | ![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png) |
+
 
 ## 🛠️ Requirements
 
