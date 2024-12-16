@@ -36,6 +36,7 @@
 
 The **aw-sync-agent** is an open-source background service written in Go that  facilitates the synchronization of multiple ActivityWatch instances to a single Prometheus database, allowing for centralized monitoring and analysis of user activity data across various systems.
 
+For a brief overview of the agent's functionality, refer to the [Agent Documentation](https://github.com/phrp720/aw-sync-suite/wiki/Agent-as-a-Service)
 ## Key Features
 
 - **Data Synchronization**: Fetches user activity data from multiple ActivityWatch instances.
