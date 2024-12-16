@@ -32,16 +32,16 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 
 1. [About](#-about)
 2. [Features](#-features)
-3. [Flow Diagrams](#-flow-diagrams)
-4. [Quick Start Guide](#-quick-start-guide)
+3. [Components](#-components)
+    - [aw-sync-agent](#aw-sync-agent)
+    - [aw-sync-center](#aw-sync-center)
+4. [Flow Diagrams](#-flow-diagrams)
+5. [Quick Start Guide](#-quick-start-guide)
     - [Download the Latest Release](#step-1-download-the-latest-release)
     - [Deploy aw-sync-center (Cloud Setup)](#step-2-deploy-aw-sync-center-cloud-setup)
     - [Configure and Run aw-sync-agent](#step-3-configure-and-run-aw-sync-agent)
     - [Visualize in Grafana](#step-4-visualize-in-grafana)
-5. [Preview](#%EF%B8%8F-preview)
-6. [Components](#-components)
-    - [aw-sync-agent](#aw-sync-agent)
-    - [aw-sync-center](#aw-sync-center)
+6. [Preview](#%EF%B8%8F-preview)
 7. [Requirements](#-requirements)
 8. [Contributing](#-contributing)
 </details>
@@ -49,13 +49,17 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 ## 🔍 About
 **Aw-Sync-Suite** provides an easy-to-deploy solution on syncing data from multiple [ActivityWatch](https://github.com/ActivityWatch/activitywatch) instances to a centralized [Prometheus](https://prometheus.io/) database with easy visualization in [Grafana](https://grafana.com/).
 
-The project operates independently of **ActivityWatch** and supports all ActivityWatch versions with a REST API.
-
 ### This suite consists of two main components:
 - **[aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent):** Runs on each device, retrieves and filters ActivityWatch data, and sends it securely to Prometheus via remote-write.
 - **[aw-sync-center](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center):** A centralized Prometheus and Grafana setup for aggregating and visualizing data.
 
-This repository simplifies the deployment and integration process, allowing you to monitor user activity across multiple devices with ease.
+### Preview
+
+
+| ![TOP](aw-sync-center/grafana/dashboards/screenshots/summary/summary_1.png) | ![BOTTOM](aw-sync-center/grafana/dashboards/screenshots/summary/summary_2.png) |
+|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+
+The project operates independently of **ActivityWatch** and supports all ActivityWatch versions with a REST API.
 
 ## 🌟  Features
 - 🌐 **Centralized Monitoring:** Aggregate data from multiple devices effortlessly.
@@ -65,12 +69,30 @@ This repository simplifies the deployment and integration process, allowing you 
 - ⚙️ **Effortless Deployment:** Simple setup for both agent and central components.
 
 
+
+## 🧩 Components
+
+### aw-sync-agent
+
+- **Purpose**: Syncs data from ActivityWatch to Prometheus.
+- **Deployment**: Run on each computer you wish to track user activity from.
+- **Configuration**: Configurable via the `aw-sync-agent.yaml` file.
+
+### aw-sync-center
+
+- **Purpose**: Centralized cloud setup that includes Prometheus and Grafana for monitoring and visualization.
+- **Deployment**: Set up once for centralized control and management.
+- **Included Services**: Prometheus, Grafana, and necessary dashboards.
+
 ## 📊 Flow Diagrams
 
+Sync-Suite contains two available setups: one **without Bearer Token Authentication** and another **with Bearer Token Authentication**.
+The latter provides an additional layer of security by securing the Prometheus endpoints with a Bearer token if it is exposed to the internet.
 
-| Sync-Suite Without Bearer Token Authentication 🔓 | Sync-Suite With Bearer Token Authentication 🔐          |
-|---------------------------------------------------|---------------------------------------------------------|
-| ![aw-sync-diagram.png](aw-sync-diagram.png)       | ![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png) |
+| Without Bearer Token Authentication 🔓      | With Bearer Token Authentication 🔐                     |
+|---------------------------------------------|---------------------------------------------------------|
+| ![aw-sync-diagram.png](aw-sync-diagram.png) | ![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png) |
+
 
 
 ## 🚀 Quick Start Guide
@@ -171,19 +193,6 @@ You can run **aw-sync-agent** in one of the following ways:
 | ![TOP](aw-sync-center/grafana/dashboards/screenshots/summary/summary_1.png) | ![BOTTOM](aw-sync-center/grafana/dashboards/screenshots/summary/summary_2.png) |
 |-----------------------------------------------------------------------------|--------------------------------------------------------------------------------|
 
-## 🧩 Components
-
-### aw-sync-agent
-
-- **Purpose**: Syncs data from ActivityWatch to Prometheus.
-- **Deployment**: Run on each computer you wish to track user activity from.
-- **Configuration**: Configure it via the `aw-sync-agent.yaml` file.
-
-### aw-sync-center
-
-- **Purpose**: Centralized cloud setup that includes Prometheus and Grafana for monitoring and visualization.
-- **Deployment**: Set up once for centralized control and management.
-- **Included Services**: Prometheus, Grafana, and necessary dashboards.
 
 ## 🛠️ Requirements
 
