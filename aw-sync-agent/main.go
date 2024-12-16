@@ -47,7 +47,6 @@ func main() {
 
 	// Validate the cron expression and create a scheduler
 	scheduler := util.ValidateCronExpr(Configs.Settings.Cron)
-
 	// If the -service flag is set, creates and starts the service and exit
 	if Configs.Settings.AsService {
 
@@ -64,7 +63,7 @@ func main() {
 	c := cron.Init()
 	cron.Add(c, scheduler, synchronizer.SyncRoutine(*Configs))
 	cron.Start(c)
-
+	defer cron.Stop(c)
 	log.Print("Agent Started Successfully")
 
 	// Keep the main program running

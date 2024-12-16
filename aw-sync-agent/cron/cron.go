@@ -13,7 +13,9 @@ func Init() *cron.Cron {
 
 // Add adds a new function to the cron job
 func Add(c *cron.Cron, scheduler string, fun func()) {
-	err := c.AddFunc(scheduler, fun)
+	// 0 is the seconds.
+	//This happens to remove the SECONDS options from the cron expression(default in github.com/robfig/cron ) so it conforms to the standard. https://en.wikipedia.org/wiki/Cron
+	err := c.AddFunc("0 "+scheduler, fun)
 	if err != nil {
 		log.Fatal(err)
 	}
