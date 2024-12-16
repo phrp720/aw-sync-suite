@@ -424,9 +424,3 @@ This filter configuration drops data records that match specified conditions.
 | `service-status`  | Displays the status of the ActivityWatch Sync Agent service.                      |
 | `service-remove`  | Stops and removes the ActivityWatch Sync Agent service, and cleans service files. |
 | `service-restart` | Restarts the ActivityWatch Sync Agent service.                                    |
-
-Debug
-
-```bash
-./aw-sync-agent -prometheusUrl=http://localhost:9090 -userId=Phillip -awUrl=http://localhost:5600 -includeHostname=true -immediate
-```
