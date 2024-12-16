@@ -78,6 +78,16 @@ For instructions on how to get started, please see the [guide in the documentati
 - **Deployment**: Run on each computer you wish to track user activity from.
 - **Configuration**: Configurable via the `aw-sync-agent.yaml` file.
 
+| Platform Support | Runs as a Service (`-service`) | General Workability |
+|------------------|--------------------------------|---------------------|
+| **Windows**      | ✅                              | ✅                   |
+| **Linux**        | ✅                              | ✅                   |
+| **macOS**        | ❌                              | ✅                   |
+
+> [!Note]
+> - The **aw-sync-agent** is fully operational on **macOS**, but the `-service` feature (which allows the agent to run as a background service) is not yet implemented for macOS.
+> - On macOS, you can still manually start and run the agent to sync ActivityWatch data without issues.
+
 ### aw-sync-center
 
 - **Purpose**: Centralized cloud setup that includes Prometheus and Grafana for monitoring and visualization.
