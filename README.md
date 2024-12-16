@@ -33,8 +33,6 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 1. [About](#-about)
 2. [Features](#-features)
 3. [Flow Diagrams](#-flow-diagrams)
-    - [Without Bearer Token Authentication](#1-sync-suite-without-bearer-token-authentication-)
-    - [With Bearer Token Authentication](#2-sync-suite-with-bearer-token-authentication-)
 4. [Quick Start Guide](#-quick-start-guide)
     - [Download the Latest Release](#step-1-download-the-latest-release)
     - [Deploy aw-sync-center (Cloud Setup)](#step-2-deploy-aw-sync-center-cloud-setup)
@@ -69,11 +67,10 @@ This repository simplifies the deployment and integration process, allowing you 
 
 ## 📊 Flow Diagrams
 
-### 1. Sync-Suite without Bearer Token Authentication 🔓
-![aw-sync-diagram.png](aw-sync-diagram.png)
 
-### 2. Sync-Suite with Bearer Token Authentication 🔐
-![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png)
+| Sync-Suite Without Bearer Token Authentication 🔓 | Sync-Suite With Bearer Token Authentication 🔐          |
+|---------------------------------------------------|---------------------------------------------------------|
+| ![aw-sync-diagram.png](aw-sync-diagram.png)       | ![aw-sync-diagram-nginx.png](aw-sync-diagram-nginx.png) |
 
 
 ## 🚀 Quick Start Guide
@@ -170,7 +167,9 @@ You can run **aw-sync-agent** in one of the following ways:
 3. Import the pre-built dashboards (available [here]()) to visualize ActivityWatch data.
 
 ## 👁️ Preview
-Here there will be a preview of the Grafana dashboard with data from ActivityWatch.
+
+| ![TOP](aw-sync-center/grafana/dashboards/screenshots/summary/summary_1.png) | ![BOTTOM](aw-sync-center/grafana/dashboards/screenshots/summary/summary_2.png) |
+|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------|
 
 ## 🧩 Components
 
