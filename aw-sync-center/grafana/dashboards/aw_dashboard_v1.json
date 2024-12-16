@@ -94,6 +94,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "description": "Total active users the past 1 year",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -104,7 +105,6 @@
             "cellOptions": {
               "type": "auto"
             },
-            "filterable": false,
             "inspect": false
           },
           "displayName": "Total Users",
@@ -134,18 +134,16 @@
       "id": 15,
       "interval": "1s",
       "options": {
-        "cellHeight": "sm",
+        "cellHeight": "lg",
         "footer": {
           "countRows": false,
-          "enablePagination": false,
           "fields": "",
           "reducer": [
             "sum"
           ],
           "show": false
         },
-        "showHeader": true,
-        "sortBy": []
+        "showHeader": true
       },
       "pluginVersion": "11.2.0",
       "targets": [
@@ -156,9 +154,9 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "count(sum by (user) ({__name__=~\"aw_watcher.*\"}))",
+          "expr": "count by(user) (sum_over_time(aw_watcher_window[1y]))",
           "fullMetaSearch": false,
-          "includeNullMetadata": true,
+          "includeNullMetadata": false,
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -168,17 +166,63 @@
       ],
       "transformations": [
         {
-          "id": "labelsToFields",
+          "id": "seriesToRows",
           "options": {}
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "Time",
+                "Metric",
+                "Value"
+              ]
+            }
+          }
         },
         {
           "id": "groupBy",
           "options": {
             "fields": {
-              "count(sum by (user) ({__name__=~\"aw_watcher.*\"}))": {
+              "Metric": {
                 "aggregations": [],
                 "operation": "groupby"
               }
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "Metric"
+              ],
+              "reducer": "distinctCount"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "labelsToFields": false,
+            "mode": "seriesToRows",
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "Total"
+              ]
             }
           }
         }
@@ -190,7 +234,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "",
+      "description": "Active users the past 1 year",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -204,7 +248,7 @@
             "filterable": true,
             "inspect": false
           },
-          "displayName": "Users",
+          "displayName": "Users(Active in the Past Year)",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -252,9 +296,9 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
+          "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by (user) ({__name__=~\"aw_watcher.*\"} offset 6m)",
+          "expr": "sum_over_time(aw_watcher_window[1y])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -300,7 +344,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "",
+      "description": "Active hosts the past 1 year",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -314,7 +358,7 @@
             "filterable": true,
             "inspect": false
           },
-          "displayName": "Hosts",
+          "displayName": "Hosts(Active in the Past Year)",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -362,9 +406,9 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
+          "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by(host) ({__name__=~\"aw_watcher.*\"})",
+          "expr": "sum_over_time(aw_watcher_window[1y])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -405,6 +449,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "description": "Watchers' Activity",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -552,7 +597,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "",
+      "description": "Total active hosts the past 1 year",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -610,8 +655,8 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "builder",
-          "expr": "count(count by (host) ({__name__=~\"aw_watcher.*\"}))\n",
+          "editorMode": "code",
+          "expr": "count by(host) (sum_over_time(aw_watcher_window[1y]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -620,17 +665,77 @@
       ],
       "transformations": [
         {
-          "id": "labelsToFields",
+          "id": "seriesToRows",
           "options": {}
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "Metric"
+              ]
+            }
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "substring",
+                  "options": {
+                    "value": "count by(host) (sum_over_time(aw_watcher_window["
+                  }
+                },
+                "fieldName": "Metric"
+              }
+            ],
+            "match": "any",
+            "type": "exclude"
+          }
         },
         {
           "id": "groupBy",
           "options": {
             "fields": {
-              "count(count by (host) ({__name__=~\"aw_watcher.*\"}))\n": {
+              "Metric": {
                 "aggregations": [],
                 "operation": "groupby"
               }
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "Metric"
+              ],
+              "reducer": "distinctCount"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "labelsToFields": false,
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "Total"
+              ]
             }
           }
         }
@@ -655,6 +760,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "description": "Depicts the used applications in a pie form ",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -669,7 +775,7 @@
           },
           "fieldMinMax": true,
           "mappings": [],
-          "unit": "m"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -714,19 +820,33 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "exemplar": false,
-          "expr": "sum by(app) (aw_watcher_window{user=~\"$User\", host=~\"$Host\", category=~\"$Categories\"})",
+          "expr": "sum_over_time(aw_watcher_window{user=~\"$User\", host=~\"$Host\", category=~\"$Categories\"}[$__interval])",
           "fullMetaSearch": false,
-          "includeNullMetadata": false,
+          "hide": false,
+          "includeNullMetadata": true,
           "instant": false,
-          "interval": "",
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A",
+          "refId": "B",
           "useBackend": false
         }
       ],
       "title": "Most Used Applications",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "app"
+            ],
+            "valueLabel": "app"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
       "type": "piechart"
     },
     {
@@ -734,6 +854,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "description": "Window Titles and their  total time spent",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -793,7 +914,7 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by(title) (aw_watcher_window{user=~\"$User\", host=~\"$Host\", category=~\"$Categories\"})",
+          "expr": "sum_over_time(aw_watcher_window{user=~\"$User\", host=~\"$Host\", category=~\"$Categories\"}[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -804,6 +925,21 @@
         }
       ],
       "title": "Top Window Titles",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "title"
+            ],
+            "valueLabel": "title"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
       "type": "bargauge"
     },
     {
@@ -811,6 +947,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "description": "Shows the used applications and their total duration",
       "fieldConfig": {
         "defaults": {
           "fieldMinMax": false,
@@ -867,7 +1004,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(app) (aw_watcher_window{user=~\"$User\", host=~\"$Host\", category=~\"$Categories\"})",
+          "expr": "sum_over_time(aw_watcher_window{user=~\"$User\", host=~\"$Host\", category=~\"$Categories\"}[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": false,
           "instant": false,
@@ -878,6 +1015,21 @@
         }
       ],
       "title": "Most Used Applications' Duration",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "app"
+            ],
+            "valueLabel": "app"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
       "type": "gauge"
     },
     {
@@ -898,6 +1050,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "description": "Traces of web browser urls",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -972,7 +1125,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "aw_client_web",
+          "expr": "sum_over_time(aw_client_web[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1061,6 +1214,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "description": "Browser URLs and their time spent",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1118,7 +1272,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(url) (aw_client_web)",
+          "expr": "sum_over_time(aw_client_web[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1130,6 +1284,19 @@
       ],
       "title": "Top Browser URLs",
       "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "url"
+            ],
+            "valueLabel": "url"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "filterFieldsByName",
           "options": {
@@ -1164,6 +1331,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "description": "Editor files and the time spent on them",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1221,7 +1389,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(file) (aw_watcher_vscode)",
+          "expr": "sum_over_time(aw_watcher_vscode[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1233,6 +1401,19 @@
       ],
       "title": "Top Editor Files",
       "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "file"
+            ],
+            "valueLabel": "file"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "filterFieldsByName",
           "options": {
@@ -1253,6 +1434,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "description": "Editor projects and the time spent on them",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1310,7 +1492,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(project) (aw_watcher_vscode)",
+          "expr": "sum_over_time(aw_watcher_vscode[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1322,6 +1504,19 @@
       ],
       "title": "Top Editor Projects",
       "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "project"
+            ],
+            "valueLabel": "project"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "filterFieldsByName",
           "options": {
@@ -1341,6 +1536,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "description": "Editor languages and their usage in the form of a donut",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1366,6 +1562,7 @@
       },
       "id": 31,
       "options": {
+        "displayLabels": [],
         "legend": {
           "displayMode": "list",
           "placement": "right",
@@ -1374,7 +1571,7 @@
             "percent"
           ]
         },
-        "pieType": "pie",
+        "pieType": "donut",
         "reduceOptions": {
           "calcs": [
             "sum"
@@ -1396,7 +1593,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(language) (aw_watcher_vscode)",
+          "expr": "sum_over_time(aw_watcher_vscode[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1408,6 +1605,19 @@
       ],
       "title": "Top Editor Languages",
       "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "language"
+            ],
+            "valueLabel": "language"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "filterFieldsByName",
           "options": {
@@ -1494,8 +1704,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "sum  (aw_watcher_window{host=~\"$Host\", user=~\"$User\"}) by(category)",
+          "editorMode": "builder",
+          "expr": "sum_over_time(aw_watcher_window{host=~\"$Host\", user=~\"$User\"}[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1506,6 +1716,21 @@
         }
       ],
       "title": "Categories",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "category"
+            ],
+            "valueLabel": "category"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
       "type": "piechart"
     },
     {
@@ -1572,7 +1797,7 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by(category) (aw_watcher_window{user=~\"$User\", host=~\"$Host\"})",
+          "expr": "sum_over_time(aw_watcher_window{user=~\"$User\", host=~\"$Host\"}[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1583,6 +1808,21 @@
         }
       ],
       "title": "Top Categories",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "category"
+            ],
+            "valueLabel": "category"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
       "type": "bargauge"
     },
     {
@@ -1603,8 +1843,8 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineWidth": 0,
-            "spanNulls": true
+            "lineWidth": 2,
+            "spanNulls": false
           },
           "displayName": "Categories",
           "mappings": [
@@ -1639,7 +1879,7 @@
                   "index": 3
                 },
                 "Video": {
-                  "color": "blue",
+                  "color": "super-light-orange",
                   "index": 0
                 },
                 "Video Edit": {
@@ -1696,8 +1936,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "(aw_watcher_window{host=~\"$Host\", user=~\"$User\"})",
+          "editorMode": "builder",
+          "expr": "sum_over_time(aw_watcher_window{host=~\"$Host\", user=~\"$User\"}[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1726,8 +1966,8 @@
           "options": {
             "include": {
               "names": [
-                "Time",
-                "category"
+                "category",
+                "Time"
               ]
             }
           }
@@ -1766,10 +2006,11 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineWidth": 0,
-            "spanNulls": true
+            "lineWidth": 3,
+            "spanNulls": false
           },
           "displayName": "Status",
+          "fieldMinMax": false,
           "mappings": [
             {
               "options": {
@@ -1805,7 +2046,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 24,
         "x": 0,
         "y": 72
@@ -1833,8 +2074,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "(aw_watcher_afk{host=~\"$Host\", user=~\"$User\"})",
+          "editorMode": "builder",
+          "expr": "sum_over_time(aw_watcher_afk{host=~\"$Host\", user=~\"$User\"}[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1956,15 +2197,15 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-2d",
     "to": "now"
   },
   "timepicker": {
     "hidden": false
   },
   "timezone": "browser",
-  "title": "Prototype",
+  "title": "ActivityWatch Dashboard",
   "uid": "ae587m3gg5j40b",
-  "version": 53,
+  "version": 68,
   "weekStart": ""
 }
