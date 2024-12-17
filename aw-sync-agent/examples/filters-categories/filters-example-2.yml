@@ -1,0 +1,96 @@
+
+- Filter:
+  filter-name: "Youtube Plain Filtering" ## Name of the filter (optional)
+  enable: true
+  watchers: ## watchers where the filter will be applied (optional)
+    - "aw-watcher-window"
+
+  target: ## Data Records that if match , do the filtering (mandatory)
+
+    - key: "app" ## key to filter on
+      value: "Google.*" ## value to filter on REGEX
+
+    - key: "title" ## key to filter on
+      value: "YouTube" ## value to filter on REGEX
+
+  plain-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
+
+    - key: "title" ## key of record
+      value: "YouTube" ## value to replace
+
+- Filter:
+  filter-name: "Slack Plain Filtering" ## Name of the filter (optional)
+  enable: true
+  watchers: ## watchers where the filter will be applied (optional)
+    - "aw-watcher-window"
+
+  target: ## Data Records that if match , do the filtering (mandatory)
+
+    - key: "app" ## key to filter on
+      value: "Slack.*" ## value to filter on REGEX
+
+    - key: "title" ## key to filter on
+      value: "Slack" ## value to filter on REGEX
+
+  plain-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
+
+    - key: "title" ## key of record
+      value: "Slack" ## value to replace
+
+
+- Filter:
+  filter-name: "Linkedin Plain Filtering" ## Name of the filter (optional)
+  enable: true
+  watchers: ## watchers where the filter will be applied (optional)
+    - "aw-watcher-window"
+
+  target: ## Data Records that if match , do the filtering (mandatory)
+
+    - key: "app" ## key to filter on
+      value: "Google.*" ## value to filter on REGEX
+
+    - key: "title" ## key to filter on
+      value: "LinkedIn" ## value to filter on REGEX
+
+  plain-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
+
+    - key: "title" ## key of record
+      value: "LinkedIn" ## value to replace
+
+- Filter:
+  filter-name: "VsCode Plain Filtering" ## Name of the filter (optional)
+  enable: true
+  watchers: ## watchers where the filter will be applied (optional)
+    - "aw-watcher-window"
+
+  target: ## Data Records that if match , do the filtering (mandatory)
+
+    - key: "app" ## key to filter on
+      value: "Google.*" ## value to filter on REGEX
+
+    - key: "title" ## key to filter on
+      value: "Visual Studio Code" ## value to filter on REGEX
+
+  plain-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
+
+    - key: "title" ## key of record
+      value: "VsCode" ## value to replace
+
+- Filter:
+  filter-name: "Grafana Plain Filtering" ## Name of the filter (optional)
+  enable: true
+  watchers: ## watchers where the filter will be applied (optional)
+    - "aw-watcher-window"
+
+  target: ## Data Records that if match , do the filtering (mandatory)
+
+    - key: "app" ## key to filter on
+      value: "Google.*" ## value to filter on REGEX
+
+    - key: "title" ## key to filter on
+      value: "Grafana" ## value to filter on REGEX
+
+  plain-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
+
+    - key: "title" ## key of record
+      value: "Grafana" ## value to replace
