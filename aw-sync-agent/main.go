@@ -17,6 +17,7 @@ func main() {
 
 	log.Print("Initializing configurations...")
 	Configs := settings.InitConfigurations()
+	Configs.Settings.UserID = util.GetUserID(Configs.Settings.UserID)
 
 	if Configs.Filters != nil {
 		log.Print("Validating Filters...")

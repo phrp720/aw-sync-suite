@@ -19,7 +19,6 @@ func Start(Config settings.Configuration) error {
 
 	prometheusClient := prometheus.NewClient(fmt.Sprintf("%s%s", Config.Settings.PrometheusUrl, "/api/v1/write"))
 	scrapedData, err := datamanager.ScrapeData(Config.Settings.AWUrl, Config.Settings.ExcludedWatchers)
-	userID := util.GetUserID(Config.Settings.UserID)
 	if err != nil {
 		return err
 	}
@@ -30,7 +29,7 @@ func Start(Config settings.Configuration) error {
 		log.Print("------------------------------------------------------------------")
 
 		log.Print("Aggregating data for watcher: [", watcher, "] ...")
-		aggregatedData := datamanager.AggregateData(data, watcher, userID, Config.Settings.IncludeHostname, Config.Filters) //metric names must not have '-'
+		aggregatedData := datamanager.AggregateData(data, watcher, Config.Settings.UserID, Config.Settings.IncludeHostname, Config.Filters) //metric names must not have '-'
 		err = datamanager.PushData(prometheusClient, Config.Settings.PrometheusUrl, Config.Settings.PrometheusSecretKey, aggregatedData, watcher)
 		if err != nil {
 			return err
