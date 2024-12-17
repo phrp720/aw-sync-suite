@@ -1,6 +1,6 @@
 services:
   aw-sync-agent:
-    image: phrp5/aw-sync-agent:v0.1.0
+    image: phrp5/aw-sync-agent:latest
     container_name: aw-sync-agent
     restart: unless-stopped
     network_mode: "host"
