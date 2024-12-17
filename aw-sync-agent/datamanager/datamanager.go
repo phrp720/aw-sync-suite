@@ -100,13 +100,22 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 			Name:  "user",
 			Value: userID,
 		})
+		var hostValue string
+
 		if includeHostName {
+			hostValue = util.GetHostname()
 			// Hostname of the machine
 			labels = append(labels, prometheus.Label{
 				Name:  "host",
 				Value: util.GetHostname(),
 			})
+		} else {
+			hostValue = "Unknown"
 		}
+		labels = append(labels, prometheus.Label{
+			Name:  "host",
+			Value: hostValue,
+		})
 		// Add the data as labels
 		for key, value := range event.Data {
 			labels = append(labels, prometheus.Label{
