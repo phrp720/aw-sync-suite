@@ -56,6 +56,7 @@ The project operates independently of **ActivityWatch** and supports all Activit
 | ![TOP](aw-sync-center/grafana/dashboards/screenshots/summary/summary_1.png) | ![BOTTOM](aw-sync-center/grafana/dashboards/screenshots/summary/summary_2.png) |
 |-----------------------------------------------------------------------------|--------------------------------------------------------------------------------|
 
+You can check also the [screenshots](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center/grafana/dashboards/screenshots) for more insights.
 
 ## 🌟  Features
 - 🌐 **Centralized Monitoring:** Aggregate data from multiple devices effortlessly.
