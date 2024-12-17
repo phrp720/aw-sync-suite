@@ -58,12 +58,24 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 
 	var timeSeriesList []prometheus.TimeSeries
 
-	watcherFilters := filter.GetMatchingFilters(filters, watcher)
+	//Apply the filters
+	var watcherFilters []filter.Filter
+	if watcher != "aw-watcher-afk" {
+		watcherFilters = filter.GetMatchingFilters(filters, watcher)
+		// Sort watcherFilters so filters with a Category take priority
+		sort.Slice(watcherFilters, func(i, j int) bool {
+			return watcherFilters[i].Category != "" && watcherFilters[j].Category == ""
+		})
+	}
+
 	var dropEvent bool
 	for _, event := range events {
 
 		//Apply the filters
-		event.Data, dropEvent = filter.Apply(event.Data, watcherFilters)
+		if watcher != "aw-watcher-afk" {
+			event.Data["category"] = "Other" //Default category
+			event.Data, dropEvent = filter.Apply(event.Data, watcherFilters)
+		}
 
 		// Drop the event if it matches the filter
 		if dropEvent {
@@ -77,18 +89,34 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 		// Unique ID for each event to avoid duplicate errors of timestamp seconds
 		labels = append(labels, prometheus.Label{
 			Name:  "unique_id",
-			Value: util.CreateUniqueID(strconv.Itoa(event.ID)),
+			Value: util.GetRandomUUID(),
+		})
+		//Event ID created from activityWatch
+		labels = append(labels, prometheus.Label{
+			Name:  "aw_id",
+			Value: strconv.Itoa(event.ID),
 		})
 		labels = append(labels, prometheus.Label{
 			Name:  "user",
 			Value: userID,
 		})
+		var hostValue string
+
 		if includeHostName {
+			hostValue = util.GetHostname()
+			// Hostname of the machine
 			labels = append(labels, prometheus.Label{
 				Name:  "host",
 				Value: util.GetHostname(),
 			})
+		} else {
+			hostValue = "Unknown"
 		}
+		labels = append(labels, prometheus.Label{
+			Name:  "host",
+			Value: hostValue,
+		})
+		// Add the data as labels
 		for key, value := range event.Data {
 			labels = append(labels, prometheus.Label{
 				Name:  key,
@@ -101,7 +129,7 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 		}
 
 		timeSeries := prometheus.TimeSeries{
-			Labels: labels, // Add more labels as needed
+			Labels: labels,
 			Sample: sample,
 		}
 

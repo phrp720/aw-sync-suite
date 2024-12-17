@@ -1,0 +1,112 @@
+Filters:
+  - Filter:
+    filter-name: Email Category
+    enable: true
+    watchers: []
+    target:
+      - key: app
+        value: Google.*
+      - key: title
+        value: Gmail|Thunderbird|mutt|alpine|Yahoo|Hotmail
+    category: Email
+
+  - Filter:
+    filter-name: Programming Category
+    enable: true
+    watchers: []
+    target:
+      - key: app
+        value: Google.*
+      - key: title
+        value:  GitHub|Stack Overflow|BitBucket|Gitlab|vim|Spyder|kate|Ghidra|Scite|code|eclipse|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual studio code|emacs|vim|nano|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual studio code|emacs|vim|nano|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual studio code|emacs|vim|nano|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual studio code|emacs|vim|nano|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual studio code|emacs|vim|nano|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual studio code|emacs|vim|nano|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual studio code|emacs|vim|nano|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual studio code|emacs|vim|nano|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual studio code|emacs|vim|nano|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual studio code|emacs|vim|nano|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual studio code|emacs|vim|nano|sublime|notepad|gedit|atom|vscode|jupyter|pycharm|intellij|netbeans|eclipse|visual studio|visual
+    category: Programming
+
+  - Filter:
+    filter-name: Image Category
+    enable: true
+    watchers: []
+    target:
+      - key: app
+        value: Google.*
+      - key: title
+        value: GIMP|Inkscape|Photoshop|Krita|Paint|Paint3D|Paint.NET|PaintShop|CorelDRAW|Illustrator|Lightroom|Acorn|Affinity|Pixelmator|Sketch|Figma|Gravit|Vectr|Canva|Photopea|SumoPaint|Pinta|Seashore|MyPaint|TuxPaint|KolourPaint|Karbon|CinePaint
+    category: Image
+
+  - Filter:
+    filter-name: 3D Category
+    enable: true
+    watchers: []
+    target:
+      - key: app
+        value: Google.*
+      - key: title
+        value: Blender|Maya|3ds Max|Cinema 4D|ZBrush|Houdini|Modo|LightWave|Rhino|SketchUp|AutoCAD|SolidWorks|Fusion 360|Tinkercad|OpenSCAD|FreeCAD|Sculptris|SculptGL|Clara.io|Vectary|Onshape|Shapr3D|SelfCAD|BlocksCAD|Morphi|TinkerCAD|Tinkercad|TinkerCAD
+    category: "3D"
+
+  - Filter:
+    filter-name: Audio Category
+    enable: true
+    watchers: []
+    target:
+      - key: app
+        value: Google.*
+      - key: title
+        value: Audacity|Ardour|LMMS|Reaper|FL Studio|Ableton Live|Pro Tools|GarageBand|Logic Pro|Cubase|Reason|Bitwig Studio|Studio One|Cakewalk|Waveform|Tracktion|Mixcraft|Audition|Sound Forge|Acid Pro|FL Studio|Ableton Live|Pro Tools|GarageBand|Logic Pro|Cubase|Reason|Bitwig Studio|Studio One|Cakewalk|Waveform|Tracktion|Mixcraft|Audition|Sound Forge|Acid Pro|FL Studio|Ableton Live|Pro Tools|GarageBand|Logic Pro|Cubase|Reason|Bitwig Studio|Studio One|Cakewalk|Waveform|Tracktion|Mixcraft|Audition|Sound Forge|Acid Pro|FL Studio|Ableton Live|Pro Tools|GarageBand|Logic Pro|Cubase|Reason|Bitwig Studio|Studio One|Cakewalk|Waveform|Tracktion|Mixcraft|Audition|Sound Forge|Acid Pro|FL Studio|Ableton Live|Pro Tools|GarageBand|Logic Pro|Cubase|Reason|Bitwig Studio|Studio One|Cakewalk|Waveform|Tracktion|Mixcraft|Audition|Sound Forge|Acid Pro|FL Studio|Ableton Live|Pro Tools|GarageBand|Logic Pro|Cubase|Reason|Bitwig Studio|Studio One|Cakewalk|Waveform|Tracktion|Mixcraft|Audition|Sound Forge|Acid Pro|FL Studio|Ableton Live|Pro Tools|GarageBand|Logic Pro|Cubase|Reason|Bitwig Studio|Studio One|Cakewalk|Waveform|Tracktion|Mixcraft|Audition|Sound Forge|Acid Pro|FL Studio|Ableton Live|Pro Tools|GarageBand|Logic Pro|Cubase|Reason|Bitwig Studio|Studio One|Cakewalk|Waveform|Tracktion|Mixcraft|Audition|Sound Forge|Acid Pro|FL Studio|Ableton Live|Pro Tools|GarageBand|Logic Pro|Cubase|Reason|Bitwig Studio|Studio One|Cakewalk|Waveform|Tracktion|Mixcraft|Audition|Sound
+    category: Audio
+
+  - Filter:
+    filter-name: Video Edit Category
+    enable: true
+    watchers: []
+    target:
+      - key: app
+        value: Google.*
+      - key: title
+        value: Kdenlive|Shotcut|OpenShot|DaVinci Resolve|Lightworks|HitFilm Express|Avidemux|Blender
+    category: Video Edit
+
+  - Filter:
+    filter-name: Video Category
+    enable: true
+    watchers: []
+    target:
+      - key: app
+        value: Google.*
+      - key: title
+        value: YouTube|Plex|VLC
+    category: Video
+
+  - Filter:
+    filter-name: Social Media Category
+    enable: true
+    watchers: []
+    target:
+      - key: app
+        value: Google.* | Reddit | Facebook | Twitter | Instagram | devRant | LinkedIn | Pinterest | Snapchat | Tumblr | TikTok
+      - key: title
+        value: reddit|Facebook|Twitter|Instagram|devRant|LinkedIn|Pinterest|Snapchat|Tumblr|TikTok
+    category: Social Media
+
+  - Filter:
+    filter-name: Music Category
+    enable: true
+    watchers: []
+    target:
+      - key: app
+        value: Google.* | Spotify | Deezer | Apple Music | Amazon Music | Tidal | Pandora | SoundCloud | YouTube Music
+      - key: title
+        value: Spotify|Deezer|Apple Music|Amazon Music|Tidal|Pandora|SoundCloud|YouTube Music
+    category: Email
+
+  - Filter:
+    filter-name: Communication Category
+    enable: true
+    watchers: []
+    target:
+      - key: app
+        value: Google.* | Slack | Discord | Zoom | Microsoft Teams | Jitsi Meet | Cisco Webex | BlueJeans | GoToMeeting | Zoho Meeting
+      - key: title
+        value: Messenger|Telegram|Signal|WhatsApp|Rambox|Slack|Riot|Element|Discord|Nheko|NeoChat|Mattermost|Zulip|Rocket.Chat|Jitsi|Jami|Wire|Tox|Threema|Viber|Skype|Zoom|Microsoft Teams|Jitsi Meet|Cisco Webex|BlueJeans|GoToMeeting|Zoho Meeting
+    category: Communication
+
+

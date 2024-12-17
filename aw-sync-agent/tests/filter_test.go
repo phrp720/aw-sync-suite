@@ -24,6 +24,23 @@ func TestValidateFilters(t *testing.T) {
 			Enable: false,
 		},
 		{
+			FilterName: "CategoryInvalidFilter",
+			Target: []filter.Target{
+				{Key: "key3", Value: regexp.MustCompile("value3")},
+			},
+			Category: "Email",
+			Drop:     true,
+			Enable:   true,
+		},
+		{
+			FilterName: "CategoryValidFilter",
+			Target: []filter.Target{
+				{Key: "key3", Value: regexp.MustCompile("value3")},
+			},
+			Category: "Email",
+			Enable:   true,
+		},
+		{
 			FilterName: "InvalidFilter",
 			Target: []filter.Target{
 				{Key: "", Value: regexp.MustCompile("value2")},
@@ -33,8 +50,8 @@ func TestValidateFilters(t *testing.T) {
 	}
 
 	validFilters, total, invalid, disabled := filter.ValidateFilters(filters)
-	if len(validFilters) != 1 || total != 3 || invalid != 1 || disabled != 1 {
-		t.Errorf("expected 3 total filters,1 valid, 1 invalid, 1 disabled; got %d valid, %d total, %d invalid, %d disabled", len(validFilters), total, invalid, disabled)
+	if len(validFilters) != 2 || total != 5 || invalid != 2 || disabled != 1 {
+		t.Errorf("expected 4 total filters,1 valid, 1 invalid, 1 disabled; got %d valid, %d total, %d invalid, %d disabled", len(validFilters), total, invalid, disabled)
 	}
 }
 
@@ -206,6 +223,28 @@ func TestApplyWithDisabledFilter(t *testing.T) {
 	filters, _, _, _ = filter.ValidateFilters(filters)
 	result, dropped := filter.Apply(data, filters)
 	if dropped || result["key1"] != expected["key1"] {
+		t.Errorf("expected %v, got %v, dropped: %v", expected, result, dropped)
+	}
+}
+
+// TestApplyWithCategory tests the Apply function with a category filter
+func TestApplyWithCategory(t *testing.T) {
+	filters := []filter.Filter{
+		{
+			FilterName: "CategoryFilter",
+			Target: []filter.Target{
+				{Key: "key1", Value: regexp.MustCompile("value1")},
+			},
+			Category: "Email",
+			Enable:   true,
+		},
+	}
+
+	data := map[string]interface{}{"key1": "value1"}
+	expected := map[string]interface{}{"key1": "value1", "category": "Email"}
+
+	result, dropped := filter.Apply(data, filters)
+	if dropped || result["category"] != expected["category"] {
 		t.Errorf("expected %v, got %v, dropped: %v", expected, result, dropped)
 	}
 }

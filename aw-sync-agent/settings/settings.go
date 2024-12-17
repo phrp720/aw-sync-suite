@@ -27,6 +27,7 @@ const (
 	AsService           SettingsKey = "service"
 	Immediate           SettingsKey = "immediate"
 	IncludeHostname     SettingsKey = "includeHostname"
+	TestConfigs         SettingsKey = "testConfig"
 )
 const configFile = "aw-sync-agent.yaml"
 
@@ -40,6 +41,7 @@ type Setts struct {
 	Cron                string   `yaml:"cron"`
 	AsService           bool     `yaml:"-"`
 	Immediate           bool     `yaml:"-"`
+	TestConfigs         bool     `yaml:"-"` // TestConfigs is a flag to test the configurations/filters
 }
 
 // Configuration struct
@@ -121,6 +123,7 @@ func loadFlags(config *Configuration) {
 	flag.StringVar(&config.Settings.PrometheusSecretKey, string(PrometheusSecretKey), config.Settings.PrometheusSecretKey, "Prometheus Secret Key")
 	flag.BoolVar(&config.Settings.AsService, string(AsService), config.Settings.AsService, "Run as service")
 	flag.BoolVar(&config.Settings.Immediate, string(Immediate), config.Settings.Immediate, "Run a sync immediately")
+	flag.BoolVar(&config.Settings.TestConfigs, string(TestConfigs), config.Settings.TestConfigs, "Test the configurations/filters")
 
 	flag.Parse()
 	log.Print("Loading settings from flags.")

@@ -24,6 +24,7 @@
     - [Filter Example Scenario](#filter-examples)
       - [Plain Replace of Data](#plain-replace-of-data)
       - [Regex Replace of Data](#regex-replace-of-data)
+      - [Categorizing a Metric](#categorizing-a-metric)
       - [Drop of the Record](#drop-of-the-record)
 7. [Makefile Commands](#makefile-commands)
     - [General Commands](#general-commands)
@@ -35,6 +36,7 @@
 
 The **aw-sync-agent** is an open-source background service written in Go that  facilitates the synchronization of multiple ActivityWatch instances to a single Prometheus database, allowing for centralized monitoring and analysis of user activity data across various systems.
 
+For a brief overview of the agent's functionality, refer to the [Agent Documentation](https://github.com/phrp720/aw-sync-suite/wiki/Agent-as-a-Service)
 ## Key Features
 
 - **Data Synchronization**: Fetches user activity data from multiple ActivityWatch instances.
@@ -100,18 +102,18 @@ The table below details all configurable settings, their purpose, and their defa
 
 ### Configurable Settings
 
-| Flag              | Environment Variable | Config Key       | Description                                                                                                                    | Required | Default                  |
-|-------------------|----------------------|------------------|--------------------------------------------------------------------------------------------------------------------------------|----------|--------------------------|
-| -service          | -                    | -                | Runs the agent as a continuous service.                                                                                        | ❌        | -                        |
-| -immediate        | -                    | -                | Executes the synchronization process once immediately.                                                                         | ❌        | -                        |
-| -awUrl            | ACTIVITY_WATCH_URL   | awUrl            | URL of the ActivityWatch server to fetch data from.                                                                            | ✅        | http://localhost:5600    |
-| -prometheusUrl    | PROMETHEUS_URL       | prometheusUrl    | URL of the Prometheus server for sending metrics.                                                                              | ✅        | -                        |
-| -prometheusAuth   | PROMETHEUS_AUTH      | prometheusAuth   | Bearer token for Prometheus authentication (useful when secured via NGINX).                                                    | ❌        | -                        |
-| -cron             | CRON                 | cron             | Cron expression to schedule periodic syncs (e.g., */5 * * * * for every 5 minutes).                                            | ❌        | Every 5 minutes          |
-| -excludedWatchers | EXCLUDED_WATCHERS    | excludedWatchers | List of ActivityWatch watchers to exclude from syncing (use pipe `\|` for multiple entries in flags or environment variables). | ❌        | -                        |
-| -userId           | USER_ID              | userId           | Custom identifier for the user; defaults to the system hostname or a generated ID if unspecified.                              | ❌        | Hostname or Generated ID |
-| -includeHostname  | INCLUDE_HOSTNAME     | includeHostname  | When set to true, appends the hostname to the exported metrics for better identification in multi-user environments.           | ❌        | false                    |
-
+| Flag              | Environment Variable | Config Key       | Description                                                                                                                                                      | Required | Default                  |
+|-------------------|----------------------|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|--------------------------|
+| -service          | -                    | -                | Runs the agent as a continuous service.                                                                                                                          | ❌        | -                        |
+| -immediate        | -                    | -                | Executes the synchronization process once immediately.                                                                                                           | ❌        | -                        |
+| -testConfig       | -                    | -                | Prints the agent settings,filter(not raw) and categories results                                                                                                 | ❌        | -                        |
+| -awUrl            | ACTIVITY_WATCH_URL   | awUrl            | URL of the ActivityWatch server to fetch data from.                                                                                                              | ✅        | http://localhost:5600    |
+| -prometheusUrl    | PROMETHEUS_URL       | prometheusUrl    | URL of the Prometheus server for sending metrics.                                                                                                                | ✅        | -                        |
+| -prometheusAuth   | PROMETHEUS_AUTH      | prometheusAuth   | Bearer token for Prometheus authentication (useful when secured via NGINX).                                                                                      | ❌        | -                        |
+| -cron             | CRON                 | cron             | Cron expression to schedule periodic syncs .It conforms to the standard as described by the [Cron wikipedia page](https://en.wikipedia.org/wiki/Cron).           | ❌        | Every 5 minutes          |
+| -excludedWatchers | EXCLUDED_WATCHERS    | excludedWatchers | List of ActivityWatch watchers to exclude from syncing (use pipe `\|` for multiple entries in flags or environment variables).                                   | ❌        | -                        |
+| -userId           | USER_ID              | userId           | Custom identifier for the user; defaults to the system hostname or a generated ID if unspecified.                                                                | ❌        | Hostname or Generated ID |
+| -includeHostname  | INCLUDE_HOSTNAME     | includeHostname  | When set to true, appends the hostname to the exported metrics for better identification in multi-user environments.Otherwise the host value is set to `Unknown` | ❌        | false                    |
 #### Configuration Examples
 <ol>
 <li>
@@ -145,13 +147,14 @@ includeHostname: true
 
 ### Filter Overview
 
-The `aw-sync-agent.yaml` file supports three types of filtering, which can be applied individually or mixed for advanced filtering needs:
+The `aw-sync-agent.yaml` file supports three types of data filtering and one categorization filtering, which can be applied individually or mixed for advanced filtering needs:
 
 1. **Plain Replace**: Replaces field values with specified new values when target conditions are met.
 2. **Regex Replace**: Performs partial or full replacements using regex patterns for flexible matching and substitution.
 3. **Drop Record**: Removes records entirely when the specified target conditions are met.
+4. **Categorize Metric**: Assigns a category to the metric based on the target conditions.
 
-These filtering methods can be combined in a single filter, allowing you to replace some fields while dropping others based on the same or different conditions.
+These filtering methods can be combined in a single filter(except Categorize Metric), allowing you to replace some fields while dropping others based on the same or different conditions.
 ### Filter Format
 
 ```yaml
@@ -164,7 +167,7 @@ Filters:
 
     target:  ## Conditions that if match , it will apply the filtering for the specific record
       - key: <key_name>
-        value: <value_to_match> 
+        value: <value_to_match>
         .
         .
         .
@@ -215,9 +218,23 @@ Filters:
           .
         - key: <key_name>
           value: <value_to_match>
-    
+
       drop: "true" ## if true, the record will be dropped if the target conditions are met
-          
+  - Filter:
+      filter-name: "Categorize of a Metric" ## Name of the filter (optional)
+      watchers: ## watchers where the filter will be applied (optional)
+        - <watcher_name>
+
+      target: ## Data Records that if match , do the filtering (mandatory)
+
+        - key: <key_name>
+          value: <value_to_match>
+          .
+          .
+          .
+        - key: <key_name>
+          value: <value_to_match>
+      category: <category> ## Categorization of the metric
 
 ```
 
@@ -231,7 +248,7 @@ Filters:
 | **plain_replace** | Specifies key-value pairs for replacement. If the target key-values match, the specified keys in replace will be updated to the new values in the data record. Each entry includes: <br> - **key**: The field name to replace. <br> - **value**: The new value for the specified key.                                                                                                 |
 | **regex_replace** | Specifies key-value pairs for replacement using regex patterns. If the target key-values match, the specified keys in replace will be updated to the new values in the data record. Each entry includes: <br> - **key**: The field name to replace. <br> - **expression**: A regex pattern to match against the field's value. <br> - **value**: The new value for the specified key. |
 | **drop**          | If set to `true`, the record will be dropped if the target conditions are met.                                                                                                                                                                                                                                                                                                        |
-
+| **category**      | Specifies the category of the metric                                                                                                                                                                                                                                                                                                                                                  |
 ### Filter Examples
 
 #### Plain Replace of Data
@@ -239,19 +256,17 @@ Filters:
 This filter configuration performs a plain text replacement on data records.
 
 ```yaml
-Filters:
-
-  - Filter:
+- Filter:
     watchers:  ## watchers where the filter will be applied. If empty, the filter will apply to all watchers
       - "aw-watcher-window"
-
+    
     target: ## Data Records that if match , do the filtering for the specific record
       - key: "app" ## key to filter on
         value: "Google.*" ## value to filter on RegEX
-      
+    
       - key: "title" ## key to filter on     
         value: "mail.*"  ## value to filter on RegEX
-
+    
     plain_replace:  ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
       - key: "title"  ## key of record
         value: "Email" ## value to replace
@@ -261,7 +276,7 @@ Filters:
 **Explanation**:
 
 - **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
- 
+
 - **target**: Specifies matching conditions:
 
     - `app` must match `"Google.*"` (e.g., "Google Chrome").
@@ -274,28 +289,27 @@ Both conditions must match for the filter to apply.
     - Sets the title field to "Email".
 
 **Outcome**: For records in `"aw-watcher-window"` where `app` starts with "Google" and `title` starts with "mail," this filter changes the `title` field’s value to `"Email"`.
-### Regex Replace of Data
+#### Regex Replace of Data
 
 This filter configuration performs a partial regex replacement on data records.
 
 ```yaml
-Filters:
-  - Filter:
+- Filter:
     filter-name: "Partial Regex Replace of data" ## Name of the filter (optional)
     enable: "false" ## Enable the filter
     watchers: ## watchers where the filter will be applied (optional)
       - "aw-watcher-window"
-
+    
     target: ## Data Records that if match , do the filtering (mandatory)
-
+    
       - key: "app" ## key to filter on
         value: "Google.*" ## value to filter on REGEX
-
+    
       - key: "title" ## key to filter on
         value: "test.*" ## value to filter on REGEX
-
+    
     regex-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
-
+    
       - key: "title" ## key of record
         expression: "test.*" ## REGEX to replace
         value: "Email" ## value to replace
@@ -312,12 +326,47 @@ Filters:
 - **regex-replace**: When the `target` conditions are met, this section replaces values in the matching record using regex:
     - For the `title` field, if a part of `title` matches the regex `"test.*"`, it will be replaced with `"Email"`.
 
-### Drop of the Record
+#### Categorizing a Metric
 
 This filter configuration drops data records that match specified conditions.
 
 ```yaml
-Filters:
+- Filter:
+    filter-name: "Email Category" ## Name of the filter (optional)
+    watchers: ## watchers where the filter will be applied (optional)
+    - "aw-watcher-window"
+    
+    target: ## Data Records that if match , do the filtering (mandatory)
+    
+    - key: "app" ## key to filter on
+      value: "Google.*" ## value to filter on REGEX
+    
+    - key: "title" ## key to filter on
+      value: "Gmail|Yahoo|Hotmail|Thunderbird" ## value to filter on REGEX
+    category: "Email" ## Categorization of the metric
+```
+
+**Explanation**:
+
+- **filter-name**: Specifies a name for the filter.
+- **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
+- **target**: Specifies matching conditions:
+    - `app` must match `"Google.*"` (e.g., "Google Chrome").
+    - `title` must match `"Gmail|Yahoo|Hotmail|Thunderbird"` (e.g., "Gmail").
+- **category**: Adds to the metric the category `Email` so it can be categorized in the Grafana Dashboards.
+
+> [!Caution]
+> - If the category is not specified, the metric will be categorized as `Other` by default.
+> - The category field is case-sensitive.
+> - The category field is optional, but it is recommended to categorize the metrics for better visualization in Grafana Dashboards.
+> - The category field CANNOT be used in combination with other filters at the same time.
+
+#### Drop of the Record
+
+This filter configuration drops data records that match specified conditions.
+
+```yaml
+- Filter:
   filter-name: "Drop of the Record" ## Name of the filter (optional)
   watchers: ## watchers where the filter will be applied (optional)
     - "aw-watcher-window"
@@ -341,11 +390,13 @@ Filters:
     - `title` must match `"test.*"` (e.g., "test case").
 - **drop**: If set to `true`, the record will be dropped if the `target` conditions are met.
 
+
 > [!Note]
 > - Filters can be combined to perform multiple operations on the same data record(plain && regex replacement).
-> - Filters are applied in the order they are defined in the configuration file.
+> - Category Filters take precedence over other filters.
 > - Filters can be disabled by setting the `enabled` field to `false`.
 > - Filters that have the drop field set to `true` will not perform any replacement operations.
+> - Filters that have a category field must not perform any replacement operations otherwise it will be marked as invalid.
 
 
 ## Makefile Commands
@@ -374,9 +425,3 @@ Filters:
 | `service-status`  | Displays the status of the ActivityWatch Sync Agent service.                      |
 | `service-remove`  | Stops and removes the ActivityWatch Sync Agent service, and cleans service files. |
 | `service-restart` | Restarts the ActivityWatch Sync Agent service.                                    |
-
-Debug
-
-```bash
-./aw-sync-agent -prometheusUrl=http://localhost:9090 -userId=Phillip -awUrl=http://localhost:5600 -includeHostname=true -immediate
-```

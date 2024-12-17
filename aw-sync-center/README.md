@@ -1,8 +1,6 @@
 # Aw-Sync-Center
 
-
 <details>
-
 <summary>Table of Contents</summary>
 
 1. [About](#about)
@@ -10,65 +8,104 @@
     - [Prerequisites](#prerequisites)
     - [Setup Options](#setup-options)
     - [Installation and Running](#installation-and-running)
-3. [Prometheus with NGINX (Secure Setup)](#prometheus-with-nginx-secure-setup)
+3. [Secure Prometheus with NGINX](#secure-prometheus-with-nginx)
     - [Generating Bearer Tokens](#generating-bearer-tokens)
+4. [Folder Structure](#folder-structure)
 
 </details>
 
+
 ## About
 
-The **aw-sync-center** is a **centralized monitoring and reporting solution** using **Grafana and Prometheus**, designed to collect and visualize user activity data collected from ActivityWatch Sync Agents ([aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent)).
+**Aw-Sync-Center** is a centralized monitoring and visualization solution built with **Prometheus** and **Grafana**. It seamlessly collects and displays user activity data synchronized by ActivityWatch Sync Agents ([aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent)). The setup supports both secure and simple configurations to meet various deployment needs.
+
 
 
 ## Getting Started
 
 ### Prerequisites
-- **Docker** and **Docker Compose** installed on your machine.
+
+Before proceeding, ensure the following are installed on your system:
+
+- **Docker**
+- **Docker Compose**
 
 ### Setup Options
 
-This repository offers two Docker Compose configurations:
-- **docker-compose-with-nginx.yml**: Includes NGINX with Bearer token authentication for added Prometheus security.
-- **docker-compose-default.yml**: A simpler setup without authentication.
+The repository provides two Docker Compose configurations:
+
+1. **Secure Setup (Recommended):**  
+   Includes an NGINX reverse proxy to secure Prometheus endpoints using Bearer token authentication.  
+   File: `docker-compose-with-nginx.yml`
+
+2. **Default Setup:**  
+   A simple configuration without authentication.  
+   File: `docker-compose-default.yml`
+
 
 ### Installation and Running
 
-1. **Clone the Repository**:
+1. **Download the Aw-Sync-Center**:  
+   Download the `.zip` file from the [aw-sync-suite releases](https://github.com/phrp720/aw-sync-suite/releases) and extract it, or clone the repository:
    ```bash
    git clone https://github.com/phrp720/aw-sync-suite.git
    cd aw-sync-suite/aw-sync-center
+   ```
 
-2. **Choose a Docker Compose Configuration**:
-
-   - For the secure setup with Bearer token authentication:
-     - Read the [Generating Bearer Tokens](#generating-bearer-tokens) section to create tokens for authentication.
-     - Run the following command:
-    ```bash
-    docker-compose -f docker-compose-with-nginx.yml up -d
-    ```
-   - For the default setup without authentication:
-     ```bash
-     docker-compose -f docker-compose-default.yml up -d
+2. **Choose Your Setup**:
+    - **Default Setup (No Authentication):**
+      ```bash
+      docker-compose -f docker-compose-default.yml up -d
       ```
+
+    - **Secure Setup (With NGINX Authentication):**
+        - First, generate Bearer tokens (refer to [Generating Bearer Tokens](#generating-bearer-tokens)).
+        - Then run:
+          ```bash
+          docker-compose -f docker-compose-with-nginx.yml up -d
+          ```
+
 3. **Access Grafana**:
+    - Open [http://localhost:3000](http://localhost:3000) in your browser.
+    - Default credentials:
+        - Username: `admin`
+        - Password: `admin`
 
-   - Open a browser and go to http://localhost:3000 to access Grafana.
-     - Default login credentials are admin:admin .
-   
-## Prometheus with NGINX (Secure Setup)
+4. **Import Dashboards**:
+    - Navigate to the Grafana UI and upload dashboards from the `grafana/dashboards` directory.
+    - The dashboards are pre-configured for user activity data.
 
-The **docker-compose-with-nginx.yml** configuration uses an **NGINX reverse proxy** to protect Prometheus endpoints (`/api/v1/write` and `/-/healthy`) with Bearer token authentication.
+
+## Secure Prometheus with NGINX
+
+The secure configuration includes an NGINX reverse proxy to protect critical Prometheus endpoints (`/api/v1/write` and `/-/healthy`) using Bearer token authentication. Only authorized clients with valid tokens can access these endpoints.
 
 ### Generating Bearer Tokens
 
-To generate tokens for authentication, use the `createBearerToken.py` script. This will create a `tokens.conf` file in the NGINX directory with the specified tokens, allowing secure access to Prometheus.
+To create Bearer tokens:
 
-1. Run the following command:
+1. Run the token generation script:
    ```bash
    python3 createBearerToken.py
    ```
-2. **Follow the prompts** to specify the number of tokens. The script will output a new `tokens.conf` file(if not exists) within the nginx directory.
-3. Using the Generated Tokens
-   - Requests sent to Prometheus endpoints through NGINX must include a valid token.
-   - Each token will be checked against `tokens.conf` for authentication.
+
+2. Follow the prompts to specify how many tokens you need.
+    - The script will generate or update a `tokens.conf` file located in the `nginx` directory.
+
+3. Include the token in requests to authenticate with Prometheus:
+   ```bash
+   curl -H "Authorization: Bearer <your-token>" http://localhost:8080/api/v1/write
+   ```
+
+
+
+## Folder Structure
+
+| Directory    | Description                                                        |
+|--------------|--------------------------------------------------------------------|
+| `grafana`    | Contains pre-configured Grafana dashboards and data sources.       |
+| `prometheus` | Holds Prometheus configuration files.                              |
+| `nginx`      | NGINX configuration for secure setups, including token management. |
+
+
 

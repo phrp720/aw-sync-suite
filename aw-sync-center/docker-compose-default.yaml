@@ -11,6 +11,7 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--web.enable-remote-write-receiver'
+      - '--storage.tsdb.retention.time=1y'
     volumes:
       - ./prometheus:/etc/prometheus
       - prom_data:/prometheus

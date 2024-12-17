@@ -52,3 +52,16 @@ Filters:
       - key: "title" ## key to filter on
         value: "test.*" ## value to filter on REGEX
     drop: "true" ## Drop the record if matched
+  - Filter:
+    filter-name: "Email Category" ## Name of the filter (optional)
+    watchers: ## watchers where the filter will be applied (optional)
+      - "aw-watcher-window"
+
+    target: ## Data Records that if match , do the filtering (mandatory)
+
+      - key: "app" ## key to filter on
+        value: "Google.*" ## value to filter on REGEX
+
+      - key: "title" ## key to filter on
+        value: "Gmail|Yahoo|Hotmail|Thunderbird" ## value to filter on REGEX
+    category: "Email" ## Categorization of the metric
