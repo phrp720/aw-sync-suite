@@ -1,11 +1,13 @@
 services:
   aw-sync-agent:
-    image: phrp5/aw-sync-agent
+    image: phrp5/aw-sync-agent:v0.1.0
     container_name: aw-sync-agent
     restart: unless-stopped
+    network_mode: "host"
     environment:
         - ACTIVITY_WATCH_URL=http://localhost:5600
         - PROMETHEUS_URL=http://localhost:9090
-        - EXCLUDED_WATCHERS=aw-watcher-window #Pipe seperated watchers to exclude
+        - EXCLUDED_WATCHERS=aw-watcher-afk #Pipe seperated watchers to exclude
         - USER_ID=DemoUser
-        - CRON=0 0 * * * #Cron expression to run the sync agent
+        - CRON=* * * * * #Cron expression to run the sync agent
+        - PROMETHEUS_AUTH=

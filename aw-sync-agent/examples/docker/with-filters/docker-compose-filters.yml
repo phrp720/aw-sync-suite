@@ -3,6 +3,7 @@ services:
     image: phrp5/aw-sync-agent
     container_name: aw-sync-agent
     restart: unless-stopped
+    network_mode: "host"
     volumes:
       - ./aw-sync-agent.yaml:/opt/aw-sync-agent/aw-sync-agent.yaml
     environment:
