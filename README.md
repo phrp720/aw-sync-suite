@@ -39,6 +39,7 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 5. [Architecture](#-architecture)
 6. [Requirements](#-requirements)
 7. [Contributing](#-contributing)
+8. [License](#-license)
 </details>
 
 ## 🔍 About
@@ -115,3 +116,8 @@ This setup uses a Nginx reverse proxy to secure the Prometheus endpoints.
 ## 👥 Contributing
 Contributions are welcomed! If you have ideas, improvements, or bug fixes, feel free to open an issue or submit a pull request.
 
+## 📝 License
+
+This project is licensed under the **MIT license**.
+
+See [LICENSE](https://github.com/phrp720/aw-sync-suite/blob/master/LICENSE) for more information.
