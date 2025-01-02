@@ -898,10 +898,14 @@
             "sum"
           ],
           "fields": "",
-          "values": false
+          "limit": 5000,
+          "values": true
         },
         "showUnfilled": false,
         "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        },
         "valueMode": "color"
       },
       "pluginVersion": "11.2.0",
@@ -938,6 +942,26 @@
         {
           "id": "merge",
           "options": {}
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
+          }
         }
       ],
       "type": "bargauge"
@@ -982,18 +1006,22 @@
       "id": 23,
       "options": {
         "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
+        "minVizWidth": 142,
+        "orientation": "vertical",
         "reduceOptions": {
           "calcs": [
             "sum"
           ],
           "fields": "",
-          "values": false
+          "limit": 800,
+          "values": true
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": true,
-        "sizing": "auto"
+        "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        }
       },
       "pluginVersion": "11.2.0",
       "targets": [
@@ -1028,6 +1056,26 @@
         {
           "id": "merge",
           "options": {}
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
+          }
         }
       ],
       "type": "gauge"
@@ -1253,14 +1301,16 @@
         "namePlacement": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": [],
           "fields": "",
-          "values": false
+          "limit": 5000,
+          "values": true
         },
         "showUnfilled": true,
         "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        },
         "valueMode": "color"
       },
       "pluginVersion": "11.2.0",
@@ -1319,6 +1369,26 @@
               ],
               "pattern": "^(?!Value$).*"
             }
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
           }
         }
       ],
@@ -1385,10 +1455,14 @@
             "sum"
           ],
           "fields": "",
-          "values": false
+          "limit": 500,
+          "values": true
         },
         "showUnfilled": true,
         "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        },
         "valueMode": "color"
       },
       "pluginVersion": "11.2.0",
@@ -1435,6 +1509,26 @@
                 "/home/phrp/SquareDasher/resenty/apps/resenty/app/Http/Controllers/DeleteSessionsController.php"
               ]
             }
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
           }
         }
       ],
@@ -1488,10 +1582,14 @@
             "sum"
           ],
           "fields": "",
-          "values": false
+          "limit": 5000,
+          "values": true
         },
         "showUnfilled": true,
         "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        },
         "valueMode": "color"
       },
       "pluginVersion": "11.2.0",
@@ -1537,6 +1635,26 @@
                 "/home/phrp/SquareDasher/resenty"
               ]
             }
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
           }
         }
       ],
@@ -1788,14 +1906,15 @@
         "namePlacement": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": [],
           "fields": "",
-          "values": false
+          "values": true
         },
         "showUnfilled": false,
         "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        },
         "valueMode": "color"
       },
       "pluginVersion": "11.2.0",
@@ -1832,6 +1951,26 @@
         {
           "id": "merge",
           "options": {}
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
+          }
         }
       ],
       "type": "bargauge"
@@ -1857,7 +1996,9 @@
             "lineWidth": 2,
             "spanNulls": false
           },
+          "decimals": 1,
           "displayName": "Categories",
+          "fieldMinMax": false,
           "mappings": [
             {
               "options": {
@@ -1880,6 +2021,10 @@
                 "Image": {
                   "color": "dark-purple",
                   "index": 6
+                },
+                "Other": {
+                  "color": "super-light-blue",
+                  "index": 9
                 },
                 "Programming": {
                   "color": "semi-dark-red",
@@ -1932,7 +2077,7 @@
           "placement": "bottom",
           "showLegend": true
         },
-        "mergeValues": true,
+        "mergeValues": false,
         "rowHeight": 0.9,
         "showValue": "always",
         "tooltip": {
@@ -2208,7 +2353,7 @@
     ]
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-30d",
     "to": "now"
   },
   "timepicker": {
@@ -2217,6 +2362,6 @@
   "timezone": "browser",
   "title": "ActivityWatch Dashboard",
   "uid": "ae587m3gg5j40b",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }
