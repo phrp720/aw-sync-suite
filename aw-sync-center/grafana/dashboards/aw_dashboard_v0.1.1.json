@@ -234,7 +234,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Active users the past 1 year",
+      "description": "Active users in the selected time range",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -248,7 +248,7 @@
             "filterable": true,
             "inspect": false
           },
-          "displayName": "Users(Active in the Past Year)",
+          "displayName": "Active Users",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -296,9 +296,9 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
+          "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum_over_time(aw_watcher_window[1y])",
+          "expr": "sum_over_time(aw_watcher_window[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -344,7 +344,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Active hosts the past 1 year",
+      "description": "Active hosts in the selected time range",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -358,7 +358,7 @@
             "filterable": true,
             "inspect": false
           },
-          "displayName": "Hosts(Active in the Past Year)",
+          "displayName": "Active Hosts",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -406,9 +406,9 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
+          "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum_over_time(aw_watcher_window[180d])",
+          "expr": "sum_over_time(aw_watcher_window[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -2270,7 +2270,7 @@
       "type": "state-timeline"
     }
   ],
-  "refresh": "5m",
+  "refresh": "",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
@@ -2353,8 +2353,8 @@
     ]
   },
   "time": {
-    "from": "now-30d",
-    "to": "now"
+    "from": "2024-10-27T23:00:00.000Z",
+    "to": "2024-11-02T22:59:59.000Z"
   },
   "timepicker": {
     "hidden": false
@@ -2362,6 +2362,6 @@
   "timezone": "browser",
   "title": "ActivityWatch Dashboard",
   "uid": "ae587m3gg5j40b",
-  "version": 4,
+  "version": 6,
   "weekStart": ""
 }
