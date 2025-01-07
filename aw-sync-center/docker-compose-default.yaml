@@ -17,9 +17,16 @@ services:
       - prom_data:/prometheus
     ports:
       - "9090:9090"
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 8g  # Set the maximum RAM (e.g., 4GB)
+#        reservations:
+#          memory: 4g  # Optional: Reserve minimum RAM (e.g., 2GB)
   grafana:
     image: grafana/grafana
     container_name: grafana
+
     ports:
       - "3000:3000"
     restart: unless-stopped
@@ -30,6 +37,11 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
-
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 8g  # Set the maximum RAM (e.g., 4GB)
+#        reservations:
+#          memory: 4g  # Optional: Reserve minimum RAM (e.g., 2GB)
 volumes:
   prom_data:

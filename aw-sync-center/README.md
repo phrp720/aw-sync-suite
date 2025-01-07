@@ -75,6 +75,8 @@ The repository provides two Docker Compose configurations:
     - Navigate to the Grafana UI and upload dashboards from the `grafana/dashboards` directory.
     - The dashboards are pre-configured for user activity data.
 
+> [!Warning]
+>  Querying an entire year or upper in Grafana is a very heavy operation and will likely take some time to load.
 
 ## Secure Prometheus with NGINX
 

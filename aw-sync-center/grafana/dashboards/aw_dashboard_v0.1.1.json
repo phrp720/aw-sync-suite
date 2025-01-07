@@ -234,7 +234,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Active users the past 1 year",
+      "description": "Active users in the selected time range",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -248,7 +248,7 @@
             "filterable": true,
             "inspect": false
           },
-          "displayName": "Users(Active in the Past Year)",
+          "displayName": "Active Users",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -298,7 +298,7 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum_over_time(aw_watcher_window[1y])",
+          "expr": "sum_over_time(aw_watcher_window[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -344,7 +344,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Active hosts the past 1 year",
+      "description": "Active hosts in the selected time range",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -358,7 +358,7 @@
             "filterable": true,
             "inspect": false
           },
-          "displayName": "Hosts(Active in the Past Year)",
+          "displayName": "Active Hosts",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -406,9 +406,9 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
+          "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum_over_time(aw_watcher_window[1y])",
+          "expr": "sum_over_time(aw_watcher_window[$__interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -888,7 +888,7 @@
       "id": 24,
       "options": {
         "displayMode": "gradient",
-        "maxVizHeight": 300,
+        "maxVizHeight": 47,
         "minVizHeight": 41,
         "minVizWidth": 8,
         "namePlacement": "auto",
@@ -898,10 +898,14 @@
             "sum"
           ],
           "fields": "",
-          "values": false
+          "limit": 5000,
+          "values": true
         },
         "showUnfilled": false,
         "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        },
         "valueMode": "color"
       },
       "pluginVersion": "11.2.0",
@@ -938,6 +942,26 @@
         {
           "id": "merge",
           "options": {}
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
+          }
         }
       ],
       "type": "bargauge"
@@ -982,18 +1006,22 @@
       "id": 23,
       "options": {
         "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
+        "minVizWidth": 142,
+        "orientation": "vertical",
         "reduceOptions": {
           "calcs": [
             "sum"
           ],
           "fields": "",
-          "values": false
+          "limit": 800,
+          "values": true
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": true,
-        "sizing": "auto"
+        "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        }
       },
       "pluginVersion": "11.2.0",
       "targets": [
@@ -1028,6 +1056,26 @@
         {
           "id": "merge",
           "options": {}
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
+          }
         }
       ],
       "type": "gauge"
@@ -1070,8 +1118,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1089,7 +1136,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 245
+                "value": 280
               }
             ]
           }
@@ -1225,8 +1272,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1247,20 +1293,22 @@
       "id": 29,
       "options": {
         "displayMode": "gradient",
-        "maxVizHeight": 300,
+        "maxVizHeight": 50,
         "minVizHeight": 16,
         "minVizWidth": 8,
         "namePlacement": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": [],
           "fields": "",
-          "values": false
+          "limit": 5000,
+          "values": true
         },
         "showUnfilled": true,
-        "sizing": "auto",
+        "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        },
         "valueMode": "color"
       },
       "pluginVersion": "11.2.0",
@@ -1302,12 +1350,43 @@
           "options": {
             "include": {
               "names": [
-                "Time",
-                "http://localhost:5600/#/settings",
-                "https://chromewebstore.google.com/detail/activitywatch-web-watcher/nglaklhklhcoonedhgnpgddginnjdadi",
-                "https://github.com/phrp720/aw-sync-suite"
-              ]
+                "https://github.com/phrp720/aw-sync-suite?tab=readme-ov-file",
+                "chrome://newtab/",
+                "http://localhost:3000/login",
+                "http://localhost:3000/",
+                "http://localhost:3000/dashboards",
+                "http://localhost:3000/dashboard/import",
+                "http://localhost:3000/connections/datasources/new",
+                "http://localhost:3000/connections/datasources/edit/ee8q0yx56fu2oe",
+                "http://localhost:3000/d/ae587m3gg5j40b/activitywatch-dashboard?orgId=1&refresh=5m",
+                "http://localhost:3000/d/ae587m3gg5j40b/activitywatch-dashboard?orgId=1&refresh=5m&from=now-30d&to=now",
+                "http://localhost:3000/d/ae587m3gg5j40b/activitywatch-dashboard?orgId=1&refresh=5m&from=now-30d&to=now&editview=settings",
+                "http://localhost:3000/d/ae587m3gg5j40b/activitywatch-dashboard?orgId=1&refresh=5m&from=now-30d&to=now&editview=templating",
+                "http://localhost:3000/?orgId=1",
+                "http://localhost:3000/explore?schemaVersion=1&panes=%7B%22enl%22%3A%7B%22datasource%22%3A%22ee8q0yx56fu2oe%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22expr%22%3A%22%22%2C%22range%22%3Atrue%2C%22instant%22%3Atrue%2C%22datasource%22%3A%7B%22type%22%3A%22prometheus%22%2C%22uid%22%3A%22ee8q0yx56fu2oe%22%7D%7D%5D%2C%22range%22%3A%7B%22from%22%3A%22now-1h%22%2C%22to%22%3A%22now%22%7D%7D%7D&orgId=1"
+              ],
+              "pattern": "^(?!Value$).*"
             }
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
           }
         }
       ],
@@ -1342,8 +1421,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1364,7 +1442,7 @@
       "id": 26,
       "options": {
         "displayMode": "gradient",
-        "maxVizHeight": 300,
+        "maxVizHeight": 50,
         "minVizHeight": 16,
         "minVizWidth": 8,
         "namePlacement": "auto",
@@ -1374,10 +1452,14 @@
             "sum"
           ],
           "fields": "",
-          "values": false
+          "limit": 500,
+          "values": true
         },
         "showUnfilled": true,
-        "sizing": "auto",
+        "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        },
         "valueMode": "color"
       },
       "pluginVersion": "11.2.0",
@@ -1425,6 +1507,26 @@
               ]
             }
           }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
+          }
         }
       ],
       "type": "bargauge"
@@ -1445,8 +1547,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1467,20 +1568,24 @@
       "id": 30,
       "options": {
         "displayMode": "gradient",
-        "maxVizHeight": 300,
+        "maxVizHeight": 31,
         "minVizHeight": 16,
         "minVizWidth": 8,
-        "namePlacement": "auto",
+        "namePlacement": "top",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "sum"
           ],
           "fields": "",
-          "values": false
+          "limit": 5000,
+          "values": true
         },
         "showUnfilled": true,
-        "sizing": "auto",
+        "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        },
         "valueMode": "color"
       },
       "pluginVersion": "11.2.0",
@@ -1526,6 +1631,26 @@
                 "/home/phrp/SquareDasher/resenty"
               ]
             }
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
           }
         }
       ],
@@ -1749,8 +1874,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1771,20 +1895,21 @@
       "id": 36,
       "options": {
         "displayMode": "gradient",
-        "maxVizHeight": 300,
+        "maxVizHeight": 47,
         "minVizHeight": 41,
         "minVizWidth": 8,
         "namePlacement": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": [],
           "fields": "",
-          "values": false
+          "values": true
         },
         "showUnfilled": false,
         "sizing": "manual",
+        "text": {
+          "titleSize": 12
+        },
         "valueMode": "color"
       },
       "pluginVersion": "11.2.0",
@@ -1821,6 +1946,26 @@
         {
           "id": "merge",
           "options": {}
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "sum"
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Total"
+              }
+            ]
+          }
         }
       ],
       "type": "bargauge"
@@ -1846,7 +1991,9 @@
             "lineWidth": 2,
             "spanNulls": false
           },
+          "decimals": 1,
           "displayName": "Categories",
+          "fieldMinMax": false,
           "mappings": [
             {
               "options": {
@@ -1869,6 +2016,10 @@
                 "Image": {
                   "color": "dark-purple",
                   "index": 6
+                },
+                "Other": {
+                  "color": "super-light-blue",
+                  "index": 9
                 },
                 "Programming": {
                   "color": "semi-dark-red",
@@ -1894,8 +2045,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1921,7 +2071,7 @@
           "placement": "bottom",
           "showLegend": true
         },
-        "mergeValues": true,
+        "mergeValues": false,
         "rowHeight": 0.9,
         "showValue": "always",
         "tooltip": {
@@ -2032,8 +2182,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2114,7 +2263,7 @@
       "type": "state-timeline"
     }
   ],
-  "refresh": "5m",
+  "refresh": "",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
@@ -2138,7 +2287,7 @@
           "query": "label_values(aw_watcher_window,user)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
@@ -2163,7 +2312,7 @@
           "query": "label_values(aw_watcher_window{user=~\"$User\"},host)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
@@ -2188,7 +2337,7 @@
           "query": "label_values(aw_watcher_window,category)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
@@ -2197,8 +2346,8 @@
     ]
   },
   "time": {
-    "from": "now-2d",
-    "to": "now"
+    "from": "2024-10-27T23:00:00.000Z",
+    "to": "2024-11-02T22:59:59.000Z"
   },
   "timepicker": {
     "hidden": false
@@ -2206,6 +2355,6 @@
   "timezone": "browser",
   "title": "ActivityWatch Dashboard",
   "uid": "ae587m3gg5j40b",
-  "version": 68,
+  "version": 4,
   "weekStart": ""
 }

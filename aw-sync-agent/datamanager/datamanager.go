@@ -17,6 +17,9 @@ import (
 
 // ScrapeData scrapes the data from the local ActivityWatch instance via the aw Client
 func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEventsMap, error) {
+	if !util.ActivityWatchHealthCheck(awUrl) {
+		return nil, errors.New("activityWatch is not reachable. Data will be pushed at the next synchronization")
+	}
 	log.Print("Fetching buckets  ...\n")
 	buckets, err := aw.GetBuckets(awUrl)
 	if err != nil {
@@ -28,6 +31,9 @@ func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEvents
 	util.RemoveExcludedWatchers(buckets, excludedWatchers)
 	eventsMap := make(aw.WatcherNameToEventsMap)
 	for name, bucket := range buckets {
+		if !util.ActivityWatchHealthCheck(awUrl) {
+			return nil, errors.New("activityWatch is not reachable. Data will be pushed at the next synchronization")
+		}
 		log.Print("Fetching events from ", bucket.Client, " ...")
 		startPoint := checkpoint.Read(bucket.Client)
 
@@ -82,41 +88,22 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 			continue
 		}
 		var labels []prometheus.Label
-		labels = append(labels, prometheus.Label{
-			Name:  "__name__",
-			Value: strings.ReplaceAll(watcher, "-", "_"),
-		})
-		// Unique ID for each event to avoid duplicate errors of timestamp seconds
-		labels = append(labels, prometheus.Label{
-			Name:  "unique_id",
-			Value: util.GetRandomUUID(),
-		})
-		//Event ID created from activityWatch
-		labels = append(labels, prometheus.Label{
-			Name:  "aw_id",
-			Value: strconv.Itoa(event.ID),
-		})
-		labels = append(labels, prometheus.Label{
-			Name:  "user",
-			Value: userID,
-		})
-		var hostValue string
 
+		util.AddMetricLabel(labels, "__name__", strings.ReplaceAll(watcher, "-", "_")) //Watcher name
+		util.AddMetricLabel(labels, "unique_id", util.GetRandomUUID())                 // Unique ID for each event to avoid duplicate errors of timestamp seconds
+		util.AddMetricLabel(labels, "aw_id", strconv.Itoa(event.ID))                   //Event ID created from activityWatch
+		util.AddMetricLabel(labels, "user", userID)
+
+		hostValue := "Unknown"
 		if includeHostName {
 			hostValue = util.GetHostname()
-		} else {
-			hostValue = "Unknown"
 		}
-		labels = append(labels, prometheus.Label{
-			Name:  "host",
-			Value: hostValue,
-		})
+
+		util.AddMetricLabel(labels, "host", hostValue)
+
 		// Add the data as labels
 		for key, value := range event.Data {
-			labels = append(labels, prometheus.Label{
-				Name:  key,
-				Value: fmt.Sprintf("%v", value),
-			})
+			util.AddMetricLabel(labels, key, fmt.Sprintf("%v", value))
 		}
 		sample := prometheus.Sample{
 			Value: event.Duration,
@@ -142,7 +129,7 @@ func PushData(client *prometheus.Client, prometheusUrl string, prometheusSecretK
 
 	for i := 0; i < len(timeseries); i += chunkSize {
 		if !util.PromHealthCheck(prometheusUrl, prometheusSecretKey) {
-			return errors.New("prometheus is not reachable or Internet connection is lost. Data will be pushed when health is recovered")
+			return errors.New("prometheus is not reachable or Internet connection is lost. Data will be pushed at the next synchronization")
 		}
 		end := i + chunkSize
 		if end > len(timeseries) {

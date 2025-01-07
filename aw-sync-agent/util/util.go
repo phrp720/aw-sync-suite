@@ -1,9 +1,9 @@
 package util
 
 import (
-	"aw-sync-agent/errors"
+	internalErrors "aw-sync-agent/errors"
+	"errors"
 	"github.com/google/uuid"
-
 	"github.com/robfig/cron"
 	"io"
 	"log"
@@ -16,7 +16,7 @@ import (
 // ValidateCronExpr validates the cron expression
 func ValidateCronExpr(cronExpr string) string {
 	_, err := cron.ParseStandard(cronExpr)
-	errors.HandleFatal("Invalid cron expression: ", err)
+	internalErrors.HandleFatal("Invalid cron expression: ", err)
 	return cronExpr
 }
 
@@ -48,7 +48,7 @@ func CopyBinary(appPath string, binaryName string) {
 	defer src.Close()
 
 	dst, err := os.Create(appPath)
-	errors.HandleFatal("Failed to create destination binary: ", err)
+	internalErrors.HandleFatal("Failed to create destination binary: ", err)
 	defer dst.Close()
 
 	if _, err := io.Copy(dst, src); err != nil {
@@ -112,4 +112,16 @@ func Contains(slice []string, item string) bool {
 		}
 	}
 	return false
+}
+
+// EndpointsHealthCheck checks the health of the ActivityWatch and Prometheus endpoints
+func EndpointsHealthCheck(activityWatchUrl string, prometheusUrl string, secretKey string) (bool, error) {
+
+	if !PromHealthCheck(prometheusUrl, secretKey) {
+		return false, errors.New("Prometheus is not reachable or Internet connection is lost. Please fix the issue before the next synchronization.")
+	}
+	if !ActivityWatchHealthCheck(activityWatchUrl) {
+		return false, errors.New("ActivityWatch is not reachable. Please fix the issue before the next synchronization.")
+	}
+	return true, nil
 }

@@ -195,9 +195,12 @@ func PrintFilters(totalFilters, invalidFilters, disabledFilters int) {
 	}
 	maxKeyLength := 0
 	maxValueLength := 0
-	for key := range filtersMap {
+	for key, value := range filtersMap {
 		if len(key) > maxKeyLength {
 			maxKeyLength = len(key)
+		}
+		if len(fmt.Sprintf("%d", value)) > maxValueLength {
+			maxValueLength = len(fmt.Sprintf("%d", value))
 		}
 	}
 

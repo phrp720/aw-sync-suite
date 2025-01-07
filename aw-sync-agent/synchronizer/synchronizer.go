@@ -2,7 +2,7 @@ package synchronizer
 
 import (
 	"aw-sync-agent/datamanager"
-	"aw-sync-agent/errors"
+	internalErrors "aw-sync-agent/errors"
 	"aw-sync-agent/prometheus"
 	"aw-sync-agent/settings"
 	"aw-sync-agent/util"
@@ -47,10 +47,12 @@ func Start(Config settings.Configuration) error {
 func SyncRoutine(Config settings.Configuration) func() {
 	return func() {
 		if !util.PromHealthCheck(Config.Settings.PrometheusUrl, Config.Settings.PrometheusSecretKey) {
-			log.Print("Something went wrong with Prometheus or Internet connection is lost!")
+			log.Print("Something went wrong with Prometheus or Internet connection is lost! Data will be pushed at the next synchronization.")
+		} else if !util.ActivityWatchHealthCheck(Config.Settings.AWUrl) {
+			log.Print("ActivityWatch is not reachable! Data will be pushed at the next synchronization.")
 		} else {
 			err := Start(Config)
-			errors.HandleNormal("", err)
+			internalErrors.HandleNormal("Error:", err)
 		}
 
 	}

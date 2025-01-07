@@ -26,3 +26,6 @@ pkg/
 *.swn
 *.sublime-project
 *.sublime-workspace
+
+## aw-sync-agent files
+checkpoint.json
