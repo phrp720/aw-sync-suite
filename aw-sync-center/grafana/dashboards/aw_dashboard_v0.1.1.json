@@ -888,7 +888,7 @@
       "id": 24,
       "options": {
         "displayMode": "gradient",
-        "maxVizHeight": 300,
+        "maxVizHeight": 47,
         "minVizHeight": 41,
         "minVizWidth": 8,
         "namePlacement": "auto",
@@ -1118,8 +1118,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1273,8 +1272,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1423,8 +1421,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1550,8 +1547,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1572,7 +1568,7 @@
       "id": 30,
       "options": {
         "displayMode": "gradient",
-        "maxVizHeight": 50,
+        "maxVizHeight": 31,
         "minVizHeight": 16,
         "minVizWidth": 8,
         "namePlacement": "top",
@@ -1878,8 +1874,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1900,7 +1895,7 @@
       "id": 36,
       "options": {
         "displayMode": "gradient",
-        "maxVizHeight": 300,
+        "maxVizHeight": 47,
         "minVizHeight": 41,
         "minVizWidth": 8,
         "namePlacement": "auto",
@@ -2050,8 +2045,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2188,8 +2182,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2294,7 +2287,7 @@
           "query": "label_values(aw_watcher_window,user)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
@@ -2319,7 +2312,7 @@
           "query": "label_values(aw_watcher_window{user=~\"$User\"},host)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
@@ -2344,7 +2337,7 @@
           "query": "label_values(aw_watcher_window,category)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
@@ -2362,6 +2355,6 @@
   "timezone": "browser",
   "title": "ActivityWatch Dashboard",
   "uid": "ae587m3gg5j40b",
-  "version": 6,
+  "version": 4,
   "weekStart": ""
 }
