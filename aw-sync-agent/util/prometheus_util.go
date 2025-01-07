@@ -1,7 +1,8 @@
 package util
 
 import (
-	"aw-sync-agent/errors"
+	internalErrors "aw-sync-agent/errors"
+	"aw-sync-agent/prometheus"
 	"fmt"
 	"log"
 	"net/http"
@@ -35,7 +36,7 @@ func MakeRequest(url string, secretKey string) (*http.Response, error) {
 	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		errors.HandleNormal("Failed to create Prometheus health-check request: ", err)
+		internalErrors.HandleNormal("Failed to create Prometheus health-check request: ", err)
 	}
 
 	// Set Bearer if exists
@@ -50,4 +51,13 @@ func MakeRequest(url string, secretKey string) (*http.Response, error) {
 	}
 
 	return resp, nil
+}
+
+func AddMetricLabel(labels []prometheus.Label, key string, value string) {
+	if value != "" {
+		labels = append(labels, prometheus.Label{
+			Name:  key,
+			Value: value,
+		})
+	}
 }

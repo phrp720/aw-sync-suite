@@ -1,7 +1,7 @@
 package service
 
 import (
-	"aw-sync-agent/errors"
+	internalErrors "aw-sync-agent/errors"
 	"aw-sync-agent/settings"
 	"aw-sync-agent/util"
 	"github.com/phrp720/go-service-builder/systemd"
@@ -20,7 +20,7 @@ const (
 func CreateLinuxService(config settings.Configuration) {
 	// Get the current user
 	currentUser, err := user.Current()
-	errors.HandleFatal("Failed to get current user: ", err)
+	internalErrors.HandleFatal("Failed to get current user: ", err)
 
 	// Define paths dynamically based on the user's home directory
 	homeDir := currentUser.HomeDir
@@ -33,7 +33,7 @@ func CreateLinuxService(config settings.Configuration) {
 
 	// Create the config file that will be used for the service (Based on the settings) and loads it to the user's config path
 	err = settings.CreateConfigFile(config, configPath)
-	errors.HandleFatal("Failed to create config file: ", err)
+	internalErrors.HandleFatal("Failed to create config file: ", err)
 
 	// Get the working directory
 	workingDirectory := filepath.Dir(appPath)
@@ -55,10 +55,10 @@ func CreateLinuxService(config settings.Configuration) {
 
 	// Generate, enable, and start the service
 	err = systemd.CreateService(service, serviceFilePath)
-	errors.HandleFatal("Failed to create service: ", err)
+	internalErrors.HandleFatal("Failed to create service: ", err)
 
 	err = systemd.StartService(LinuxExecutable, false)
-	errors.HandleFatal("Failed to start service: ", err)
+	internalErrors.HandleFatal("Failed to start service: ", err)
 
 	log.Print("Running as a Linux service...")
 }

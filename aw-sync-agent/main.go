@@ -2,6 +2,7 @@ package main
 
 import (
 	"aw-sync-agent/cron"
+	"aw-sync-agent/errors"
 	"aw-sync-agent/filter"
 	"aw-sync-agent/service"
 	"aw-sync-agent/settings"
@@ -65,7 +66,13 @@ func main() {
 	cron.Add(c, scheduler, synchronizer.SyncRoutine(*Configs))
 	cron.Start(c)
 	defer cron.Stop(c)
-	log.Print("Agent Started Successfully")
+
+	isHealthy, err := util.EndpointsHealthCheck(Configs.Settings.AWUrl, Configs.Settings.PrometheusUrl, Configs.Settings.PrometheusSecretKey)
+
+	if !isHealthy {
+		errors.HandleNormal("Warning:", err)
+	}
+	log.Print("Agent Started Successfully!")
 
 	// Keep the main program running
 	select {}
