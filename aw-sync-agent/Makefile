@@ -64,7 +64,7 @@ service-install: build
 	@go run main.go -service
 
 
-### Service commands for linux
+### Service commands
 
 service-start:
 	@echo "Starting ActivityWatch Sync Agent service..."
