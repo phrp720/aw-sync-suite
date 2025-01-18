@@ -12,7 +12,6 @@ import (
 	"log"
 	"sort"
 	"strconv"
-	"strings"
 )
 
 // ScrapeData scrapes the data from the local ActivityWatch instance via the aw Client
@@ -89,21 +88,21 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 		}
 		var labels []prometheus.Label
 
-		util.AddMetricLabel(labels, "__name__", strings.ReplaceAll(watcher, "-", "_")) //Watcher name
-		util.AddMetricLabel(labels, "unique_id", util.GetRandomUUID())                 // Unique ID for each event to avoid duplicate errors of timestamp seconds
-		util.AddMetricLabel(labels, "aw_id", strconv.Itoa(event.ID))                   //Event ID created from activityWatch
-		util.AddMetricLabel(labels, "user", userID)
+		util.AddMetricLabel(&labels, "__name__", util.SanitizeLabelName(watcher)) //Watcher name
+		util.AddMetricLabel(&labels, "unique_id", util.GetRandomUUID())           // Unique ID for each event to avoid duplicate errors of timestamp seconds
+		util.AddMetricLabel(&labels, "aw_id", strconv.Itoa(event.ID))             //Event ID created from activityWatch
+		util.AddMetricLabel(&labels, "user", userID)
 
 		hostValue := "Unknown"
 		if includeHostName {
 			hostValue = util.GetHostname()
 		}
 
-		util.AddMetricLabel(labels, "host", hostValue)
+		util.AddMetricLabel(&labels, "host", hostValue)
 
 		// Add the data as labels
 		for key, value := range event.Data {
-			util.AddMetricLabel(labels, key, fmt.Sprintf("%v", value))
+			util.AddMetricLabel(&labels, key, fmt.Sprintf("%v", value))
 		}
 		sample := prometheus.Sample{
 			Value: event.Duration,
@@ -117,7 +116,6 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 
 		timeSeriesList = append(timeSeriesList, timeSeries)
 	}
-
 	return timeSeriesList
 }
 
