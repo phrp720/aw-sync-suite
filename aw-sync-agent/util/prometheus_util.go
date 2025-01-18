@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"time"
 )
 
@@ -53,11 +54,17 @@ func MakeRequest(url string, secretKey string) (*http.Response, error) {
 	return resp, nil
 }
 
-func AddMetricLabel(labels []prometheus.Label, key string, value string) {
+func AddMetricLabel(labels *[]prometheus.Label, key string, value string) {
 	if value != "" {
-		labels = append(labels, prometheus.Label{
+		*labels = append(*labels, prometheus.Label{
 			Name:  key,
 			Value: value,
 		})
 	}
+}
+
+// SanitizeLabelName ensures the label name conforms to Prometheus naming conventions
+func SanitizeLabelName(name string) string {
+	re := regexp.MustCompile(`[^a-zA-Z0-9_]`)
+	return re.ReplaceAllString(name, "_")
 }
