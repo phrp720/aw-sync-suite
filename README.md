@@ -31,13 +31,13 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 <summary>📑 Table of Contents</summary>
 
 1. [About](#-about)
-2. [Features](#--features)
+2. [Features](#-features)
 3. [Installation & Usage](#-installation--usage)
 4. [Components](#-components)
     - [aw-sync-agent](#-aw-sync-agent)
     - [aw-sync-center](#-aw-sync-center)
 5. [Architecture](#-architecture)
-6. [Requirements](%EF%B8%8F-requirements)
+6. [Requirements](#-requirements)
 7. [Contributing](#-contributing)
 8. [License](#-license)
 
@@ -56,7 +56,7 @@ The project operates independently of **ActivityWatch** and supports all Activit
 
 You can check also the [screenshots](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center/grafana/dashboards/screenshots) for more insights.
 
-## 🌟  Features
+## 🌟 Features
 - 🌐 **Centralized Monitoring:** Aggregate data from multiple devices effortlessly.
 - 🛡️ **Data Filtering:** Protect sensitive information by filtering or sanitizing it at the source.
 - 📍 **Checkpointing Mechanism:** Smart synchronization with automatic tracking of synced data.
