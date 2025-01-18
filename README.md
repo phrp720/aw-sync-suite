@@ -34,22 +34,19 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 2. [Features](#-features)
 3. [Installation & Usage](#-installation--usage)
 4. [Components](#-components)
-    - [aw-sync-agent](#aw-sync-agent)
-    - [aw-sync-center](#aw-sync-center)
+    - [aw-sync-agent](#-aw-sync-agent)
+    - [aw-sync-center](#-aw-sync-center)
 5. [Architecture](#-architecture)
 6. [Requirements](#-requirements)
 7. [Contributing](#-contributing)
 8. [License](#-license)
+
 </details>
 
 ## 🔍 About
 **Aw-Sync-Suite** provides an easy-to-deploy solution on syncing data from multiple [ActivityWatch](https://github.com/ActivityWatch/activitywatch) instances to a centralized [Prometheus](https://prometheus.io/) database with easy visualization in [Grafana](https://grafana.com/).
 
 The project operates independently of **ActivityWatch** and supports all ActivityWatch versions with a REST API.
-
-### This suite consists of two main components:
-- **[aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent):** Runs on each device, retrieves and filters ActivityWatch data, and sends it securely to Prometheus via remote-write.
-- **[aw-sync-center](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center):** A centralized Prometheus and Grafana setup for aggregating and visualizing data.
 
 ### 👁️ Preview
 
@@ -74,7 +71,9 @@ For instructions on how to get started, please see the [guide in the documentati
 
 ## 🧩 Components
 
-### aw-sync-agent
+### 📦 [aw-sync-agent](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-agent)
+
+Runs on each device, retrieves and filters ActivityWatch data, and sends it securely to Prometheus via remote-write.
 
 - **Purpose**: Syncs data from ActivityWatch to Prometheus.
 - **Deployment**: Run on each computer you wish to track user activity from.
@@ -90,7 +89,9 @@ For instructions on how to get started, please see the [guide in the documentati
 > - The **aw-sync-agent** is fully operational on **macOS**, but the `-service` feature (which allows the agent to run as a background service) is not yet implemented for macOS.
 > - On macOS, you can still manually start and run the agent to sync ActivityWatch data without issues.
 
-### aw-sync-center
+### 📦 [aw-sync-center](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center)
+
+A centralized Prometheus and Grafana setup for aggregating and visualizing data.
 
 - **Purpose**: Centralized cloud setup that includes Prometheus and Grafana for monitoring and visualization.
 - **Deployment**: Set up once for centralized control and management.
