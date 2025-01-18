@@ -31,13 +31,13 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 <summary>📑 Table of Contents</summary>
 
 1. [About](#-about)
-2. [Features](#-features)
+2. [Features](#--features)
 3. [Installation & Usage](#-installation--usage)
 4. [Components](#-components)
     - [aw-sync-agent](#-aw-sync-agent)
     - [aw-sync-center](#-aw-sync-center)
 5. [Architecture](#-architecture)
-6. [Requirements](#-requirements)
+6. [Requirements](%EF%B8%8F-requirements)
 7. [Contributing](#-contributing)
 8. [License](#-license)
 
