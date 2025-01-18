@@ -53,7 +53,7 @@ func ValidateFilters(filters []Filter) ([]Filter, int, int, int) {
 			}
 
 			if len(targetList) != 0 { // Check if the filter has at least one valid target
-				if filter.Category != "" && (filter.Drop != false || filter.RegexReplace != nil || filter.PlainReplace != nil) {
+				if filter.Category != "" && (filter.Drop || (filter.RegexReplace != nil && len(filter.RegexReplace) > 0) || (filter.PlainReplace != nil && len(filter.PlainReplace) > 0)) {
 					log.Print("Warning: Filter `", filter.FilterName, "` has a category assigned, but it must not have any additional filtering. This filter will be ignored.")
 					invalid++
 					continue

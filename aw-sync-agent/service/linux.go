@@ -28,6 +28,9 @@ func CreateLinuxService(config settings.Configuration) {
 	appPath := filepath.Join(homeDir, ".config", "aw", LinuxExecutable)
 	serviceFilePath := filepath.Join(homeDir, ".config", "systemd", "user", LinuxService)
 
+	// Stop the old service if it is running
+	systemd.StopService(LinuxExecutable, false)
+
 	// Copies the aw-sync-agent executable to the user's config path
 	util.CopyBinary(appPath, LinuxExecutable)
 
