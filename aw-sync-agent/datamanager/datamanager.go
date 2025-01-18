@@ -116,7 +116,6 @@ func AggregateData(events []aw.Event, watcher string, userID string, includeHost
 
 		timeSeriesList = append(timeSeriesList, timeSeries)
 	}
-	fmt.Print(timeSeriesList)
 	return timeSeriesList
 }
 
