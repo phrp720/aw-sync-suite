@@ -1,6 +1,6 @@
 module aw-sync-agent
 
-go 1.23.2
+go 1.23.5
 
 require (
 	github.com/gogo/protobuf v1.3.2
