@@ -1,4 +1,4 @@
-package aw
+package activitywatch
 
 import "time"
 

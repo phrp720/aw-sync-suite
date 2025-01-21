@@ -1,7 +1,6 @@
-package util
+package activitywatch
 
 import (
-	"aw-sync-agent/aw"
 	internalErrors "aw-sync-agent/errors"
 	"log"
 	"net/http"
@@ -9,7 +8,7 @@ import (
 )
 
 // RemoveExcludedWatchers removes the excluded watchers from the buckets
-func RemoveExcludedWatchers(buckets aw.Watchers, excludedWatchers []string) aw.Watchers {
+func RemoveExcludedWatchers(buckets Watchers, excludedWatchers []string) Watchers {
 	if len(excludedWatchers) > 0 {
 		for _, excludedWatcher := range excludedWatchers {
 			for id, bucket := range buckets {
@@ -23,7 +22,7 @@ func RemoveExcludedWatchers(buckets aw.Watchers, excludedWatchers []string) aw.W
 	return buckets
 }
 
-func ActivityWatchHealthCheck(activityWatchUrl string) bool {
+func HealthCheck(activityWatchUrl string) bool {
 
 	resp, err := getRequest(activityWatchUrl)
 	if err != nil {

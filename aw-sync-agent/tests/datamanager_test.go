@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"aw-sync-agent/aw"
+	"aw-sync-agent/activitywatch"
 	"aw-sync-agent/datamanager"
 	"aw-sync-agent/filter"
 	"aw-sync-agent/prometheus"
@@ -10,7 +10,7 @@ import (
 )
 
 func TestAggregateData(t *testing.T) {
-	events := []aw.Event{
+	events := []activitywatch.Event{
 		{
 			Timestamp: time.Now().Add(-1 * time.Hour),
 			Duration:  30,

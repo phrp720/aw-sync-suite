@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	LinuxConfig     = "aw-sync-agent.yaml"
+	LinuxConfig     = "aw-sync-settings.yaml"
 	LinuxExecutable = "aw-sync-agent"
 	LinuxService    = "aw-sync-agent.service"
 )
@@ -24,7 +24,7 @@ func CreateLinuxService(config settings.Configuration) {
 
 	// Define paths dynamically based on the user's home directory
 	homeDir := currentUser.HomeDir
-	configPath := filepath.Join(homeDir, ".config", "aw", LinuxConfig)
+	configPath := filepath.Join(homeDir, ".config", "aw", "config", LinuxConfig)
 	appPath := filepath.Join(homeDir, ".config", "aw", LinuxExecutable)
 	serviceFilePath := filepath.Join(homeDir, ".config", "systemd", "user", LinuxService)
 

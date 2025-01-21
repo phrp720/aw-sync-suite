@@ -1,7 +1,6 @@
 package settings
 
 import (
-	"aw-sync-agent/filter"
 	"flag"
 	"fmt"
 	"github.com/joho/godotenv"
@@ -29,7 +28,9 @@ const (
 	IncludeHostname     SettingsKey = "includeHostname"
 	TestConfigs         SettingsKey = "testConfig"
 )
-const configFile = "aw-sync-agent.yaml"
+const configFile = "aw-sync-settings.yaml"
+const configDir = "./config"
+const configAbs = configDir + "/" + configFile
 
 type Setts struct {
 	AWUrl               string   `yaml:"awUrl"`
@@ -46,13 +47,13 @@ type Setts struct {
 
 // Configuration struct
 type Configuration struct {
-	Settings Setts           `yaml:"Settings"`
-	Filters  []filter.Filter `yaml:"Filters"`
+	Settings Setts `yaml:"Settings"`
+	//Filters  []filter.Filter `yaml:"Filters"`
 }
 
 // InitConfigurations initializes the settings
 func InitConfigurations() *Configuration {
-	settings := LoadYAMLConfig(configFile)
+	settings := LoadYAMLConfig(configAbs)
 	loadEnvVariables(&settings)
 	loadFlags(&settings)
 	ValidateSettings(&settings)
@@ -66,16 +67,15 @@ func LoadYAMLConfig(filename string) Configuration {
 	var config Configuration
 
 	if err != nil {
-		log.Print("No aw-sync-agent.yaml file found. Proceeding with environment variables and flags.")
+		log.Printf("No %s file found. Proceeding with environment variables and flags.", configFile)
 	} else {
-		log.Print("Loading settings from aw-sync-agent.yaml file.")
+		log.Printf("Loading settings from %s file.", configFile)
 		defer file.Close()
 		decoder := yaml.NewDecoder(file)
 		if err = decoder.Decode(&config); err != nil && err != io.EOF {
 			log.Fatalf("Error: Failed to decode settings file: %v", err)
 		}
-		// Remove loading of SERVICE and STANDALONE from YAML config
-		config.Settings.AsService = false
+
 	}
 
 	return config

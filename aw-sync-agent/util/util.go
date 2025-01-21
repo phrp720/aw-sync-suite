@@ -2,7 +2,6 @@ package util
 
 import (
 	internalErrors "aw-sync-agent/errors"
-	"errors"
 	"github.com/google/uuid"
 	"github.com/robfig/cron"
 	"io"
@@ -112,16 +111,4 @@ func Contains(slice []string, item string) bool {
 		}
 	}
 	return false
-}
-
-// EndpointsHealthCheck checks the health of the ActivityWatch and Prometheus endpoints
-func EndpointsHealthCheck(activityWatchUrl string, prometheusUrl string, secretKey string) (bool, error) {
-
-	if !PromHealthCheck(prometheusUrl, secretKey) {
-		return false, errors.New("Prometheus is not reachable or Internet connection is lost. Please fix the issue before the next synchronization.")
-	}
-	if !ActivityWatchHealthCheck(activityWatchUrl) {
-		return false, errors.New("ActivityWatch is not reachable. Please fix the issue before the next synchronization.")
-	}
-	return true, nil
 }

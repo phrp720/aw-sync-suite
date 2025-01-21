@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	WinConfig     = "aw-sync-agent.yaml"
+	WinConfig     = "aw-sync-settings.yaml"
 	WinExecutable = "aw-sync-agent.exe"
 	WinFolder     = "AwSyncAgent"
 	WinService    = "aw-sync-agent"
@@ -28,7 +28,7 @@ func CreateWindowsService(config settings.Configuration) {
 
 	windowsRootPath := filepath.Join(homeDir, WinFolder)
 	windowsAppPath := filepath.Join(windowsRootPath, WinExecutable)
-	windowsConfigPath := filepath.Join(windowsRootPath, WinConfig)
+	windowsConfigPath := filepath.Join(windowsRootPath, "config", WinConfig)
 
 	err = nssm.InitNssm(windowsRootPath)
 	internalErrors.HandleFatal("", err)
