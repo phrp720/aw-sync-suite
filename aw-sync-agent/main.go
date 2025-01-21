@@ -41,7 +41,7 @@ func main() {
 
 	// If the -testConfig flag is set, test the configurations and filters and exit
 	if Configs.Settings.TestConfigs {
-		log.Print("Testing Configuration Settings and Plugins is finished. Exiting...")
+		log.Print("Testing Settings and Plugins configuration is finished. Exiting...")
 		os.Exit(1)
 	}
 

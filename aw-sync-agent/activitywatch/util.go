@@ -4,6 +4,7 @@ import (
 	internalErrors "aw-sync-agent/errors"
 	"log"
 	"net/http"
+	"sort"
 	"time"
 )
 
@@ -57,4 +58,18 @@ func getRequest(url string) (*http.Response, error) {
 	}
 
 	return resp, nil
+}
+
+func SortAndTrimEvents(events []Event) []Event {
+	// Sort events by timestamp. Older to newer.
+	sort.Slice(events, func(i, j int) bool {
+		return events[i].Timestamp.Before(events[j].Timestamp)
+	})
+
+	// Remove the newest event because it might be incomplete.
+	if len(events) > 0 {
+		events = events[:len(events)-1]
+	}
+
+	return events
 }

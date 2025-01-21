@@ -49,15 +49,7 @@ func ScrapeData(awUrl string, excludedWatchers []string) (activitywatch.WatcherN
 // This is going to be called with events for each watcher separately
 func AggregateData(events []activitywatch.Event, watcher string, userID string, includeHostName bool, filters []filter.Filter) []prometheus.TimeSeries {
 
-	// Sort events by timestamp. Older to newer.
-	sort.Slice(events, func(i, j int) bool {
-		return events[i].Timestamp.Before(events[j].Timestamp)
-	})
-
-	// Remove the newest event because it might be incomplete.
-	if len(events) > 0 {
-		events = events[:len(events)-1]
-	}
+	events = activitywatch.SortAndTrimEvents(events)
 
 	var timeSeriesList []prometheus.TimeSeries
 

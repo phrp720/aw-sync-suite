@@ -27,6 +27,8 @@ const (
 	Immediate           SettingsKey = "immediate"
 	IncludeHostname     SettingsKey = "includeHostname"
 	TestConfigs         SettingsKey = "testConfig"
+	Plugins             SettingsKey = "plugins"
+	PluginsStrictOrder  SettingsKey = "pluginsStrictOrder"
 )
 const configFile = "aw-sync-settings.yaml"
 const configDir = "./config"
@@ -40,6 +42,8 @@ type Setts struct {
 	UserID              string   `yaml:"userId"`
 	IncludeHostname     bool     `yaml:"includeHostname"`
 	Cron                string   `yaml:"cron"`
+	Plugins             []string `yaml:"plugins"`
+	PluginsStrictOrder  bool     `yaml:"pluginsStrictOrder"`
 	AsService           bool     `yaml:"-"`
 	Immediate           bool     `yaml:"-"`
 	TestConfigs         bool     `yaml:"-"` // TestConfigs is a flag to test the configurations/filters
@@ -96,7 +100,13 @@ func loadEnvVariables(config *Configuration) {
 		config.Settings.PrometheusUrl = value
 	}
 	if value, exists := os.LookupEnv("EXCLUDED_WATCHERS"); exists {
-		config.Settings.ExcludedWatchers = strings.Split(value, ",")
+		config.Settings.ExcludedWatchers = strings.Split(value, "|")
+	}
+	if value, exists := os.LookupEnv("PLUGINS"); exists {
+		config.Settings.Plugins = strings.Split(value, "|")
+	}
+	if value, exists := os.LookupEnv("PLUGINS_STRICT_ORDER"); exists {
+		config.Settings.PluginsStrictOrder = value == "true"
 	}
 	if value, exists := os.LookupEnv("USER_ID"); exists {
 		config.Settings.UserID = value
@@ -119,6 +129,15 @@ func loadFlags(config *Configuration) {
 	flag.StringVar(&config.Settings.PrometheusUrl, string(PrometheusUrl), config.Settings.PrometheusUrl, "Prometheus URL")
 	flag.StringVar(&config.Settings.UserID, string(UserID), config.Settings.UserID, "User Identification")
 	flag.BoolVar(&config.Settings.IncludeHostname, string(IncludeHostname), config.Settings.IncludeHostname, "Include hostname in the metrics")
+
+	var excludedWatchers StringSliceFlag
+	flag.Var(&excludedWatchers, string(ExcludedWatchers), "Excluded watchers")
+
+	var plugins StringSliceFlag
+	flag.Var(&plugins, string(Plugins), "Plugins to load")
+
+	flag.BoolVar(&config.Settings.PluginsStrictOrder, string(PluginsStrictOrder), config.Settings.PluginsStrictOrder, "Plugins strict order")
+
 	flag.StringVar(&config.Settings.Cron, string(Cron), config.Settings.Cron, "Cron expression")
 	flag.StringVar(&config.Settings.PrometheusSecretKey, string(PrometheusSecretKey), config.Settings.PrometheusSecretKey, "Prometheus Secret Key")
 	flag.BoolVar(&config.Settings.AsService, string(AsService), config.Settings.AsService, "Run as service")
@@ -126,6 +145,9 @@ func loadFlags(config *Configuration) {
 	flag.BoolVar(&config.Settings.TestConfigs, string(TestConfigs), config.Settings.TestConfigs, "Test the configurations/filters")
 
 	flag.Parse()
+	config.Settings.ExcludedWatchers = excludedWatchers
+	config.Settings.Plugins = plugins
+
 	log.Print("Loading settings from flags.")
 }
 
@@ -153,9 +175,11 @@ func printSettings(config *Configuration) {
 		AWUrl:               config.Settings.AWUrl,
 		PrometheusUrl:       config.Settings.PrometheusUrl,
 		PrometheusSecretKey: config.Settings.PrometheusSecretKey,
-		ExcludedWatchers:    strings.Join(config.Settings.ExcludedWatchers, ", "),
+		ExcludedWatchers:    strings.Join(config.Settings.ExcludedWatchers, ","),
 		UserID:              config.Settings.UserID,
 		IncludeHostname:     fmt.Sprintf("%t", config.Settings.IncludeHostname),
+		Plugins:             strings.Join(config.Settings.Plugins, ","),
+		PluginsStrictOrder:  fmt.Sprintf("%t", config.Settings.PluginsStrictOrder),
 		Cron:                config.Settings.Cron,
 	}
 
@@ -167,6 +191,8 @@ func printSettings(config *Configuration) {
 		ExcludedWatchers,
 		UserID,
 		IncludeHostname,
+		Plugins,
+		PluginsStrictOrder,
 		Cron,
 	}
 
