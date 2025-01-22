@@ -2,6 +2,7 @@ package activitywatch
 
 import (
 	internalErrors "aw-sync-agent/errors"
+	"github.com/phrp720/aw-sync-agent-plugins/models"
 	"log"
 	"net/http"
 	"sort"
@@ -72,4 +73,21 @@ func SortAndTrimEvents(events []Event) []Event {
 	}
 
 	return events
+}
+
+func ToPluginEvent(events []Event) models.Events {
+	var convertedEvents models.Events
+	for _, event := range events {
+
+		convertedEvents = append(convertedEvents, models.Event{ID: event.ID, Timestamp: event.Timestamp, Duration: event.Duration, Data: event.Data})
+	}
+	return convertedEvents
+}
+
+func ToAwEvent(events models.Events) Events {
+	var convertedEvents Events
+	for _, event := range events {
+		convertedEvents = append(convertedEvents, Event{ID: event.ID, Timestamp: event.Timestamp, Duration: event.Duration, Data: event.Data})
+	}
+	return convertedEvents
 }

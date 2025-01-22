@@ -10,6 +10,7 @@ import (
 	"aw-sync-agent/synchronizer"
 	"aw-sync-agent/util"
 	"errors"
+	"github.com/phrp720/aw-sync-agent-plugins/plugins"
 	"log"
 	"os"
 )
@@ -24,21 +25,10 @@ func main() {
 
 	// Here abstract init of the plugins. In init we will load the plugins,load their configs if exists and do the checks like below.
 
-	//if Configs.Filters != nil {
-	//	log.Print("Validating Filters...")
-	//	var totalFilters, invalidFilters, disabledFilters int
-	//	Configs.Filters, totalFilters, invalidFilters, disabledFilters = filter.ValidateFilters(Configs.Filters)
-	//	filter.PrintFilters(totalFilters, invalidFilters, disabledFilters)
-	//
-	//	log.Print("Extracting Categories from Filters...")
-	//	categories := filter.GetCategories(Configs.Filters)
-	//	if len(categories) > 0 {
-	//		filter.PrintCategories(categories)
-	//	} else {
-	//		log.Print("No Categories found.")
-	//	}
-	//}
-
+	Plugins := plugins.Select(plugins.Initialize(), Configs.Settings.Plugins)
+	for _, plugin := range Plugins {
+		plugin.Initialize()
+	}
 	// If the -testConfig flag is set, test the configurations and filters and exit
 	if Configs.Settings.TestConfigs {
 		log.Print("Testing Settings and Plugins configuration is finished. Exiting...")
@@ -47,7 +37,7 @@ func main() {
 
 	// If -immediate flag is set, run the sync routine and exit
 	if Configs.Settings.Immediate {
-		synchronizer.SyncRoutine(*Configs)()
+		synchronizer.SyncRoutine(*Configs, Plugins)()
 		os.Exit(0)
 	}
 
@@ -67,7 +57,7 @@ func main() {
 
 	log.Print("Setting up Sync Cronjob...")
 	c := cron.Init()
-	cron.Add(c, scheduler, synchronizer.SyncRoutine(*Configs))
+	cron.Add(c, scheduler, synchronizer.SyncRoutine(*Configs, Plugins))
 	cron.Start(c)
 	defer cron.Stop(c)
 

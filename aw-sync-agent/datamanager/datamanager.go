@@ -3,13 +3,12 @@ package datamanager
 import (
 	"aw-sync-agent/activitywatch"
 	"aw-sync-agent/checkpoint"
-	"aw-sync-agent/filter"
 	"aw-sync-agent/prometheus"
 	"context"
 	"errors"
 	"fmt"
+	"github.com/phrp720/aw-sync-agent-plugins/models"
 	"log"
-	"sort"
 )
 
 // ScrapeData scrapes the data from the local ActivityWatch instance via the aw Client
@@ -47,38 +46,16 @@ func ScrapeData(awUrl string, excludedWatchers []string) (activitywatch.WatcherN
 
 // AggregateData aggregates the data
 // This is going to be called with events for each watcher separately
-func AggregateData(events []activitywatch.Event, watcher string, userID string, includeHostName bool, filters []filter.Filter) []prometheus.TimeSeries {
+func AggregateData(Plugins []models.Plugin, events []activitywatch.Event, watcher string, userID string, includeHostName bool) []prometheus.TimeSeries {
 
 	events = activitywatch.SortAndTrimEvents(events)
-
 	var timeSeriesList []prometheus.TimeSeries
-
-	//Apply the filters
-	var watcherFilters []filter.Filter
-	if watcher != "aw-watcher-afk" {
-		watcherFilters = filter.GetMatchingFilters(filters, watcher)
-		// Sort watcherFilters so filters with a Category take priority
-		sort.Slice(watcherFilters, func(i, j int) bool {
-			return watcherFilters[i].Category != "" && watcherFilters[j].Category == ""
-		})
+	var unmarshaledEvents models.Events
+	for _, plugin := range Plugins {
+		unmarshaledEvents = plugin.Execute(activitywatch.ToPluginEvent(events), watcher, userID, includeHostName)
 	}
-
-	var dropEvent bool
+	events = activitywatch.ToAwEvent(unmarshaledEvents)
 	for _, event := range events {
-
-		// Here it will be the abstract run of each plugin.We can follow strict order of execution.Each plugin will have its own function and must return Event type.
-
-		//Apply the filters
-		if watcher != "aw-watcher-afk" {
-			event.Data["category"] = "Other" //Default category
-			event.Data, dropEvent = filter.Apply(event.Data, watcherFilters)
-		}
-
-		// Drop the event if it matches the filter
-		if dropEvent {
-			continue
-		}
-
 		timeSeriesList = append(timeSeriesList, prometheus.AttachTimeSeriesPayload(event, includeHostName, watcher, userID))
 	}
 	return timeSeriesList

@@ -3,7 +3,6 @@ package tests
 import (
 	"aw-sync-agent/activitywatch"
 	"aw-sync-agent/datamanager"
-	"aw-sync-agent/filter"
 	"aw-sync-agent/prometheus"
 	"testing"
 	"time"
@@ -25,9 +24,8 @@ func TestAggregateData(t *testing.T) {
 
 	watcher := "test-watcher"
 	userID := "test-user"
-	filters := []filter.Filter{}
 
-	timeSeries := datamanager.AggregateData(events, watcher, userID, false, filters)
+	timeSeries := datamanager.AggregateData(nil, events, watcher, userID, false)
 
 	if len(timeSeries) != 1 {
 		t.Errorf("Expected 1 time series, got %d", len(timeSeries))

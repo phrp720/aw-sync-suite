@@ -52,7 +52,6 @@ type Setts struct {
 // Configuration struct
 type Configuration struct {
 	Settings Setts `yaml:"Settings"`
-	//Filters  []filter.Filter `yaml:"Filters"`
 }
 
 // InitConfigurations initializes the settings
