@@ -47,9 +47,9 @@ func main() {
 	if Configs.Settings.AsService {
 
 		if util.IsWindows() {
-			service.CreateWindowsService(*Configs)
+			service.CreateWindowsService(*Configs, Plugins)
 		} else if util.IsLinux() {
-			service.CreateLinuxService(*Configs)
+			service.CreateLinuxService(*Configs, Plugins)
 		}
 		os.Exit(0)
 
