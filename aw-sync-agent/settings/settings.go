@@ -144,8 +144,13 @@ func loadFlags(config *Configuration) {
 	flag.BoolVar(&config.Settings.TestConfigs, string(TestConfigs), config.Settings.TestConfigs, "Test the configurations/filters")
 
 	flag.Parse()
-	config.Settings.ExcludedWatchers = excludedWatchers
-	config.Settings.Plugins = plugins
+	if len(excludedWatchers) > 0 {
+		config.Settings.ExcludedWatchers = excludedWatchers
+	}
+	if len(plugins) > 0 {
+		config.Settings.Plugins = plugins
+
+	}
 
 	log.Print("Loading settings from flags.")
 }

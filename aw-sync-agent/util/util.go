@@ -2,13 +2,17 @@ package util
 
 import (
 	internalErrors "aw-sync-agent/errors"
+	"fmt"
 	"github.com/google/uuid"
+	"github.com/phrp720/aw-sync-agent-plugins/models"
 	"github.com/robfig/cron"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
+	"strings"
 )
 
 // ValidateCronExpr validates the cron expression
@@ -110,4 +114,36 @@ func Contains(slice []string, item string) bool {
 		}
 	}
 	return false
+}
+
+// PrintPlugins prints the categories in the List in a dashboard format
+func PrintPlugins(Plugins []models.Plugin) {
+	log.Print("Plugins:")
+	pluginNames := make([]string, 0)
+	for _, plugin := range Plugins {
+		pluginNames = append(pluginNames, plugin.RawName())
+	}
+	filtersPluginsMap := map[string]string{
+		"Plugins found": strconv.Itoa(len(Plugins)),
+		"Plugins":       strings.Join(pluginNames, ", "),
+	}
+
+	maxKeyLength := 0
+	maxValueLength := 0
+	for key, value := range filtersPluginsMap {
+		if len(key) > maxKeyLength {
+			maxKeyLength = len(key)
+		}
+		if len(value) > maxValueLength {
+			maxValueLength = len(value)
+		}
+	}
+
+	borderLength := maxKeyLength + maxValueLength + 7
+	border := strings.Repeat("-", borderLength)
+	fmt.Println(border)
+	for key, value := range filtersPluginsMap {
+		fmt.Printf("| %-*s | %-*s |\n", maxKeyLength, key, maxValueLength, value)
+	}
+	fmt.Println(border)
 }

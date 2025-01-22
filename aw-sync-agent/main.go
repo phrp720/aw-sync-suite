@@ -26,9 +26,15 @@ func main() {
 	// Here abstract init of the plugins. In init we will load the plugins,load their configs if exists and do the checks like below.
 
 	Plugins := plugins.Select(plugins.Initialize(), Configs.Settings.Plugins)
-	for _, plugin := range Plugins {
-		plugin.Initialize()
+	if len(Plugins) == 0 {
+		log.Print("No plugins are loaded.")
+	} else {
+		util.PrintPlugins(Plugins)
+		for _, plugin := range Plugins {
+			plugin.Initialize()
+		}
 	}
+
 	// If the -testConfig flag is set, test the configurations and filters and exit
 	if Configs.Settings.TestConfigs {
 		log.Print("Testing Settings and Plugins configuration is finished. Exiting...")

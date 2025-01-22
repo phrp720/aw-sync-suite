@@ -54,7 +54,9 @@ func AggregateData(Plugins []models.Plugin, events []activitywatch.Event, watche
 	for _, plugin := range Plugins {
 		unmarshaledEvents = plugin.Execute(activitywatch.ToPluginEvent(events), watcher, userID, includeHostName)
 	}
-	events = activitywatch.ToAwEvent(unmarshaledEvents)
+	if len(Plugins) > 0 {
+		events = activitywatch.ToAwEvent(unmarshaledEvents)
+	}
 	for _, event := range events {
 		timeSeriesList = append(timeSeriesList, prometheus.AttachTimeSeriesPayload(event, includeHostName, watcher, userID))
 	}

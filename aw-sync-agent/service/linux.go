@@ -38,7 +38,7 @@ func CreateLinuxService(config settings.Configuration, plugins []models.Plugin) 
 	// Create the config file that will be used for the service (Based on the settings) and loads it to the user's config path
 	err = settings.CreateConfigFile(config, configPath)
 	for _, plugin := range plugins {
-		plugin.ReplicateConfig(homeDir + "/.config/aw/config")
+		plugin.ReplicateConfig(homeDir + "/.config/aw/config/")
 	}
 	internalErrors.HandleFatal("Failed to create config file: ", err)
 
