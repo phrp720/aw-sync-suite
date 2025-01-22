@@ -24,6 +24,9 @@ func AttachTimeSeriesPayload(event activitywatch.Event, includeHostName bool, wa
 
 	AddMetricLabel(&labels, "host", hostValue)
 
+	if event.Data["category"] == nil {
+		AddMetricLabel(&labels, "category", "Other")
+	}
 	// Add the data as labels
 	for key, value := range event.Data {
 		AddMetricLabel(&labels, key, fmt.Sprintf("%v", value))
