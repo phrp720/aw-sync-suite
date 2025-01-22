@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -114,6 +115,21 @@ func Contains(slice []string, item string) bool {
 		}
 	}
 	return false
+}
+
+// SortPlugins sorts the Plugins array based on the order of names in Config.Settings.Plugins
+func SortPlugins(pluginNames []string, plugins []models.Plugin) []models.Plugin {
+	// Create a map to store the index of each plugin name
+	pluginOrder := make(map[string]int)
+	for i, name := range pluginNames {
+		pluginOrder[name] = i
+	}
+
+	// Sort the Plugins array based on the order defined in Config.Settings.Plugins
+	sort.Slice(plugins, func(i, j int) bool {
+		return pluginOrder[plugins[i].RawName()] < pluginOrder[plugins[j].RawName()]
+	})
+	return plugins
 }
 
 // PrintPlugins prints the categories in the List in a dashboard format

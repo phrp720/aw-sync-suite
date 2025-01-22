@@ -30,6 +30,9 @@ func main() {
 		log.Print("No plugins are loaded.")
 	} else {
 		util.PrintPlugins(Plugins)
+		if Configs.Settings.PluginsStrictOrder {
+			Plugins = util.SortPlugins(Configs.Settings.Plugins, Plugins)
+		}
 		for _, plugin := range Plugins {
 			plugin.Initialize()
 		}
