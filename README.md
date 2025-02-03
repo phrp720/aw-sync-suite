@@ -93,7 +93,7 @@ Runs on each device, retrieves and filters ActivityWatch data, and sends it secu
 
 ### 🔌 [aw-sync-suite-plugins](https://github.com/phrp720/aw-sync-suite-plugins)
 
-The `aw-sync-suite` supports a range of plugins that allow for custom data processing before data collection and before pushing the data to Prometheus. You can utilize these plugins to enhance your data synchronization capabilities.
+The `aw-sync-suite` supports a range of plugins that allow for custom data processing before pushing the data to Prometheus. You can utilize these plugins to enhance your data synchronization capabilities.
 
 - **Purpose**: Plugins enable pre-processing of ActivityWatch data, allowing for filtering, transformation, and custom handling based on specific requirements(read more on how they work [here](https://github.com/phrp720/aw-sync-suite/wiki/Agent-Plugins)).
 - **Integration**: Easily configurable within the `aw-sync-agent` through the `aw-sync-settings.yaml` file.

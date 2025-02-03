@@ -37,7 +37,7 @@ For a brief overview of the agent's functionality, refer to the [Agent Documenta
 
 - **Data Synchronization**: Fetches user activity data from multiple ActivityWatch instances.
 - **Data Filtering and Aggregation**: Filters and aggregates data based on user-defined criteria.
-- **Plugin System**: Allows for easy extensibility and customization before and after data collection.
+- **Plugin System**: Allows for easy extensibility and customization before pushing the data to Prometheus.
 - **Prometheus Integration**: Transforms data into a Prometheus-compatible format for centralized monitoring.
 - **Grafana Visualization**: Easily visualize activity metrics and trends through Grafana dashboards.
 - **Flexible Configuration**: Allows selection of ActivityWatch buckets to include/exclude and customizes sync intervals.
@@ -109,7 +109,7 @@ The table below details all configurable settings, their purpose, and their defa
 
 1. **Command-Line Flags**: Highest priority, overrides all other settings.
 2. **Environment Variables**: Override settings in the configuration file.
-3. **Configuration File** (`aw-sync-agent.yaml`): Base settings, used if no overrides are provided.
+3. **Configuration File** (`aw-sync-settings.yaml`): Base settings, used if no overrides are provided.
 
 
 ### Configurable Settings
@@ -128,6 +128,7 @@ The table below details all configurable settings, their purpose, and their defa
 | -pluginsStrictOrder | PLUGINS_STRICT_ORDER | pluginsStrictOrder | When set to true,executes the plugins with the given order                                                                                                                            | ❌        | false                    |
 | -userId             | USER_ID              | userId             | Custom identifier for the user; defaults to the system hostname or a generated ID if unspecified.                                                                                     | ❌        | Hostname or Generated ID |
 | -includeHostname    | INCLUDE_HOSTNAME     | includeHostname    | When set to true, appends the hostname to the exported metrics for better identification in multi-user environments.Otherwise the host value is set to `Unknown`                      | ❌        | false                    |
+
 #### Configuration Examples
 <ol>
 <li>
