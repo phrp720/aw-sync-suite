@@ -1,0 +1,9 @@
+#Settings:
+#  awUrl: http://localhost:5600
+#  prometheusUrl: http://localhost:9090
+#  prometheusAuth: ""
+#  excludedWatchers: []
+#  userId: TestUser
+#  includeHostname: true
+#  plugins:
+#    - "filters"  # This is the only plugin that is enabled by default

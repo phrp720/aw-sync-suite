@@ -29,3 +29,5 @@ pkg/
 
 ## aw-sync-agent files
 checkpoint.json
+
+config

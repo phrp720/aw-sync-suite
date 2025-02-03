@@ -1,17 +1,18 @@
 package synchronizer
 
 import (
+	"aw-sync-agent/activitywatch"
 	"aw-sync-agent/datamanager"
 	internalErrors "aw-sync-agent/errors"
 	"aw-sync-agent/prometheus"
 	"aw-sync-agent/settings"
-	"aw-sync-agent/util"
 	"fmt"
+	"github.com/phrp720/aw-sync-agent-plugins/models"
 	"log"
 )
 
 // Start starts the synchronization process of data with prometheus
-func Start(Config settings.Configuration) error {
+func Start(Config settings.Configuration, Plugins []models.Plugin) error {
 
 	log.Print("==================================================================")
 	log.Print("Starting synchronization process...\n")
@@ -29,7 +30,7 @@ func Start(Config settings.Configuration) error {
 		log.Print("------------------------------------------------------------------")
 
 		log.Print("Aggregating data for watcher: [", watcher, "] ...")
-		aggregatedData := datamanager.AggregateData(data, watcher, Config.Settings.UserID, Config.Settings.IncludeHostname, Config.Filters) //metric names must not have '-'
+		aggregatedData := datamanager.AggregateData(Plugins, data, watcher, Config.Settings.UserID, Config.Settings.IncludeHostname) //metric names must not have '-'
 		err = datamanager.PushData(prometheusClient, Config.Settings.PrometheusUrl, Config.Settings.PrometheusSecretKey, aggregatedData, watcher)
 		if err != nil {
 			return err
@@ -44,14 +45,14 @@ func Start(Config settings.Configuration) error {
 }
 
 // SyncRoutine returns a function that init the synchronization and starts the  process
-func SyncRoutine(Config settings.Configuration) func() {
+func SyncRoutine(Config settings.Configuration, Plugins []models.Plugin) func() {
 	return func() {
-		if !util.PromHealthCheck(Config.Settings.PrometheusUrl, Config.Settings.PrometheusSecretKey) {
+		if !prometheus.HealthCheck(Config.Settings.PrometheusUrl, Config.Settings.PrometheusSecretKey) {
 			log.Print("Something went wrong with Prometheus or Internet connection is lost! Data will be pushed at the next synchronization.")
-		} else if !util.ActivityWatchHealthCheck(Config.Settings.AWUrl) {
+		} else if !activitywatch.HealthCheck(Config.Settings.AWUrl) {
 			log.Print("ActivityWatch is not reachable! Data will be pushed at the next synchronization.")
 		} else {
-			err := Start(Config)
+			err := Start(Config, Plugins)
 			internalErrors.HandleNormal("Error:", err)
 		}
 

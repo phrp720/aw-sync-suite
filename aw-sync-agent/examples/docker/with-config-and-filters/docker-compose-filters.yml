@@ -5,4 +5,4 @@ services:
     container_name: aw-sync-agent
     restart: unless-stopped
     volumes:
-      - ./aw-sync-agent.yaml:/opt/aw-sync-agent.yaml
+      - ./config:/opt/config

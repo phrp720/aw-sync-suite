@@ -5,6 +5,7 @@ import (
 	"aw-sync-agent/settings"
 	"aw-sync-agent/util"
 	"fmt"
+	"github.com/phrp720/aw-sync-agent-plugins/models"
 	"github.com/phrp720/go-service-builder/nssm"
 	"log"
 	"os"
@@ -13,13 +14,13 @@ import (
 )
 
 const (
-	WinConfig     = "aw-sync-agent.yaml"
+	WinConfig     = "aw-sync-settings.yaml"
 	WinExecutable = "aw-sync-agent.exe"
 	WinFolder     = "AwSyncAgent"
 	WinService    = "aw-sync-agent"
 )
 
-func CreateWindowsService(config settings.Configuration) {
+func CreateWindowsService(config settings.Configuration, plugins []models.Plugin) {
 
 	// Construct paths relative to the user's home directory
 	// Get the user's home directory
@@ -28,7 +29,7 @@ func CreateWindowsService(config settings.Configuration) {
 
 	windowsRootPath := filepath.Join(homeDir, WinFolder)
 	windowsAppPath := filepath.Join(windowsRootPath, WinExecutable)
-	windowsConfigPath := filepath.Join(windowsRootPath, WinConfig)
+	windowsConfigPath := filepath.Join(windowsRootPath, "config", WinConfig)
 
 	err = nssm.InitNssm(windowsRootPath)
 	internalErrors.HandleFatal("", err)
@@ -40,6 +41,10 @@ func CreateWindowsService(config settings.Configuration) {
 
 	// Create the config file that will be used for the service(Based on the settings) and loads it  to /opt/aw/ path
 	err = settings.CreateConfigFile(config, windowsConfigPath)
+	for _, plugin := range plugins {
+		plugin.ReplicateConfig(homeDir + "/.config/aw/config/")
+	}
+
 	internalErrors.HandleFatal("Failed to create config file: ", err)
 
 	builder := nssm.NewServiceBuilder()

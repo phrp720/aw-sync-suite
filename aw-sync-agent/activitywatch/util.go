@@ -1,15 +1,16 @@
-package util
+package activitywatch
 
 import (
-	"aw-sync-agent/aw"
 	internalErrors "aw-sync-agent/errors"
+	"github.com/phrp720/aw-sync-agent-plugins/models"
 	"log"
 	"net/http"
+	"sort"
 	"time"
 )
 
 // RemoveExcludedWatchers removes the excluded watchers from the buckets
-func RemoveExcludedWatchers(buckets aw.Watchers, excludedWatchers []string) aw.Watchers {
+func RemoveExcludedWatchers(buckets Watchers, excludedWatchers []string) Watchers {
 	if len(excludedWatchers) > 0 {
 		for _, excludedWatcher := range excludedWatchers {
 			for id, bucket := range buckets {
@@ -23,7 +24,7 @@ func RemoveExcludedWatchers(buckets aw.Watchers, excludedWatchers []string) aw.W
 	return buckets
 }
 
-func ActivityWatchHealthCheck(activityWatchUrl string) bool {
+func HealthCheck(activityWatchUrl string) bool {
 
 	resp, err := getRequest(activityWatchUrl)
 	if err != nil {
@@ -58,4 +59,35 @@ func getRequest(url string) (*http.Response, error) {
 	}
 
 	return resp, nil
+}
+
+func SortAndTrimEvents(events []Event) []Event {
+	// Sort events by timestamp. Older to newer.
+	sort.Slice(events, func(i, j int) bool {
+		return events[i].Timestamp.Before(events[j].Timestamp)
+	})
+
+	// Remove the newest event because it might be incomplete.
+	if len(events) > 0 {
+		events = events[:len(events)-1]
+	}
+
+	return events
+}
+
+func ToPluginEvent(events []Event) models.Events {
+	var convertedEvents models.Events
+	for _, event := range events {
+
+		convertedEvents = append(convertedEvents, models.Event{ID: event.ID, Timestamp: event.Timestamp, Duration: event.Duration, Data: event.Data})
+	}
+	return convertedEvents
+}
+
+func ToAwEvent(events models.Events) Events {
+	var convertedEvents Events
+	for _, event := range events {
+		convertedEvents = append(convertedEvents, Event{ID: event.ID, Timestamp: event.Timestamp, Duration: event.Duration, Data: event.Data})
+	}
+	return convertedEvents
 }

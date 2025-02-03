@@ -1,17 +1,15 @@
-package util
+package prometheus
 
 import (
 	internalErrors "aw-sync-agent/errors"
-	"aw-sync-agent/prometheus"
 	"fmt"
 	"log"
 	"net/http"
-	"regexp"
 	"time"
 )
 
-// PromHealthCheck checks the health of Prometheus and the internet connection
-func PromHealthCheck(prometheusUrl string, secretKey string) bool {
+// HealthCheck checks the health of Prometheus and the internet connection
+func HealthCheck(prometheusUrl string, secretKey string) bool {
 	url := fmt.Sprintf("%s/-/healthy", prometheusUrl)
 	resp, err := MakeRequest(url, secretKey)
 	if err != nil {
@@ -52,19 +50,4 @@ func MakeRequest(url string, secretKey string) (*http.Response, error) {
 	}
 
 	return resp, nil
-}
-
-func AddMetricLabel(labels *[]prometheus.Label, key string, value string) {
-	if value != "" {
-		*labels = append(*labels, prometheus.Label{
-			Name:  key,
-			Value: value,
-		})
-	}
-}
-
-// SanitizeLabelName ensures the label name conforms to Prometheus naming conventions
-func SanitizeLabelName(name string) string {
-	re := regexp.MustCompile(`[^a-zA-Z0-9_]`)
-	return re.ReplaceAllString(name, "_")
 }

@@ -1,43 +1,40 @@
 package datamanager
 
 import (
-	"aw-sync-agent/aw"
+	"aw-sync-agent/activitywatch"
 	"aw-sync-agent/checkpoint"
-	"aw-sync-agent/filter"
 	"aw-sync-agent/prometheus"
-	"aw-sync-agent/util"
 	"context"
 	"errors"
 	"fmt"
+	"github.com/phrp720/aw-sync-agent-plugins/models"
 	"log"
-	"sort"
-	"strconv"
 )
 
 // ScrapeData scrapes the data from the local ActivityWatch instance via the aw Client
-func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEventsMap, error) {
-	if !util.ActivityWatchHealthCheck(awUrl) {
+func ScrapeData(awUrl string, excludedWatchers []string) (activitywatch.WatcherNameToEventsMap, error) {
+	if !activitywatch.HealthCheck(awUrl) {
 		return nil, errors.New("activityWatch is not reachable. Data will be pushed at the next synchronization")
 	}
 	log.Print("Fetching buckets  ...\n")
-	buckets, err := aw.GetBuckets(awUrl)
+	buckets, err := activitywatch.GetBuckets(awUrl)
 	if err != nil {
 		return nil, fmt.Errorf("Error fetching buckets: %v", err)
 	}
 
 	log.Print("Buckets fetched successfully")
 	log.Print("Total buckets fetched: ", len(buckets))
-	util.RemoveExcludedWatchers(buckets, excludedWatchers)
-	eventsMap := make(aw.WatcherNameToEventsMap)
+	activitywatch.RemoveExcludedWatchers(buckets, excludedWatchers)
+	eventsMap := make(activitywatch.WatcherNameToEventsMap)
 	for name, bucket := range buckets {
-		if !util.ActivityWatchHealthCheck(awUrl) {
+		if !activitywatch.HealthCheck(awUrl) {
 			return nil, errors.New("activityWatch is not reachable. Data will be pushed at the next synchronization")
 		}
 		log.Print("Fetching events from ", bucket.Client, " ...")
 		startPoint := checkpoint.Read(bucket.Client)
 
 		//endPoint := time.Now().AddDate(0, 0, -1) // Set end date to one day before the current date
-		events, err := aw.GetEvents(awUrl, name, startPoint, nil, nil)
+		events, err := activitywatch.GetEvents(awUrl, name, startPoint, nil, nil)
 		if err != nil {
 			return nil, fmt.Errorf("error fetching events for bucket %s: %v", bucket.Client, err)
 		}
@@ -49,72 +46,19 @@ func ScrapeData(awUrl string, excludedWatchers []string) (aw.WatcherNameToEvents
 
 // AggregateData aggregates the data
 // This is going to be called with events for each watcher separately
-func AggregateData(events []aw.Event, watcher string, userID string, includeHostName bool, filters []filter.Filter) []prometheus.TimeSeries {
+func AggregateData(Plugins []models.Plugin, events []activitywatch.Event, watcher string, userID string, includeHostName bool) []prometheus.TimeSeries {
 
-	// Sort events by timestamp. Older to newer.
-	sort.Slice(events, func(i, j int) bool {
-		return events[i].Timestamp.Before(events[j].Timestamp)
-	})
-
-	// Remove the newest event because it might be incomplete.
-	if len(events) > 0 {
-		events = events[:len(events)-1]
-	}
-
+	events = activitywatch.SortAndTrimEvents(events)
 	var timeSeriesList []prometheus.TimeSeries
-
-	//Apply the filters
-	var watcherFilters []filter.Filter
-	if watcher != "aw-watcher-afk" {
-		watcherFilters = filter.GetMatchingFilters(filters, watcher)
-		// Sort watcherFilters so filters with a Category take priority
-		sort.Slice(watcherFilters, func(i, j int) bool {
-			return watcherFilters[i].Category != "" && watcherFilters[j].Category == ""
-		})
+	var unmarshaledEvents models.Events
+	for _, plugin := range Plugins {
+		unmarshaledEvents = plugin.Execute(activitywatch.ToPluginEvent(events), watcher, userID, includeHostName)
 	}
-
-	var dropEvent bool
+	if len(Plugins) > 0 {
+		events = activitywatch.ToAwEvent(unmarshaledEvents)
+	}
 	for _, event := range events {
-
-		//Apply the filters
-		if watcher != "aw-watcher-afk" {
-			event.Data["category"] = "Other" //Default category
-			event.Data, dropEvent = filter.Apply(event.Data, watcherFilters)
-		}
-
-		// Drop the event if it matches the filter
-		if dropEvent {
-			continue
-		}
-		var labels []prometheus.Label
-
-		util.AddMetricLabel(&labels, "__name__", util.SanitizeLabelName(watcher)) //Watcher name
-		util.AddMetricLabel(&labels, "unique_id", util.GetRandomUUID())           // Unique ID for each event to avoid duplicate errors of timestamp seconds
-		util.AddMetricLabel(&labels, "aw_id", strconv.Itoa(event.ID))             //Event ID created from activityWatch
-		util.AddMetricLabel(&labels, "user", userID)
-
-		hostValue := "Unknown"
-		if includeHostName {
-			hostValue = util.GetHostname()
-		}
-
-		util.AddMetricLabel(&labels, "host", hostValue)
-
-		// Add the data as labels
-		for key, value := range event.Data {
-			util.AddMetricLabel(&labels, key, fmt.Sprintf("%v", value))
-		}
-		sample := prometheus.Sample{
-			Value: event.Duration,
-			Time:  event.Timestamp,
-		}
-
-		timeSeries := prometheus.TimeSeries{
-			Labels: labels,
-			Sample: sample,
-		}
-
-		timeSeriesList = append(timeSeriesList, timeSeries)
+		timeSeriesList = append(timeSeriesList, prometheus.AttachTimeSeriesPayload(event, includeHostName, watcher, userID))
 	}
 	return timeSeriesList
 }
@@ -126,7 +70,7 @@ func PushData(client *prometheus.Client, prometheusUrl string, prometheusSecretK
 	log.Print("Pushing data for [", watcher, "] ...")
 
 	for i := 0; i < len(timeseries); i += chunkSize {
-		if !util.PromHealthCheck(prometheusUrl, prometheusSecretKey) {
+		if !prometheus.HealthCheck(prometheusUrl, prometheusSecretKey) {
 			return errors.New("prometheus is not reachable or Internet connection is lost. Data will be pushed at the next synchronization")
 		}
 		end := i + chunkSize

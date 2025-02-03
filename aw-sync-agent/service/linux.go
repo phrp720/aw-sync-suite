@@ -4,6 +4,7 @@ import (
 	internalErrors "aw-sync-agent/errors"
 	"aw-sync-agent/settings"
 	"aw-sync-agent/util"
+	"github.com/phrp720/aw-sync-agent-plugins/models"
 	"github.com/phrp720/go-service-builder/systemd"
 	"log"
 	"os/user"
@@ -11,20 +12,20 @@ import (
 )
 
 const (
-	LinuxConfig     = "aw-sync-agent.yaml"
+	LinuxConfig     = "aw-sync-settings.yaml"
 	LinuxExecutable = "aw-sync-agent"
 	LinuxService    = "aw-sync-agent.service"
 )
 
 // CreateLinuxService creates a Linux service using the service-builder library github.com/phrp720/service-builder
-func CreateLinuxService(config settings.Configuration) {
+func CreateLinuxService(config settings.Configuration, plugins []models.Plugin) {
 	// Get the current user
 	currentUser, err := user.Current()
 	internalErrors.HandleFatal("Failed to get current user: ", err)
 
 	// Define paths dynamically based on the user's home directory
 	homeDir := currentUser.HomeDir
-	configPath := filepath.Join(homeDir, ".config", "aw", LinuxConfig)
+	configPath := filepath.Join(homeDir, ".config", "aw", "config", LinuxConfig)
 	appPath := filepath.Join(homeDir, ".config", "aw", LinuxExecutable)
 	serviceFilePath := filepath.Join(homeDir, ".config", "systemd", "user", LinuxService)
 
@@ -36,6 +37,9 @@ func CreateLinuxService(config settings.Configuration) {
 
 	// Create the config file that will be used for the service (Based on the settings) and loads it to the user's config path
 	err = settings.CreateConfigFile(config, configPath)
+	for _, plugin := range plugins {
+		plugin.ReplicateConfig(homeDir + "/.config/aw/config/")
+	}
 	internalErrors.HandleFatal("Failed to create config file: ", err)
 
 	// Get the working directory
