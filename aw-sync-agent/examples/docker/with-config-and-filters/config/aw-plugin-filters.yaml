@@ -1,6 +1,7 @@
 Filters:
 
   - Filter:
+    enable: true
     watchers: ## watchers where the filter will be applied
       - "aw-watcher-window"
 

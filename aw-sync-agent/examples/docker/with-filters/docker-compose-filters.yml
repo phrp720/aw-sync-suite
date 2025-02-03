@@ -12,3 +12,4 @@ services:
         - EXCLUDED_WATCHERS=aw-watcher-afk #Pipe seperated watchers to exclude
         - USER_ID=DemoUser
         - CRON=* * * * * #Cron expression to run the sync agent
+        - PLUGINS=filters

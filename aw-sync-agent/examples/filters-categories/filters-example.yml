@@ -2,7 +2,7 @@ Filters:
 
   - Filter:
     filter-name: "Plain Replace of Data" ## Name of the filter (optional)
-    enable: "true" ## Enable the filter (by default it is true)
+    enable: true
     watchers: ## watchers where the filter will be applied (optional)
       - "aw-watcher-window"
 
@@ -21,7 +21,7 @@ Filters:
 
   - Filter:
     filter-name: "Partial Regex Replace of data" ## Name of the filter (optional)
-    enable: "false" ## Enable the filter
+    enable: false
     watchers: ## watchers where the filter will be applied (optional)
       - "aw-watcher-window"
 
