@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     network_mode: "host"
     volumes:
-      - ./aw-sync-agent.yaml:/opt/aw-sync-agent.yaml
+      - ./config:/opt/config
     environment:
         - ACTIVITY_WATCH_URL=http://localhost:5600
         - PROMETHEUS_URL=http://localhost:9090

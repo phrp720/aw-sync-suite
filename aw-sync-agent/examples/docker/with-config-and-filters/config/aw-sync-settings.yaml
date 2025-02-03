@@ -1,0 +1,7 @@
+Settings:
+  awUrl: http://localhost:5600
+  prometheusUrl: http://localhost:9090
+  excludedWatchers:
+    - aw-watcher-window
+  userId: DemoUser
+
