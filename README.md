@@ -96,14 +96,14 @@ Runs on each device, retrieves and filters ActivityWatch data, and sends it secu
 The `aw-sync-suite` supports a range of plugins that allow for custom data processing before pushing the data to Prometheus. You can utilize these plugins to enhance your data synchronization capabilities.
 
 - **Purpose**: Plugins enable pre-processing of ActivityWatch data, allowing for filtering, transformation, and custom handling based on specific requirements(read more on how they work [here](https://github.com/phrp720/aw-sync-suite/wiki/Agent-Plugins)).
-- **Integration**: Easily configurable within the `aw-sync-agent` through the `aw-sync-settings.yaml` file.
+- **Integration**: Easily configurable within the `aw-sync-agent` through the `aw-sync-settings.yaml` file and their configuration files.
 - **Repository**: For a list of available plugins and their usage, visit the [aw-sync-suite-plugins repository](https://github.com/phrp720/aw-sync-suite-plugins).
 
 #### How to Use Plugins
 
 1. **Add the Plugin**: Ensure the desired plugin is available in the `aw-sync-suite-plugins` repository and modify the `aw-sync-settings.yaml` file to include the plugin.
-2. **Configure the Plugin**: If the plugin is configurable add the plugin configuration in `config` folder to configure the plugin settings.
-3. **Run the Agent**: Start the `aw-sync-agent`, and it will utilize the configured plugins for data processing.
+2. **Configure the Plugin**: If the plugin is configurable add the plugin configuration in the `config` folder to configure the plugin settings.
+3. **Run the Agent**: Start the `aw-sync-agent`, and it will automatically utilize the configured plugins for data processing.
 
 ### 📦 [aw-sync-center](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center)
 
