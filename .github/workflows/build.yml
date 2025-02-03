@@ -35,7 +35,7 @@ jobs:
         run: |
           mkdir -p ../release/linux
           GOOS=linux GOARCH=amd64 go build -o ../release/linux/aw-sync-agent
-          cp config ../release/linux/
+          cp ./config ../release/linux/config/
 
       # Build aw-sync-agent for Windows
       - name: Build aw-sync-agent for Windows
@@ -43,7 +43,7 @@ jobs:
         run: |
           mkdir -p ../release/windows
           GOOS=windows GOARCH=amd64 go build -o ../release/windows/aw-sync-agent.exe
-          cp config ../release/windows/
+          cp ./config ../release/windows/config/
 
       # Package aw-sync-center
       - name: Package aw-sync-center
