@@ -35,6 +35,7 @@ Open-Source Solution for Securely Syncing and Visualizing Multiple ActivityWatch
 3. [Installation & Usage](#-installation--usage)
 4. [Components](#-components)
     - [aw-sync-agent](#-aw-sync-agent)
+    - [aw-sync-suite-plugins](#-aw-sync-suite-plugins)
     - [aw-sync-center](#-aw-sync-center)
 5. [Architecture](#-architecture)
 6. [Requirements](#-requirements)
@@ -60,6 +61,7 @@ You can check also the [screenshots](https://github.com/phrp720/aw-sync-suite/tr
 - 🌐 **Centralized Monitoring:** Aggregate data from multiple devices effortlessly.
 - 🛡️ **Data Filtering:** Protect sensitive information by filtering or sanitizing it at the source.
 - 📍 **Checkpointing Mechanism:** Smart synchronization with automatic tracking of synced data.
+- 🔌 **Plugin Mechanism:** Use the pre-built plugins or create your own for custom data processing.
 -  📈 **Pre-Built Dashboards:** Use intuitive Grafana dashboards for instant insights.
 - ⚙️ **Effortless Deployment:** Simple setup for both agent and central components.
 
@@ -77,7 +79,7 @@ Runs on each device, retrieves and filters ActivityWatch data, and sends it secu
 
 - **Purpose**: Syncs data from ActivityWatch to Prometheus.
 - **Deployment**: Run on each computer you wish to track user activity from.
-- **Configuration**: Configurable via the `aw-sync-agent.yaml` file.
+- **Configuration**: Configurable via the `aw-sync-settings.yaml` file and its [plugins](https://github.com/phrp720/aw-sync-suite-plugins).
 
 | Platform Support | Runs as a Service (`-service`) | General Workability |
 |------------------|--------------------------------|---------------------|
@@ -88,6 +90,20 @@ Runs on each device, retrieves and filters ActivityWatch data, and sends it secu
 > [!Note]
 > - The **aw-sync-agent** is fully operational on **macOS**, but the `-service` feature (which allows the agent to run as a background service) is not yet implemented for macOS.
 > - On macOS, you can still manually start and run the agent to sync ActivityWatch data without issues.
+
+### 🔌 [aw-sync-suite-plugins](https://github.com/phrp720/aw-sync-suite-plugins)
+
+The `aw-sync-suite` supports a range of plugins that allow for custom data processing before data collection and before pushing the data to Prometheus. You can utilize these plugins to enhance your data synchronization capabilities.
+
+- **Purpose**: Plugins enable pre-processing of ActivityWatch data, allowing for filtering, transformation, and custom handling based on specific requirements.
+- **Integration**: Easily configurable within the `aw-sync-agent` through the `aw-sync-settings.yaml` file.
+- **Repository**: For a list of available plugins and their usage, visit the [aw-sync-suite-plugins repository](https://github.com/phrp720/aw-sync-suite-plugins).
+
+#### How to Use Plugins
+
+1. **Install the Plugin**: Ensure the desired plugin is available in the `aw-sync-suite-plugins` repository.
+2. **Configure the Plugin**: Modify the `aw-sync-settings.yaml` file to include the plugin configuration. This can involve specifying which plugins to load and any necessary parameters.
+3. **Run the Agent**: Start the `aw-sync-agent`, and it will utilize the configured plugins for data processing.
 
 ### 📦 [aw-sync-center](https://github.com/phrp720/aw-sync-suite/tree/master/aw-sync-center)
 

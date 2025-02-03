@@ -14,19 +14,15 @@
     - [For Development](#for-development)
     - [For Running the Agent](#for-running-the-agent)
 4. [Package Overview](#package-overview)
-5. [Configuration Options](#configuration-options)
+5. [Plugins](#plugins)
+    - [Plugin System](#plugin-system)
+    - [Available Plugins](#available-plugins)
+    - [Creating Custom Plugins](#create-custom-plugins)
+6. [Configuration Options](#configuration-options)
     - [Configuration Hierarchy](#configuration-hierarchy)
     - [Configurable Settings](#configurable-settings)
     - [Configuration Examples](#configuration-examples)
-6. [Filters](#filters)
-    - [Filter Format](#filter-format)
-    - [Filter Field Descriptions](#filter-field-descriptions)
-    - [Filter Example Scenario](#filter-examples)
-      - [Plain Replace of Data](#plain-replace-of-data)
-      - [Regex Replace of Data](#regex-replace-of-data)
-      - [Categorizing a Metric](#categorizing-a-metric)
-      - [Drop of the Record](#drop-of-the-record)
-7. [Makefile Commands](#makefile-commands)
+6. [Makefile Commands](#makefile-commands)
     - [General Commands](#general-commands)
     - [Service Commands](#service-commands)
 
@@ -41,6 +37,7 @@ For a brief overview of the agent's functionality, refer to the [Agent Documenta
 
 - **Data Synchronization**: Fetches user activity data from multiple ActivityWatch instances.
 - **Data Filtering and Aggregation**: Filters and aggregates data based on user-defined criteria.
+- **Plugin System**: Allows for easy extensibility and customization before and after data collection.
 - **Prometheus Integration**: Transforms data into a Prometheus-compatible format for centralized monitoring.
 - **Grafana Visualization**: Easily visualize activity metrics and trends through Grafana dashboards.
 - **Flexible Configuration**: Allows selection of ActivityWatch buckets to include/exclude and customizes sync intervals.
@@ -68,7 +65,7 @@ To run the agent, you need only:
 
 Here is the package structure of the agent:
 
-| Package          | Description                                                                                           |
+| Package/Folder   | Description                                                                                           |
 |------------------|-------------------------------------------------------------------------------------------------------|
 | **aw**           | Client for ActivityWatch REST API interactions.                                                       |
 | **prometheus**   | Client for Prometheus REST API interactions.                                                          |
@@ -76,13 +73,28 @@ Here is the package structure of the agent:
 | **checkpoint**   | Tracks the latest data synced for efficient operation.                                                |
 | **errors**       | Error handling utilities.                                                                             |
 | **datamanager**  | Handles data processing and transmission to Prometheus (**Scrape**, **Aggregate** and **Push** data). |
+| **config**       | Contains the agent Configuration files.                                                               |
 | **settings**     | Manages agent configuration settings.                                                                 |
-| **filter**       | Filters data based on user-defined criteria.                                                          |
 | **util**         | Utility functions, including health checks.                                                           |
 | **scripts**      | Additional, optional scripts.                                                                         |
 | **cron**         | Manages scheduled sync intervals.                                                                     |
 | **service**      | Manages service mode operations.                                                                      |
 | **tests**        | Contains unit tests for the agent.                                                                    |
+
+
+## Plugins
+
+### Plugin System
+
+The agent supports a plugin system that allows for easy extensibility and customization of the synchronization process. Plugins can be used to modify data before and after collection, apply filters, and perform other operations.
+
+### Available Plugins
+
+The available plugins can be found [here](https://github.com/phrp720/aw-sync-suite-plugins/wiki/%F0%9F%94%8C-Available-Plugins).
+
+### Create Custom Plugins
+
+To create a custom plugin, follow [these steps](https://github.com/phrp720/aw-sync-suite-plugins/wiki/%F0%9F%93%9D-How-to-Create-a-Plugin).
 
 ## Configuration Options
 
@@ -102,18 +114,20 @@ The table below details all configurable settings, their purpose, and their defa
 
 ### Configurable Settings
 
-| Flag              | Environment Variable | Config Key       | Description                                                                                                                                                      | Required | Default                  |
-|-------------------|----------------------|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|--------------------------|
-| -service          | -                    | -                | Runs the agent as a continuous service.                                                                                                                          | ❌        | -                        |
-| -immediate        | -                    | -                | Executes the synchronization process once immediately.                                                                                                           | ❌        | -                        |
-| -testConfig       | -                    | -                | Prints the agent settings,filter(not raw) and categories results                                                                                                 | ❌        | -                        |
-| -awUrl            | ACTIVITY_WATCH_URL   | awUrl            | URL of the ActivityWatch server to fetch data from.                                                                                                              | ✅        | http://localhost:5600    |
-| -prometheusUrl    | PROMETHEUS_URL       | prometheusUrl    | URL of the Prometheus server for sending metrics.                                                                                                                | ✅        | -                        |
-| -prometheusAuth   | PROMETHEUS_AUTH      | prometheusAuth   | Bearer token for Prometheus authentication (useful when secured via NGINX).                                                                                      | ❌        | -                        |
-| -cron             | CRON                 | cron             | Cron expression to schedule periodic syncs .It conforms to the standard as described by the [Cron wikipedia page](https://en.wikipedia.org/wiki/Cron).           | ❌        | Every 5 minutes          |
-| -excludedWatchers | EXCLUDED_WATCHERS    | excludedWatchers | List of ActivityWatch watchers to exclude from syncing (use pipe `\|` for multiple entries in flags or environment variables).                                   | ❌        | -                        |
-| -userId           | USER_ID              | userId           | Custom identifier for the user; defaults to the system hostname or a generated ID if unspecified.                                                                | ❌        | Hostname or Generated ID |
-| -includeHostname  | INCLUDE_HOSTNAME     | includeHostname  | When set to true, appends the hostname to the exported metrics for better identification in multi-user environments.Otherwise the host value is set to `Unknown` | ❌        | false                    |
+| Flag                | Environment Variable | Config Key         | Description                                                                                                                                                                           | Required | Default                  |
+|---------------------|----------------------|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|--------------------------|
+| -service            | -                    | -                  | Runs the agent as a continuous service.                                                                                                                                               | ❌        | -                        |
+| -immediate          | -                    | -                  | Executes the synchronization process once immediately.                                                                                                                                | ❌        | -                        |
+| -testConfig         | -                    | -                  | Prints the agent settings,filter(not raw) and categories results                                                                                                                      | ❌        | -                        |
+| -awUrl              | ACTIVITY_WATCH_URL   | awUrl              | URL of the ActivityWatch server to fetch data from.                                                                                                                                   | ✅        | http://localhost:5600    |
+| -prometheusUrl      | PROMETHEUS_URL       | prometheusUrl      | URL of the Prometheus server for sending metrics.                                                                                                                                     | ✅        | -                        |
+| -prometheusAuth     | PROMETHEUS_AUTH      | prometheusAuth     | Bearer token for Prometheus authentication (useful when secured via NGINX).                                                                                                           | ❌        | -                        |
+| -cron               | CRON                 | cron               | Cron expression to schedule periodic syncs .It conforms to the standard as described by the [Cron wikipedia page](https://en.wikipedia.org/wiki/Cron).                                | ❌        | Every 5 minutes          |
+| -excludedWatchers   | EXCLUDED_WATCHERS    | excludedWatchers   | List of ActivityWatch watchers to exclude from syncing (use pipe `\|` for multiple entries in flags or environment variables).                                                        | ❌        | -                        |
+| -plugins            | PLUGINS              | plugins            | List of [plugins](https://github.com/phrp720/aw-sync-suite-plugins) that are going to be enabled to the agent (use pipe `\|` for multiple entries in flags or environment variables). | ❌        | -                        |
+| -pluginsStrictOrder | PLUGINS_STRICT_ORDER | pluginsStrictOrder | When set to true,executes the plugins with the given order                                                                                                                            | ❌        | false                    |
+| -userId             | USER_ID              | userId             | Custom identifier for the user; defaults to the system hostname or a generated ID if unspecified.                                                                                     | ❌        | Hostname or Generated ID |
+| -includeHostname    | INCLUDE_HOSTNAME     | includeHostname    | When set to true, appends the hostname to the exported metrics for better identification in multi-user environments.Otherwise the host value is set to `Unknown`                      | ❌        | false                    |
 #### Configuration Examples
 <ol>
 <li>
@@ -137,267 +151,14 @@ cron: "*/5 * * * *"
 excludedWatchers:
   - "aw-watcher-afk"
   - "aw-watcher-window"
+plugins:
+  - "filters"
+pluginsStrictOrder: false
 userId: "custom-user-id"
 includeHostname: true
 </code></pre>
 </li>
 </ol>
-
-## Filters
-
-### Filter Overview
-
-The `aw-sync-agent.yaml` file supports three types of data filtering and one categorization filtering, which can be applied individually or mixed for advanced filtering needs:
-
-1. **Plain Replace**: Replaces field values with specified new values when target conditions are met.
-2. **Regex Replace**: Performs partial or full replacements using regex patterns for flexible matching and substitution.
-3. **Drop Record**: Removes records entirely when the specified target conditions are met.
-4. **Categorize Metric**: Assigns a category to the metric based on the target conditions.
-
-These filtering methods can be combined in a single filter(except Categorize Metric), allowing you to replace some fields while dropping others based on the same or different conditions.
-### Filter Format
-
-```yaml
-Filters:
-
-  - Filter:
-    filter-name: "Plain Replace of Data" ## Name of the filter (optional)
-    watchers: ##(Optional) watchers where the filter will be applied. If empty, the filter will apply to all watchers
-      - <watcher_name>
-
-    target:  ## Conditions that if match , it will apply the filtering for the specific record
-      - key: <key_name>
-        value: <value_to_match>
-        .
-        .
-        .
-      - key: <key_name>
-        value: <value_to_match>
-
-    plain_replace:  ## Mapping for Values to be plain replaced
-      - key: <key_name>
-        value: <new_value>
-        .
-        .
-        .
-      - key: <key_name>
-        value: <new_value>
-  - Filter:
-      filter-name: "Partial Regex Replace of data" ## Name of the filter (optional)
-      watchers: ##(Optional) watchers where the filter will be applied. If empty, the filter will apply to all watchers
-        - <watcher_name>
-
-      target:  ## Conditions that if match , it will apply the filtering for the specific record
-        - key: <key_name>
-          value: <value_to_match>
-          .
-          .
-          .
-        - key: <key_name>
-          value: <value_to_match>
-
-      regex_replace:  ## Mapping for Values to be replaced
-        - key: <key_name>
-          expression: <regex_expression>
-          value: <new_value>
-          .
-          .
-          .
-        - key: <key_name>
-          expression: <regex_expression>
-          value: <new_value>
-  - Filter:
-      filter-name: "Drop of the Record" ## Name of the filter (optional)
-      watchers: ##(Optional) watchers where the filter will be applied. If empty, the filter will apply to all watchers
-        - <watcher_name>
-      target:  ## Conditions that if match , it will apply the filtering for the specific record
-        - key: <key_name>
-          value: <value_to_match>
-          .
-          .
-          .
-        - key: <key_name>
-          value: <value_to_match>
-
-      drop: "true" ## if true, the record will be dropped if the target conditions are met
-  - Filter:
-      filter-name: "Categorize of a Metric" ## Name of the filter (optional)
-      watchers: ## watchers where the filter will be applied (optional)
-        - <watcher_name>
-
-      target: ## Data Records that if match , do the filtering (mandatory)
-
-        - key: <key_name>
-          value: <value_to_match>
-          .
-          .
-          .
-        - key: <key_name>
-          value: <value_to_match>
-      category: <category> ## Categorization of the metric
-
-```
-
-### Filter Field Descriptions
-| Field             | Description                                                                                                                                                                                                                                                                                                                                                                           |
-|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **filter-name**   | (Optional) Specifies a name for the filter.                                                                                                                                                                                                                                                                                                                                           |
-| **enabled**       | (Optional) If set to `false`, the filter will be disabled.                                                                                                                                                                                                                                                                                                                            |
-| **watchers**      | (Optional) Specifies the watchers to apply the filter to, like `aw-watcher-window`. If this field is omitted or empty, the filter will apply to all watchers.                                                                                                                                                                                                                         |
-| **target**        | Contains key-value pairs that the data record must match for filtering to occur. Each entry includes: <br> - **key**: The data field name, e.g., app. <br> - **value**: A regex pattern to match against the field's value.                                                                                                                                                           |
-| **plain_replace** | Specifies key-value pairs for replacement. If the target key-values match, the specified keys in replace will be updated to the new values in the data record. Each entry includes: <br> - **key**: The field name to replace. <br> - **value**: The new value for the specified key.                                                                                                 |
-| **regex_replace** | Specifies key-value pairs for replacement using regex patterns. If the target key-values match, the specified keys in replace will be updated to the new values in the data record. Each entry includes: <br> - **key**: The field name to replace. <br> - **expression**: A regex pattern to match against the field's value. <br> - **value**: The new value for the specified key. |
-| **drop**          | If set to `true`, the record will be dropped if the target conditions are met.                                                                                                                                                                                                                                                                                                        |
-| **category**      | Specifies the category of the metric                                                                                                                                                                                                                                                                                                                                                  |
-### Filter Examples
-
-#### Plain Replace of Data
-
-This filter configuration performs a plain text replacement on data records.
-
-```yaml
-- Filter:
-    watchers:  ## watchers where the filter will be applied. If empty, the filter will apply to all watchers
-      - "aw-watcher-window"
-    
-    target: ## Data Records that if match , do the filtering for the specific record
-      - key: "app" ## key to filter on
-        value: "Google.*" ## value to filter on RegEX
-    
-      - key: "title" ## key to filter on     
-        value: "mail.*"  ## value to filter on RegEX
-    
-    plain_replace:  ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
-      - key: "title"  ## key of record
-        value: "Email" ## value to replace
-
-```
-
-**Explanation**:
-
-- **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
-
-- **target**: Specifies matching conditions:
-
-    - `app` must match `"Google.*"` (e.g., "Google Chrome").
-    - `title` must match `"mail.*"` (e.g., "mail - Inbox").
-
-
-Both conditions must match for the filter to apply.
-
-- **plain_replace**: When the `target` conditions are met, this section replaces plain values in the matching record:
-    - Sets the title field to "Email".
-
-**Outcome**: For records in `"aw-watcher-window"` where `app` starts with "Google" and `title` starts with "mail," this filter changes the `title` field’s value to `"Email"`.
-#### Regex Replace of Data
-
-This filter configuration performs a partial regex replacement on data records.
-
-```yaml
-- Filter:
-    filter-name: "Partial Regex Replace of data" ## Name of the filter (optional)
-    enable: "false" ## Enable the filter
-    watchers: ## watchers where the filter will be applied (optional)
-      - "aw-watcher-window"
-    
-    target: ## Data Records that if match , do the filtering (mandatory)
-    
-      - key: "app" ## key to filter on
-        value: "Google.*" ## value to filter on REGEX
-    
-      - key: "title" ## key to filter on
-        value: "test.*" ## value to filter on REGEX
-    
-    regex-replace: ## key value pairs to replace e.g. on the key `title` replace its value with `Email`
-    
-      - key: "title" ## key of record
-        expression: "test.*" ## REGEX to replace
-        value: "Email" ## value to replace
-```
-
-**Explanation**:
-
-- **filter-name**: Specifies a name for the filter.
-- **enable**: Indicates whether the filter is enabled (`false` means the filter is disabled).
-- **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
-- **target**: Specifies matching conditions:
-    - `app` must match `"Google.*"` (e.g., "Google Chrome").
-    - `title` must match `"test.*"` (e.g., "test case").
-- **regex-replace**: When the `target` conditions are met, this section replaces values in the matching record using regex:
-    - For the `title` field, if a part of `title` matches the regex `"test.*"`, it will be replaced with `"Email"`.
-
-#### Categorizing a Metric
-
-This filter configuration drops data records that match specified conditions.
-
-```yaml
-- Filter:
-    filter-name: "Email Category" ## Name of the filter (optional)
-    watchers: ## watchers where the filter will be applied (optional)
-    - "aw-watcher-window"
-    
-    target: ## Data Records that if match , do the filtering (mandatory)
-    
-    - key: "app" ## key to filter on
-      value: "Google.*" ## value to filter on REGEX
-    
-    - key: "title" ## key to filter on
-      value: "Gmail|Yahoo|Hotmail|Thunderbird" ## value to filter on REGEX
-    category: "Email" ## Categorization of the metric
-```
-
-**Explanation**:
-
-- **filter-name**: Specifies a name for the filter.
-- **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
-- **target**: Specifies matching conditions:
-    - `app` must match `"Google.*"` (e.g., "Google Chrome").
-    - `title` must match `"Gmail|Yahoo|Hotmail|Thunderbird"` (e.g., "Gmail").
-- **category**: Adds to the metric the category `Email` so it can be categorized in the Grafana Dashboards.
-
-> [!Caution]
-> - If the category is not specified, the metric will be categorized as `Other` by default.
-> - The category field is case-sensitive.
-> - The category field is optional, but it is recommended to categorize the metrics for better visualization in Grafana Dashboards.
-> - The category field CANNOT be used in combination with other filters at the same time.
-
-#### Drop of the Record
-
-This filter configuration drops data records that match specified conditions.
-
-```yaml
-- Filter:
-  filter-name: "Drop of the Record" ## Name of the filter (optional)
-  watchers: ## watchers where the filter will be applied (optional)
-    - "aw-watcher-window"
-
-  target: ## Data Records that if match , do the filtering (mandatory)
-
-    - key: "app" ## key to filter on
-      value: "Google.*" ## value to filter on REGEX
-
-    - key: "title" ## key to filter on
-      value: "test.*" ## value to filter on REGEX
-  drop: "true" ## Drop the record if matched
-```
-
-**Explanation**:
-
-- **filter-name**: Specifies a name for the filter.
-- **watchers**: Applies this filter to `aw-watcher-window` only. If empty, the filter would apply to all watchers.
-- **target**: Specifies matching conditions:
-    - `app` must match `"Google.*"` (e.g., "Google Chrome").
-    - `title` must match `"test.*"` (e.g., "test case").
-- **drop**: If set to `true`, the record will be dropped if the `target` conditions are met.
-
-
-> [!Note]
-> - Filters can be combined to perform multiple operations on the same data record(plain && regex replacement).
-> - Category Filters take precedence over other filters.
-> - Filters can be disabled by setting the `enabled` field to `false`.
-> - Filters that have the drop field set to `true` will not perform any replacement operations.
-> - Filters that have a category field must not perform any replacement operations otherwise it will be marked as invalid.
-
 
 ## Makefile Commands
 
