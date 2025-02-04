@@ -1,13 +1,12 @@
 module aw-sync-agent
 
 go 1.23.2
-
 require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/snappy v0.0.4
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
-	github.com/phrp720/aw-sync-agent-plugins v0.1.0
+	github.com/phrp720/aw-sync-agent-plugins v1.0.0
 	github.com/phrp720/go-service-builder v0.3.1
 	github.com/prometheus/prometheus v0.301.0
 	github.com/robfig/cron v1.2.0
