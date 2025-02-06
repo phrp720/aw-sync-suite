@@ -7,3 +7,4 @@
 #  includeHostname: true
 #  plugins:
 #    - "filters"  # This is the only plugin that is enabled by default
+#    - "scripts"
