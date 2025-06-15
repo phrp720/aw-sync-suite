@@ -67,7 +67,7 @@ Here is the package structure of the agent:
 
 | Package/Folder   | Description                                                                                           |
 |------------------|-------------------------------------------------------------------------------------------------------|
-| **aw**           | Client for ActivityWatch REST API interactions.                                                       |
+| **activitywatch**           | Client for ActivityWatch REST API interactions.                                                       |
 | **prometheus**   | Client for Prometheus REST API interactions.                                                          |
 | **synchronizer** | Manages data synchronization from ActivityWatch to Prometheus.                                        |
 | **checkpoint**   | Tracks the latest data synced for efficient operation.                                                |
@@ -139,15 +139,15 @@ The table below details all configurable settings, their purpose, and their defa
 <li>
 <p><strong>Using Environment Variables</strong>:</p>
 <pre><code class="language-bash">export ACTIVITY_WATCH_URL=http://localhost:5600
-export PROMETHEUS_URL=http://prometheus.local/api/v1/write
+export PROMETHEUS_URL=http://prometheus.local
 export CRON="*/5 * * * *"
 ./aw-sync-agent
 </code></pre>
 </li>
 <li>
-<p><strong>Using the Configuration File (<code inline="">aw-sync-agent.yaml</code>)</strong>:</p>
+<p><strong>Using the Configuration File (<code inline="">aw-sync-settings.yaml</code>)</strong>:</p>
 <pre><code class="language-yaml">awUrl: "http://localhost:5600"
-prometheusUrl: "http://prometheus.local/api/v1/write"
+prometheusUrl: "http://prometheus.local"
 cron: "*/5 * * * *"
 excludedWatchers:
   - "aw-watcher-afk"
