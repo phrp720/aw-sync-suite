@@ -29,6 +29,7 @@ const (
 	TestConfigs         SettingsKey = "testConfig"
 	Plugins             SettingsKey = "plugins"
 	PluginsStrictOrder  SettingsKey = "pluginsStrictOrder"
+	checkpointFile		SettingsKey = "checkpoint"
 )
 const configFile = "aw-sync-settings.yaml"
 const configDir = "./config"
@@ -47,6 +48,7 @@ type Setts struct {
 	AsService           bool     `yaml:"-"`
 	Immediate           bool     `yaml:"-"`
 	TestConfigs         bool     `yaml:"-"` // TestConfigs is a flag to test the configurations/filters
+	CheckpointFile  	string	 `yaml:"checkpoint"` 
 }
 
 // Configuration struct
@@ -119,6 +121,9 @@ func loadEnvVariables(config *Configuration) {
 	if value, exists := os.LookupEnv("INCLUDE_HOSTNAME"); exists {
 		config.Settings.IncludeHostname = value == "true"
 	}
+    if value, exists := os.LookupEnv("CHECKPOINT"); exists {
+		config.Settings.CheckpointFile = value
+	}
 
 }
 
@@ -136,7 +141,7 @@ func loadFlags(config *Configuration) {
 	flag.Var(&plugins, string(Plugins), "Plugins to load")
 
 	flag.BoolVar(&config.Settings.PluginsStrictOrder, string(PluginsStrictOrder), config.Settings.PluginsStrictOrder, "Plugins strict order")
-
+	flag.StringVar(&config.Settings.CheckpointFile, string(checkpointFile), config.Settings.CheckpointFile, "Checkpoint File")
 	flag.StringVar(&config.Settings.Cron, string(Cron), config.Settings.Cron, "Cron expression")
 	flag.StringVar(&config.Settings.PrometheusSecretKey, string(PrometheusSecretKey), config.Settings.PrometheusSecretKey, "Prometheus Secret Key")
 	flag.BoolVar(&config.Settings.AsService, string(AsService), config.Settings.AsService, "Run as service")
@@ -185,6 +190,7 @@ func printSettings(config *Configuration) {
 		Plugins:             strings.Join(config.Settings.Plugins, ","),
 		PluginsStrictOrder:  fmt.Sprintf("%t", config.Settings.PluginsStrictOrder),
 		Cron:                config.Settings.Cron,
+		checkpointFile:      config.Settings.CheckpointFile,
 	}
 
 	// Define the order of the settings
@@ -198,6 +204,7 @@ func printSettings(config *Configuration) {
 		Plugins,
 		PluginsStrictOrder,
 		Cron,
+		checkpointFile,
 	}
 
 	maxKeyLength := 0

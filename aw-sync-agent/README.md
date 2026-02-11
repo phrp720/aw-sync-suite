@@ -128,7 +128,7 @@ The table below details all configurable settings, their purpose, and their defa
 | -pluginsStrictOrder | PLUGINS_STRICT_ORDER | pluginsStrictOrder | When set to true,executes the plugins with the given order                                                                                                                            | ❌        | false                    |
 | -userId             | USER_ID              | userId             | Custom identifier for the user; defaults to the system hostname or a generated ID if unspecified.                                                                                     | ❌        | Hostname or Generated ID |
 | -includeHostname    | INCLUDE_HOSTNAME     | includeHostname    | When set to true, appends the hostname to the exported metrics for better identification in multi-user environments.Otherwise the host value is set to `Unknown`                      | ❌        | false                    |
-
+| -checkpoint         | CHECKPOINT           | checkpoint         | The full path to save the checkpoint checkpoint.If not used the default file is the `checkpoint.json`                                                                                 | ❌        | `checkpoint.json`        |
 #### Configuration Examples
 <ol>
 <li>

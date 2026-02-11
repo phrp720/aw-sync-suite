@@ -5,9 +5,15 @@ import (
 	"log"
 	"os"
 	"time"
+	"aw-sync-agent/settings"
 )
 
-var checkpointFile = "checkpoint.json"
+var checkpointFile = "checkpoint.json" // Default checkpoint file
+
+// InitializeCheckpoint sets up the checkpoint file from configuration
+func InitializeCheckpoint(config *settings.Configuration) {
+	checkpointFile = config.Settings.CheckpointFile
+}
 
 // Read reads the checkpoint for the given watcher
 func Read(watcher string) *time.Time {

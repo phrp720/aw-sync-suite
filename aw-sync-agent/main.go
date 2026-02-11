@@ -2,6 +2,7 @@ package main
 
 import (
 	"aw-sync-agent/activitywatch"
+	"aw-sync-agent/checkpoint"
 	"aw-sync-agent/cron"
 	internalErrors "aw-sync-agent/errors"
 	"aw-sync-agent/prometheus"
@@ -22,6 +23,9 @@ func main() {
 	log.Print("Initializing configurations...")
 	Configs := settings.InitConfigurations()
 	Configs.Settings.UserID = util.GetUserID(Configs.Settings.UserID)
+
+	// Initialize checkpoint with the configuration
+	checkpoint.InitializeCheckpoint(Configs)
 
 	// Here abstract init of the plugins. In init we will load the plugins,load their configs if exists and do the checks like below.
 
