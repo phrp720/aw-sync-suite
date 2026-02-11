@@ -121,6 +121,9 @@ func loadEnvVariables(config *Configuration) {
 	if value, exists := os.LookupEnv("INCLUDE_HOSTNAME"); exists {
 		config.Settings.IncludeHostname = value == "true"
 	}
+    if value, exists := os.LookupEnv("CHECKPOINT"); exists {
+		config.Settings.CheckpointFile = value
+	}
 
 }
 
@@ -138,7 +141,7 @@ func loadFlags(config *Configuration) {
 	flag.Var(&plugins, string(Plugins), "Plugins to load")
 
 	flag.BoolVar(&config.Settings.PluginsStrictOrder, string(PluginsStrictOrder), config.Settings.PluginsStrictOrder, "Plugins strict order")
-	flag.StringVar(&config.Settings.CheckpointFile, string(checkpointFile), config.Settings.CheckpointFile, "Checkpoint File found")
+	flag.StringVar(&config.Settings.CheckpointFile, string(checkpointFile), config.Settings.CheckpointFile, "Checkpoint File")
 	flag.StringVar(&config.Settings.Cron, string(Cron), config.Settings.Cron, "Cron expression")
 	flag.StringVar(&config.Settings.PrometheusSecretKey, string(PrometheusSecretKey), config.Settings.PrometheusSecretKey, "Prometheus Secret Key")
 	flag.BoolVar(&config.Settings.AsService, string(AsService), config.Settings.AsService, "Run as service")
