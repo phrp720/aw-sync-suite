@@ -1,13 +1,13 @@
 # Build stage
-FROM golang:1.23.2-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /opt
 
 # Copy the source code
-COPY .. .
+COPY . .
 
 # Download and install the dependencies
-RUN go get -d -v ./...
+RUN go mod download
 
 # Build the Go app
 RUN go build -o aw-sync-agent .
