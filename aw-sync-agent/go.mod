@@ -9,7 +9,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/phrp720/aw-sync-agent-plugins v0.1.1
 	github.com/phrp720/go-service-builder v0.3.1
-	github.com/prometheus/prometheus v0.311.3
+	github.com/prometheus/prometheus v0.312.0
 	github.com/robfig/cron v1.2.0
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -21,6 +21,6 @@ require (
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.67.5 // indirect
 	go.yaml.in/yaml/v2 v2.4.4 // indirect
-	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/text v0.37.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 )
